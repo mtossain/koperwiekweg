@@ -1,6 +1,5 @@
 # koperwiekweg
-Measurement Station Ijsselstein
-Consists of the following sensors:
+Measurement Station Ijsselstein consists of the following sensors:
 
 - Ventus 70s Vintage weather station
 
