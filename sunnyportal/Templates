@@ -1,0 +1,322 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="ie8 oldie"><![endif]-->
+<!--[if IE 9 ]><html class="ie9"><![endif]-->
+<!--[if gt IE 9]><!--><html><!--<![endif]-->
+    <head id="ctl00_Head"><meta charset="utf-8" /><meta http-equiv="X-UA-Compatible" content="IE=edge" /><meta name="viewport" content="width=device-width, initial-scale=1" /><title>
+	SMA Solar Technology AG - Sunny Portal
+</title><link rel="shortcut icon" type="image/x-icon" href="../favicon.ico" /><link rel="apple-touch-icon" href="../apple-touch-icon.png" />
+    <link rel="stylesheet" href="/dist/css/sma.theme.css?v=7.5.21.38096"/>
+
+    <link rel="stylesheet" href="/dist/css/sma.webforms.css?v=7.5.21.38096"/>
+
+
+<!--[if IE ]>
+<link rel="stylesheet" type="text/css" href="/Content/themes/redesign/webforms.ie.css" />
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="/Content/Login/RedesignMaster.css" /><link rel="stylesheet" type="text/css" href="/Tools/css/form/form.css" /><link rel="stylesheet" type="text/css" href="/Tools/css/shadowbox/shadowbox.css" />
+
+        
+        
+        
+        <script type="text/javascript" src="../Scripts/vendor/jquery/jquery.js"></script>
+        <script type="text/javascript" src="../Scripts/SunnyPortal/SunnyPortalMaster.js"></script>
+        
+
+<script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-839066-23']);
+    _gaq.push(['_trackPageview']);
+
+    (function () {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+</script><meta http-equiv="expires" content="-1"></meta><meta http-equiv="cache-control" content="no-cache"></meta><meta http-equiv="Pragma" content="no-cache"></meta></head>
+    <body id="ctl00_theBody" class="no_navi" data-lang="en-GB">
+        <form method="post" action="Start.aspx?ReturnUrl=%2fPlants" id="aspnetForm">
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="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" />
+
+<script type="text/javascript">
+<!--
+	document.onkeypress = function onKeyPress(e) {
+		if (e.which == 13) {
+			if (!isMultiLineTextElement(e.target)) {
+				var ctl = document.getElementById('ctl00_ContentPlaceHolder1_Logincontrol1_LoginBtn');
+				if (ctl != null) {
+					__doPostBack('ctl00$ContentPlaceHolder1$Logincontrol1$LoginBtn','ServerReturn');
+					e.cancelBubble = true;
+					e.returnValue = false;
+				}
+			}
+		}
+	}
+	function isMultiLineTextElement(elem) {
+		return (elem.tagName == "TEXTAREA");}
+	function isAnchor(elem) {
+		return (elem.tagName == "A");}
+// -->
+</script>
+
+<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="4E24AF74" />
+           <div id="main" class="main">
+                <!-- Head -->
+                <div class="divHeaderLanguage"> <!-- empty class to override it (wizard) --> 
+                    
+<!-- Head -->
+<table cellpadding="0" cellspacing="0" style="height:80px;width:100%">
+<tr>
+   <td style="width:165px">
+       <a id="ctl00_HeaderLanguageMenuControl_LinkButtonStart" href="javascript:__doPostBack(&#39;ctl00$HeaderLanguageMenuControl$LinkButtonStart&#39;,&#39;&#39;)"><img  border="0" title="Sunny Portal" alt="Sunny Portal" src="/Images/img/name.gif" /></a>
+    </td>
+   
+   
+   
+   <td>
+        <div class="divlang" style="float:left;">
+        <ul>
+            <li style="background:transparent url(/Images/img/language_drop.gif) 0 3px no-repeat; height:22px; width:167px;"><a class="droplang" href="#"><img id="ctl00_HeaderLanguageMenuControl_ImgLanguageSelected" src="../Images/img/uk_on.gif" /><!--[if IE 7]><!--></a><!--<![endif]--><!--[if IE 8]><!--></a><!--<![endif]-->
+            <!--[if lte IE 6]><table cellpadding="0" cellspacing="0"><tr><td><![endif]-->
+            <ul id="ctl00_HeaderLanguageMenuControl_LanguageDropDownList">                                 
+            <li><a id="ctl00_HeaderLanguageMenuControl_lang_de-de" href="javascript:__doPostBack(&#39;ctl00$HeaderLanguageMenuControl$lang_de-de&#39;,&#39;&#39;)"><img title="German" src="../Images/img/german_tp.gif" alt="German" height="22" width="118" /></a></li><li><a id="ctl00_HeaderLanguageMenuControl_lang_en-gb" href="javascript:__doPostBack(&#39;ctl00$HeaderLanguageMenuControl$lang_en-gb&#39;,&#39;&#39;)"><img title="English" src="../Images/img/uk_tp.gif" alt="English" height="22" width="118" /></a></li><li><a id="ctl00_HeaderLanguageMenuControl_lang_en-us" href="javascript:__doPostBack(&#39;ctl00$HeaderLanguageMenuControl$lang_en-us&#39;,&#39;&#39;)"><img title="US-English" src="../Images/img/usa_tp.gif" alt="US-English" height="22" width="118" /></a></li><li><a id="ctl00_HeaderLanguageMenuControl_lang_it-it" href="javascript:__doPostBack(&#39;ctl00$HeaderLanguageMenuControl$lang_it-it&#39;,&#39;&#39;)"><img title="Italian" src="../Images/img/italy_tp.gif" alt="Italian" height="22" width="118" /></a></li><li><a id="ctl00_HeaderLanguageMenuControl_lang_es-es" href="javascript:__doPostBack(&#39;ctl00$HeaderLanguageMenuControl$lang_es-es&#39;,&#39;&#39;)"><img title="Spanish" src="../Images/img/spain_tp.gif" alt="Spanish" height="22" width="118" /></a></li><li><a id="ctl00_HeaderLanguageMenuControl_lang_fr-fr" href="javascript:__doPostBack(&#39;ctl00$HeaderLanguageMenuControl$lang_fr-fr&#39;,&#39;&#39;)"><img title="French" src="../Images/img/france_tp.gif" alt="French" height="22" width="118" /></a></li><li><a id="ctl00_HeaderLanguageMenuControl_lang_ko-kr" href="javascript:__doPostBack(&#39;ctl00$HeaderLanguageMenuControl$lang_ko-kr&#39;,&#39;&#39;)"><img title="Korean" src="../Images/img/korea_tp.gif" alt="Korean" height="22" width="118" /></a></li><li><a id="ctl00_HeaderLanguageMenuControl_lang_cs-cz" href="javascript:__doPostBack(&#39;ctl00$HeaderLanguageMenuControl$lang_cs-cz&#39;,&#39;&#39;)"><img title="Czech" src="../Images/img/czech_tp.gif" alt="Czech" height="22" width="118" /></a></li><li><a id="ctl00_HeaderLanguageMenuControl_lang_zh-cn" href="javascript:__doPostBack(&#39;ctl00$HeaderLanguageMenuControl$lang_zh-cn&#39;,&#39;&#39;)"><img title="Chinese" src="../Images/img/china_tp.gif" alt="Chinese" height="22" width="118" /></a></li><li><a id="ctl00_HeaderLanguageMenuControl_lang_el-gr" href="javascript:__doPostBack(&#39;ctl00$HeaderLanguageMenuControl$lang_el-gr&#39;,&#39;&#39;)"><img title="Greece" src="../Images/img/greece_tp.gif" alt="Greece" height="22" width="118" /></a></li><li><a id="ctl00_HeaderLanguageMenuControl_lang_pt-pt" href="javascript:__doPostBack(&#39;ctl00$HeaderLanguageMenuControl$lang_pt-pt&#39;,&#39;&#39;)"><img title="Portugal" src="../Images/img/portugal_tp.gif" alt="Portugal" height="22" width="118" /></a></li><li><a id="ctl00_HeaderLanguageMenuControl_lang_nl-nl" href="javascript:__doPostBack(&#39;ctl00$HeaderLanguageMenuControl$lang_nl-nl&#39;,&#39;&#39;)"><img title="Netherlands" src="../Images/img/nederlands_tp.gif" alt="Netherlands" height="22" width="118" /></a></li><li><a id="ctl00_HeaderLanguageMenuControl_lang_ja-jp" href="javascript:__doPostBack(&#39;ctl00$HeaderLanguageMenuControl$lang_ja-jp&#39;,&#39;&#39;)"><img title="Japanese" src="../Images/img/japanese_tp.gif" alt="Japanese" height="22" width="118" /></a></li><li><a id="ctl00_HeaderLanguageMenuControl_lang_tr-tr" href="javascript:__doPostBack(&#39;ctl00$HeaderLanguageMenuControl$lang_tr-tr&#39;,&#39;&#39;)"><img title="Turkish" src="../Images/img/turkish_tp.gif" alt="Turkish" height="22" width="118" /></a></li></ul>
+            <!--[if lte IE 6]></td></tr></table></a><![endif]-->
+            </li>
+        </ul>
+        </div>
+        <div style="float:left; padding-top:3px; padding-left:2px; color:red; font-weight:bold; font-size:12px;">
+            
+        </div>
+   </td>
+   <td><a href="http://www.sma.de" target="_blank" class="right">
+        <img src="/Images/img/sma_logo.png" border="0" title="SMA" alt="SMA" align="right" /></a>
+   </td>
+ </tr>
+</table>
+  
+                </div>
+                <div style="height:25px">&nbsp;</div>             
+                 <!-- Content -->
+                <div id="content" class="content" style="float:left;border:0;padding:0;">
+                 
+    <!-- Keyvisual -->
+        <div style="margin-bottom: 20px;">
+            <div style="position:relative; float:left; width:715px; height:250px; margin-right:20px;">
+                <a id="HyperLinkHoManBanner" href="http://www.sma.de/en/produkte/monitoring-systems/sunny-home-manager.html" target="_blank" style="display:inline-block;position:absolute; left:0px; top:0px; background-color:#fff; display:none;"><img src="../Images/img/HoManBanner715.en-gb.png" alt="" /></a>
+                <a id="HyperLinkWebConBanner" href="http://www.sma.de/en/products/monitoring-control/webconnect.html" target="_blank" style="display:inline-block;position:absolute; left:0px; top:0px; background-color:#fff; display:none;"><img src="../Images/img/banner_webconnect_en.png" alt="" /></a>
+                <a id="SdWebBanner" href="http://www.sunnydesignweb.com/sdweb/SunnyDesign/Home?language=en" target="_blank" style="display:inline-block;position:absolute; left:0px; top:0px; background-color:#fff; display:none;"><img src="../Images/img/banner_sd_web_en.png" alt="" /></a>
+                <a id="SunnyPlacesBanner" href="http://www.sunnyplaces.com" target="_blank" style="display:inline-block;position:absolute; left:0px; top:0px; background-color:#fff; display:none;"><img src="../Images/img/sunnyplaces_715x250_en.jpg" alt="" /></a>
+                <img id="SPBanner" src="../Images/img/home715.en-gb.jpg" alt="Photo" height="250" width="715" style="position:absolute; left:0px; top:0px; background-color:#fff;" />
+            </div>
+            <!-- Login -->
+            <div style="float:left; width:225px;">
+                
+<!-- Login -->
+
+<div class="box loginControl">
+    <h3 class="icons">
+        <span id="ctl00_ContentPlaceHolder1_Logincontrol1_LabelLogin" style="float: left;">Login</span>
+        <span class="icon user" style="float: right;">User</span>
+    </h3>
+    <div id="ctl00_ContentPlaceHolder1_Logincontrol1_DivLogin" class="content hasGrid">
+        <table id="ctl00_ContentPlaceHolder1_Logincontrol1_TableLogin" class="mainContent">
+	<tr>
+		<td colspan="2">
+                    <input name="ctl00$ContentPlaceHolder1$Logincontrol1$txtUserName" id="txtUserName" class="text no-bottom" type="email" placeholder="E-mail" autofocus="true" />
+                    
+                </td>
+	</tr>
+	<tr>
+		<td colspan="2">
+                    <input name="ctl00$ContentPlaceHolder1$Logincontrol1$txtPassword" type="password" id="txtPassword" class="text no-bottom" placeholder="Password" />
+                    
+                </td>
+	</tr>
+	<tr>
+		<td>
+                    <input type="submit" name="ctl00$ContentPlaceHolder1$Logincontrol1$LoginBtn" value="Login" onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$ContentPlaceHolder1$Logincontrol1$LoginBtn&quot;, &quot;&quot;, true, &quot;&quot;, &quot;&quot;, false, false))" id="ctl00_ContentPlaceHolder1_Logincontrol1_LoginBtn" class="button" />
+                </td>
+		<td class="checkBoxCell">
+                    <input type="hidden" name="ctl00$ContentPlaceHolder1$Logincontrol1$RedirectURL" id="ctl00_ContentPlaceHolder1_Logincontrol1_RedirectURL" />
+                    <input type="hidden" name="ctl00$ContentPlaceHolder1$Logincontrol1$RedirectPlant" id="ctl00_ContentPlaceHolder1_Logincontrol1_RedirectPlant" />
+                    <input type="hidden" name="ctl00$ContentPlaceHolder1$Logincontrol1$RedirectPage" id="ctl00_ContentPlaceHolder1_Logincontrol1_RedirectPage" />
+                    <input type="hidden" name="ctl00$ContentPlaceHolder1$Logincontrol1$RedirectDevice" id="ctl00_ContentPlaceHolder1_Logincontrol1_RedirectDevice" />
+                    <input type="hidden" name="ctl00$ContentPlaceHolder1$Logincontrol1$RedirectOther" id="ctl00_ContentPlaceHolder1_Logincontrol1_RedirectOther" />
+                </td>
+	</tr>
+	<tr id="ctl00_ContentPlaceHolder1_Logincontrol1_SPMLink">
+		<td colspan="2">
+                    <a href="http://sunnyportal.mobi/loginpage.aspx">Sunny Portal mobile</a>
+                </td>
+	</tr>
+	<tr>
+		<td colspan="2">
+                    <a href="/Account/Register">I require a user account</a>
+                </td>
+	</tr>
+	<tr>
+		<td colspan="2">
+                    
+                </td>
+	</tr>
+	<tr>
+		<td colspan="2" class="forgotPasswordCell">
+                    <a id="ctl00_ContentPlaceHolder1_Logincontrol1_ForgottenPwdLink" href="ForgotPassword.aspx">Forgotten password &#187;</a>
+                </td>
+	</tr>
+</table>
+
+    </div>
+</div>
+<input type="hidden" id="ClientScreenWidth" value="" />
+<input type="hidden" id="ClientScreenHeight" value="" />
+<input type="hidden" id="ClientScreenAvailWidth" value="" />
+<input type="hidden" id="ClientScreenAvailHeight" value="" />
+<input type="hidden" id="ClientWindowInnerWidth" value="" />
+<input type="hidden" id="ClientWindowInnerHeight" value="" />
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#ClientScreenWidth').val(screen.width);
+        $('#ClientScreenHeight').val(screen.height);
+        $('#ClientScreenAvailWidth').val(screen.availWidth);
+        $('#ClientScreenAvailHeight').val(screen.availHeight);
+        $('#ClientWindowInnerWidth').val(window.innerWidth);
+        $('#ClientWindowInnerHeight').val(window.innerHeight);
+    });
+</script>
+ 
+            </div>
+            <div style="clear:left;"></div>
+        </div>
+        <div style="width:960px;">
+        <!-- Banner -->
+        <div style="float:left; width:225px; margin-right:20px;">
+            
+            <iframe src="https://com.sunny-portal.de/portal-statistic/?culture=en-gb" id="ctl00_ContentPlaceHolder1_iframePortalStatistik" width="225" height="185" frameborder="0" marginheight="0" marginwidth="0" scrolling="no"><img src="../Images/loading.gif" width="62" height="23" alt="" style="padding-left:81px;padding-top:81px;" /></iframe>
+        </div>
+        <div style="float:left; width:225px; margin-right:20px">
+            
+            <a id="ctl00_ContentPlaceHolder1_HyperLinkExamplePlants" href="../Templates/ExamplePlants.aspx"><img src="../Images/img/bspanlagen_en.jpg" alt="" /></a>
+        </div>
+        <div style="float:left; width:225px; margin-right:20px;">
+            
+            <a id="ctl00_ContentPlaceHolder1_HyperLinkPublicPlants" href="../Templates/PublicPagesPlantList.aspx"><img src="../Images/img/freiganlagen_en.jpg" alt="" /></a>
+        </div>
+        <div style="float:left; width:225px;">
+            <a id="ctl00_ContentPlaceHolder1_HyperLinkHoManSetup" href="../register"><img src="../Images/img/HoManSetup.en-gb.png" alt="" /></a>
+        </div>
+        
+        
+        
+        
+        
+        
+        
+        
+        <div style="clear:left;padding-top:20px;">
+            
+            <a id="ctl00_ContentPlaceHolder1_New_Banner" href="../newfunctions/index_en.htm" style="display:inline-block;"><img src="../newfunctions/images/banner_sp_en.png" alt="" /></a>
+        </div>
+
+        <div style="clear:left;padding-top:20px;">
+            
+            <a id="ctl00_ContentPlaceHolder1_Mobile_Banner_all" href="../sunnyportalmobile/index_en.htm" style="display:inline-block;float:left;"><img src="../sunnyportalmobile/images/banner_portal_mobile.png" alt="" /></a>
+            <a id="ctl00_ContentPlaceHolder1_Android_Banner" href="../Android/index_en.htm" style="display:inline-block;float:left; padding-left:20px;"><img src="../Android/images/banner_portal_android_en.png" alt="" /></a>
+            <a id="ctl00_ContentPlaceHolder1_IPhone_Banner" href="../sunnyportal-iPhoneApp/index_en.htm" style="display:inline-block;float:right;"><img src="../sunnyportal-iPhoneApp/images/banner_sp_iPhoneApp_470px_en.png" alt="" /></a>
+        </div>
+    </div>
+    <input type="hidden" name="ctl00$ContentPlaceHolder1$hiddenLanguage" id="hiddenLanguage" value="en-gb" />
+
+<script>
+    (function() {
+        var counter = 0;
+        var bannerArray = ["#SPBanner", "#SunnyPlacesBanner", "#HyperLinkHoManBanner", "#HyperLinkWebConBanner", "#SdWebBanner"];
+
+        function switchBanners() {
+            $(bannerArray[counter % bannerArray.length]).fadeOut(1000);
+            $(bannerArray[(counter + 1) % bannerArray.length]).fadeIn(1000);
+            counter++;
+            setTimeout(switchBanners, 5000);
+        }
+
+        $(function() {
+            setTimeout(switchBanners, 3000);
+        });
+    })();
+</script>
+
+
+                </div>
+                <hr />
+            </div>
+            <br class="statusbarMargin" />
+            <div id="statusbar">
+                <span id="statusbarLoading">		            
+                    <img src="../Images/loading.gif" width="62" height="23" alt="Loading" />
+                </span>
+                <span id="statusbarDesc">
+                
+© 2015 SMA Solar Technology AG
+    &nbsp;&nbsp;|&nbsp;&nbsp;
+    <a id="ctl00_HeaderNavigationMenuControl_HOME" href="javascript:__doPostBack(&#39;ctl00$HeaderNavigationMenuControl$HOME&#39;,&#39;&#39;)">Home</a>
+    &nbsp;&nbsp;|&nbsp;&nbsp;
+    <a id="ctl00_HeaderNavigationMenuControl_INFO" href="javascript:__doPostBack(&#39;ctl00$HeaderNavigationMenuControl$INFO&#39;,&#39;&#39;)">Information</a>
+    &nbsp;&nbsp;|&nbsp;&nbsp;
+    <a id="ctl00_HeaderNavigationMenuControl_MANUALS_HOMAN" href="javascript:__doPostBack(&#39;ctl00$HeaderNavigationMenuControl$MANUALS_HOMAN&#39;,&#39;&#39;)">User manuals</a>
+    &nbsp;&nbsp;|&nbsp;&nbsp;
+    
+    <a id="ctl00_HeaderNavigationMenuControl_LinkFAQ" href="https://www.sma.de/en/service/faq-support.html" target="_blank">FAQ</a>
+    &nbsp;&nbsp;|&nbsp;&nbsp;
+    <a id="ctl00_HeaderNavigationMenuControl_TERMS_AND_CONDITIONS" href="javascript:__doPostBack(&#39;ctl00$HeaderNavigationMenuControl$TERMS_AND_CONDITIONS&#39;,&#39;&#39;)">Terms of Use</a>
+    &nbsp;&nbsp;|&nbsp;&nbsp;
+    <a id="ctl00_HeaderNavigationMenuControl_DATA_PROTECTION_DECLARATION" href="javascript:__doPostBack(&#39;ctl00$HeaderNavigationMenuControl$DATA_PROTECTION_DECLARATION&#39;,&#39;&#39;)">Data protection declaration</a>
+     &nbsp;&nbsp;|&nbsp;&nbsp;
+    <a id="ctl00_HeaderNavigationMenuControl_CONTACT" href="javascript:__doPostBack(&#39;ctl00$HeaderNavigationMenuControl$CONTACT&#39;,&#39;&#39;)">Legal Notice</a>
+
+
+
+                </span>
+            </div>
+            <div id="MouseTitleDiv" style="position:absolute; top:0px; left:0px; display:none;"></div>
+        </form>
+        
+        <noscript>
+            <table cellpadding="0" cellspacing="0" class="ShadowBoxOuterFrame" id="Table1" style="z-index: 9999">
+                <tr>
+                    <td align="center" valign="middle">
+                        <table cellpadding="0" cellspacing="0" class="ShadowBoxInnerFrame">
+                            <tr>
+                                <td class="ShadowBoxCloseButtonRow" colspan="3"></td>
+                            </tr>
+                            <tr>
+                                <td class="ShadowBoxTopLeft"><img height="0" id="Img9" src="~/Tools/images/shadowbox/spacer.gif" width="0"></td>
+                                <td class="ShadowBoxTop"><img height="0" id="Img10" src="~/Tools/images/shadowbox/spacer.gif" width="0"></td>
+                                <td class="ShadowBoxTopRight"><img height="0" id="Img11" src="~/Tools/images/shadowbox/spacer.gif" width="0"></td>
+                            </tr>
+                            <tr>
+                                <td class="ShadowBoxLeft"><img height="0" id="Img12" src="~/Tools/images/shadowbox/spacer.gif" width="0"></td>
+                                <td class="ShadowBoxContent">
+                                    <div class="hasGrid" id="Div1" style="text-align:left; width:500px; margin-right:0px;">
+                                        <strong>Your Browser does not support JavaScript!</strong><br>
+                                        JavaScript is required to use Sunny Portal. Enable JavaScript your browsersettings and reload this Website to try again.<br>
+                                        <br>
+                                        <strong>Ihr Internetbrowser unterstützt JavaScript nicht!</strong><br>
+                                        JavaScript wird für die Verwendung von Sunny Portal benötigt. Aktivieren Sie JavaScript in den Einstellungen Ihres Internetbrowsers und aktualisieren Sie die Ansicht dieser Internetseite.
+                                    </div>
+                                </td>
+                                <td class="ShadowBoxRight"><img height="0" id="Img13" src="~/Tools/images/shadowbox/spacer.gif" width="0"></td>
+                            </tr>
+                            <tr>
+                                <td class="ShadowBoxBottomLeft"><img height="0" id="Img14" src="~/Tools/images/shadowbox/spacer.gif" width="0"></td>
+                                <td class="ShadowBoxBottom"><img height="0" id="Img15" src="~/Tools/images/shadowbox/spacer.gif" width="0"></td>
+                                <td class="ShadowBoxBottomRight"><img height="0" id="Img16" src="~/Tools/images/shadowbox/spacer.gif" width="0"></td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </noscript>
+    </body>
+</html>
