@@ -1,11 +1,3 @@
-
-file = open('~/AuthAculinkWebsite.txt', 'r')
-PasswordAculink = file.readline():
-file.close()
-file = open('~/AuthBhostedMysql.txt', 'r')
-PasswordMysql = file.readline():
-file.close()
-
 import os
 import time
 import requests
@@ -13,6 +5,9 @@ import serial
 import mysql.connector
 import subprocess
 import shelve
+
+PasswordAculink = open("/home/pi/AuthAculinkWebsite.txt",'r').read().split('\n')[0]
+PasswordMysql = open("/home/pi/AuthBhostedMysql.txt",'r').read().split('\n')[0]
 
 shelve = shelve.open("config.db")
 

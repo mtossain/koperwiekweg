@@ -4,9 +4,7 @@ Created on Mon Apr 13 14:48:53 2015
 
 @author: Michel Tossaint
 """
-file = open('~/AuthBhostedFTP.txt', 'r')
-Password = file.readline():
-file.close()
+Password = open('/home/pi/AuthBhostedFTP.txt','r').read().split('\n')[0]
 
 import time
 import ftplib

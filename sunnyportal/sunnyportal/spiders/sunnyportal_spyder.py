@@ -1,8 +1,6 @@
 import scrapy
 
-file = open('~/AuthSunnyportalWebsite.txt', 'r')
-Password = file.readline():
-file.close()
+Password = open('/home/pi/AuthSunnyportalWebsite.txt','r').read().split('\n')[0]
 	
 class DmozSpider(scrapy.Spider):
     

@@ -156,7 +156,7 @@
         global.SMA[name] = factory();
     }(window || this, 'user', function () {
         return {
-            checkoutid:  'fba38674-ec43-4b4e-a985-c024b98e9777',
+            checkoutid:  '53b89c8f-790a-4ec6-b29a-95e797de419c',
             userid:     '018171fc-3b66-4b8a-98d3-f621bd64f4cc'
         };
     }));
@@ -962,7 +962,7 @@ function ZoomDiagramOnlyLoading()
     <div class="dashboardContent">
         <div id="anlagenleistung">
             <div class="liveTimeSince">
-                <span id="CurrentPlantPowerTimestamp" title="27 April 2015 14:45">53 minutes ago</span>
+                <span id="CurrentPlantPowerTimestamp" title="27 April 2015 19:15">55 minutes ago</span>
             </div>
             <div class="gaugeImage">
                 <img alt="" src="/Images/Dashboard/gauge.png" style="position: absolute; top: 5px; left: 5px; width: 59px; height: 35px;" />
@@ -971,13 +971,13 @@ function ZoomDiagramOnlyLoading()
                 </div>
             </div>
             <div class="plantPower">
-                <span id="CurrentPlantPowerValue">2066</span>
+                <span id="CurrentPlantPowerValue">265</span>
                 <span id="CurrentPlantPowerUnit" class="dashboardValueUnit">W</span>
             </div>
         </div>
     </div>
     <a id="ctl00_ContentPlaceHolder1_UserControlShowDashboard1_currentplantPowerWidgetContent_DashboardLink" class="dashboardLink" href="javascript:__doPostBack(&#39;ctl00$ContentPlaceHolder1$UserControlShowDashboard1$currentplantPowerWidgetContent$DashboardLink&#39;,&#39;&#39;)"><span id="ctl00_ContentPlaceHolder1_UserControlShowDashboard1_currentplantPowerWidgetContent_DashboardLinkText">Energy and Power</span> »</a>
-</div><input type="hidden" name="ctl00$ContentPlaceHolder1$UserControlShowDashboard1$currentplantPowerWidgetContent$__dataFromCsharpPlantPowerWidgetControl" id="__dataFromCsharpPlantPowerWidgetControl" value=";currentPlantPowerPointerAngle:143;x_hours_ago:{0} hours ago;just_now:just now;one_hours_ago:an hour ago;some_seconds_ago:a few seconds ago;x_minutes_ago:{0} minutes ago" /><input type="hidden" name="ctl00$ContentPlaceHolder1$UserControlShowDashboard1$currentplantPowerWidgetContent$__dataToCsharpPlantPowerWidgetControl" id="__dataToCsharpPlantPowerWidgetControl" />
+</div><input type="hidden" name="ctl00$ContentPlaceHolder1$UserControlShowDashboard1$currentplantPowerWidgetContent$__dataFromCsharpPlantPowerWidgetControl" id="__dataFromCsharpPlantPowerWidgetControl" value=";currentPlantPowerPointerAngle:18;x_hours_ago:{0} hours ago;just_now:just now;one_hours_ago:an hour ago;some_seconds_ago:a few seconds ago;x_minutes_ago:{0} minutes ago" /><input type="hidden" name="ctl00$ContentPlaceHolder1$UserControlShowDashboard1$currentplantPowerWidgetContent$__dataToCsharpPlantPowerWidgetControl" id="__dataToCsharpPlantPowerWidgetControl" />
                                 </div>
 
                                 
