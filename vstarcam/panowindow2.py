@@ -26,11 +26,11 @@ FirstRotationTime = 100 #Seconds
 while True:
     
     #Completely turned to left
-	convertstr = ""
+    convertstr = ""
     for x in range(1,NumberPics+1):
         FileName = 'KoperWiekCam_'+str(x)+'.jpg'
-		FileNameUp = 'KoperWiekCam_'+str(x+NumberPics)+'.jpg'
-		vstarcam.PTZ(IP,Port,User,Pwd,"CallPreset"+str(x))
+	    FileNameUp = 'KoperWiekCam_'+str(x+NumberPics)+'.jpg'
+	    vstarcam.PTZ(IP,Port,User,Pwd,"CallPreset"+str(x))
         if x==1:
             time.sleep(FirstRotationTime) #Pause
         else:
@@ -38,21 +38,21 @@ while True:
         vstarcam.Snapshot(IP,Port,User,Pwd,FileName)
         now = time.strftime("%Y-%m-%d %H:%M:%S")
         print(now +' Taking snapshot '+str(x)+' [OK]')
-		vstarcam.PTZ(IP,Port,User,Pwd,'Up')
+        vstarcam.PTZ(IP,Port,User,Pwd,'Up')
         time.sleep(3) #Pause 3s
-		vstarcam.PTZ(IP,Port,User,Pwd,'UpStop')
-		vstarcam.Snapshot(IP,Port,User,Pwd,FileNameUp)
+        vstarcam.PTZ(IP,Port,User,Pwd,'UpStop')
+        vstarcam.Snapshot(IP,Port,User,Pwd,FileNameUp)
         now = time.strftime("%Y-%m-%d %H:%M:%S")
         print(now +' Taking snapshot '+str(x+NumberPics)+' [OK]')
 
         os.system("convert "+FileName+" "+FileNameUp+" -append f"+str(x)+".jpg") # flip upside down
         os.system("convert f"+str(x)+".jpg -flip f"+str(x)+".jpg") # flip upside down
-		convertstr += " f"+str(x)+".jpg" 
+        convertstr += " f"+str(x)+".jpg" 
 		
     #Convert to panorama
     os.system("convert"+convertstr+" +append all.jpg") # append in one row
-	os.system("convert all.jpg -matte -virtual-pixel white -distort arc '360 45' dome.jpg") # make polar plot
-	os.system("convert dome.jpg -resize 1024x1024 dome.png") # resize and convert in png
+    os.system("convert all.jpg -matte -virtual-pixel white -distort arc '360 45' dome.jpg") # make polar plot
+    os.system("convert dome.jpg -resize 1024x1024 dome.png") # resize and convert in png
     now = time.strftime("%Y-%m-%d %H:%M:%S")
     print(now + ' Generated panorama [OK]')
 
@@ -61,16 +61,16 @@ while True:
         session = ftplib.FTP('server2.bhosted.nl','hjvveluw',Password)
         session.cwd('www/www.koperwiekweg.nl')
         for x in range(1,NumberPics+1):
-	        FileName = 'KoperWiekCam_'+str(x)+'.jpg'
+            FileName = 'KoperWiekCam_'+str(x)+'.jpg'
             file = open(FileName,'rb') # file to send
-	        session.storbinary('STOR '+FileName, file) # send the file
-	        file.close() # close file and FTP
-	        now = time.strftime("%Y-%m-%d %H:%M:%S")
-	        print(now +' Uploaded panorama '+FileName+' to FTP [OK]')
+            session.storbinary('STOR '+FileName, file) # send the file
+            file.close() # close file and FTP
+            now = time.strftime("%Y-%m-%d %H:%M:%S")
+            print(now +' Uploaded panorama '+FileName+' to FTP [OK]')
         FileName = 'dome.png'
         file = open(FileName,'rb') # file to send
         session.storbinary('STOR '+FileName, file) # send the file
-	    file.close() # close file and FTP
+        file.close() # close file and FTP
         session.quit()
     except ftplib.all_errors:
         now = time.strftime("%Y-%m-%d %H:%M:%S")
