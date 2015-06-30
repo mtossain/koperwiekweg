@@ -24,25 +24,25 @@ TransmitPower=0
 SunPower=shelve['SunPower']
 
 # Get the sun power data value
-command = ["scrapy", "crawl", "sunnyportal"]    
-with open(os.devnull, "w") as fnull:
-    result = subprocess.call(command, stderr = fnull, stdout = fnull)
-with open ("FixedPages", "r") as myfile:
-    data = myfile.read()
-test = data.find('<span id="CurrentPlantPowerValue">')
-if test > 0:
-    text2 = data[test:]
-    test2 = text2.find('</span>')
-    if test2 > 0:
-        SunPower = int(float(text2[34:test2])/12)
-        print('Found solar power from SunnyPortal.com [OK]')
-        shelve['SunPower'] = SunPower
-    else:
-        print('Could not get the Sunnyportal webpage [NOK]')
-        SunPower=shelve['SunPower']
-else:
-    print('Could not get the Sunnyportal webpage [NOK]')        
-    SunPower=shelve['SunPower']
+#command = ["scrapy", "crawl", "sunnyportal"]    
+#with open(os.devnull, "w") as fnull:
+#    result = subprocess.call(command, stderr = fnull, stdout = fnull)
+#with open ("FixedPages", "r") as myfile:
+#    data = myfile.read()
+#test = data.find('<span id="CurrentPlantPowerValue">')
+#if test > 0:
+#    text2 = data[test:]
+#    test2 = text2.find('</span>')
+#    if test2 > 0:
+#        SunPower = int(float(text2[34:test2])/12)
+#        print('Found solar power from SunnyPortal.com [OK]')
+#        shelve['SunPower'] = SunPower
+#    else:
+#        print('Could not get the Sunnyportal webpage [NOK]')
+#        SunPower=shelve['SunPower']
+#else:
+#    print('Could not get the Sunnyportal webpage [NOK]')        
+#    SunPower=shelve['SunPower']
 
 # now get the data from Aculink
 
@@ -171,7 +171,7 @@ try:
     if start>0 and stop>0 and stop>start:
         try:
             UVIndex = float(test[start+13:stop])
-            UVIndex = float(int(UVIndex*10))/10
+            UVIndex = float(int(UVIndex*10))/10*2
             print('Found UV data from sensor [OK]')
             shelve['UVIndex']=UVIndex
         except ValueError:

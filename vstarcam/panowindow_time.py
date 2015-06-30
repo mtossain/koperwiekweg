@@ -80,7 +80,7 @@ while True:
 		
     #Convert to panorama
     os.system("convert"+convertstr+" +append all.jpg") # append in one row
-    os.system("convert all.jpg -matte -virtual-pixel white -distort arc '360 40' dome.jpg") # make polar plot
+    os.system("convert all.jpg -matte -virtual-pixel white -distort arc '360 30' dome.jpg") # make polar plot
     os.system("convert dome.jpg -resize 1024x1024 dome.png") # resize and convert in png
     now = time.strftime("%Y-%m-%d %H:%M:%S")
     print(now + ' Generated panorama [OK]')
