@@ -21,16 +21,16 @@ UpdateRate = 300 #Refresh rate pictures
 #vstarcam.Setting(IP,Port,User,Pwd,5,0) # Rotation: original
 
 NumberPics = 8
-RotationTime = 30 #Seconds
-FirstRotationTime = 100 #Seconds
+RotationTime = 15 #Seconds
+FirstRotationTime = 60 #Seconds
 while True:
     
     #Completely turned to left
     convertstr = ""
     for x in range(1,NumberPics+1):
         FileName = 'KoperWiekCam_'+str(x)+'.jpg'
-	    FileNameUp = 'KoperWiekCam_'+str(x+NumberPics)+'.jpg'
-	    vstarcam.PTZ(IP,Port,User,Pwd,"CallPreset"+str(x))
+        FileNameUp = 'KoperWiekCam_'+str(x+NumberPics)+'.jpg'
+        vstarcam.PTZ(IP,Port,User,Pwd,"CallPreset"+str(x))
         if x==1:
             time.sleep(FirstRotationTime) #Pause
         else:
@@ -39,13 +39,14 @@ while True:
         now = time.strftime("%Y-%m-%d %H:%M:%S")
         print(now +' Taking snapshot '+str(x)+' [OK]')
         vstarcam.PTZ(IP,Port,User,Pwd,'Up')
-        time.sleep(3) #Pause 3s
+        time.sleep(4) #Pause
         vstarcam.PTZ(IP,Port,User,Pwd,'UpStop')
+        time.sleep(1) #Pause
         vstarcam.Snapshot(IP,Port,User,Pwd,FileNameUp)
         now = time.strftime("%Y-%m-%d %H:%M:%S")
         print(now +' Taking snapshot '+str(x+NumberPics)+' [OK]')
 
-        os.system("convert "+FileName+" "+FileNameUp+" -append f"+str(x)+".jpg") # flip upside down
+        os.system("convert "+FileNameUp+" "+FileName+" -append f"+str(x)+".jpg") # flip upside down
         os.system("convert f"+str(x)+".jpg -flip f"+str(x)+".jpg") # flip upside down
         convertstr += " f"+str(x)+".jpg" 
 		
@@ -60,13 +61,13 @@ while True:
     try:
         session = ftplib.FTP('server2.bhosted.nl','hjvveluw',Password)
         session.cwd('www/www.koperwiekweg.nl')
-        for x in range(1,NumberPics+1):
-            FileName = 'KoperWiekCam_'+str(x)+'.jpg'
-            file = open(FileName,'rb') # file to send
-            session.storbinary('STOR '+FileName, file) # send the file
-            file.close() # close file and FTP
-            now = time.strftime("%Y-%m-%d %H:%M:%S")
-            print(now +' Uploaded panorama '+FileName+' to FTP [OK]')
+        #for x in range(1,NumberPics+1):
+            #FileName = 'KoperWiekCam_'+str(x)+'.jpg'
+            #file = open(FileName,'rb') # file to send
+            #session.storbinary('STOR '+FileName, file) # send the file
+            #file.close() # close file and FTP
+            #now = time.strftime("%Y-%m-%d %H:%M:%S")
+            #print(now +' Uploaded panorama '+FileName+' to FTP [OK]')
         FileName = 'dome.png'
         file = open(FileName,'rb') # file to send
         session.storbinary('STOR '+FileName, file) # send the file

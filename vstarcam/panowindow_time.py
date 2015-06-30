@@ -20,16 +20,16 @@ UpdateRate = 300 #Refresh rate pictures
 #vstarcam.Setting(IP,Port,User,Pwd,0,1) # Main stream resolution: 720px
 #vstarcam.Setting(IP,Port,User,Pwd,5,0) # Rotation: original
 
-NumberPics = 10
-RotationTimeRight = 4 #Seconds
+NumberPics = 9
+RotationTimeRight = 3.5 #Seconds
 RotationTimeUp = 4 #Seconds
-FirstRotationTime = 100 #Seconds
+FirstRotationTime = 45 #Seconds
 
 # Make the other pictures
 while True:
     
     #Completely turned to left
-	convertstr = ""
+    convertstr = ""
 
     # Go completely to the left and make the first pictures
     x=1
@@ -38,6 +38,10 @@ while True:
     vstarcam.PTZ(IP,Port,User,Pwd,"Left")
     time.sleep(FirstRotationTime) #Pause
     vstarcam.PTZ(IP,Port,User,Pwd,"LeftStop")
+    time.sleep(1) #Pause
+    vstarcam.PTZ(IP,Port,User,Pwd,"Down")
+    time.sleep(RotationTimeUp+1) #Pause
+    vstarcam.PTZ(IP,Port,User,Pwd,"DownStop")
     time.sleep(1) #Pause
     vstarcam.Snapshot(IP,Port,User,Pwd,FileName)
     time.sleep(1) #Pause
@@ -49,7 +53,7 @@ while True:
     time.sleep(1) #Pause
     vstarcam.PTZ(IP,Port,User,Pwd,"Down")
     time.sleep(RotationTimeUp+1) #Pause
-    os.system("convert "+FileName+" "+FileNameUp+" -append f"+str(x)+".jpg") # flip upside down
+    os.system("convert "+FileNameUp+" "+FileName+" -append f"+str(x)+".jpg") # flip upside down
     os.system("convert f"+str(x)+".jpg -flip f"+str(x)+".jpg") # flip upside down
     convertstr += " f"+str(x)+".jpg" 
 
@@ -70,13 +74,13 @@ while True:
         time.sleep(1) #Pause
         vstarcam.PTZ(IP,Port,User,Pwd,"Down")
         time.sleep(RotationTimeUp+1) #Pause
-        os.system("convert "+FileName+" "+FileNameUp+" -append f"+str(x)+".jpg") # flip upside down
+        os.system("convert "+FileNameUp+" "+FileName+" -append f"+str(x)+".jpg") # flip upside down
         os.system("convert f"+str(x)+".jpg -flip f"+str(x)+".jpg") # flip upside down
         convertstr += " f"+str(x)+".jpg" 
 		
     #Convert to panorama
     os.system("convert"+convertstr+" +append all.jpg") # append in one row
-    os.system("convert all.jpg -matte -virtual-pixel white -distort arc '360 45' dome.jpg") # make polar plot
+    os.system("convert all.jpg -matte -virtual-pixel white -distort arc '360 40' dome.jpg") # make polar plot
     os.system("convert dome.jpg -resize 1024x1024 dome.png") # resize and convert in png
     now = time.strftime("%Y-%m-%d %H:%M:%S")
     print(now + ' Generated panorama [OK]')
@@ -85,13 +89,6 @@ while True:
     try:
         session = ftplib.FTP('server2.bhosted.nl','hjvveluw',Password)
         session.cwd('www/www.koperwiekweg.nl')
-        for x in range(1,NumberPics+1):
-            FileName = 'KoperWiekCam_'+str(x)+'.jpg'
-            file = open(FileName,'rb') # file to send
-            session.storbinary('STOR '+FileName, file) # send the file
-            file.close() # close file and FTP
-            now = time.strftime("%Y-%m-%d %H:%M:%S")
-            print(now +' Uploaded panorama '+FileName+' to FTP [OK]')
         FileName = 'dome.png'
         file = open(FileName,'rb') # file to send
         session.storbinary('STOR '+FileName, file) # send the file
