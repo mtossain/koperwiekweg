@@ -30,6 +30,7 @@ while True:
         session.storbinary('STOR '+FileName, file) # send the file
         file.close() # close file and FTP
         session.quit()
+        print(now +' Uploaded panorama '+FileName+' to FTP [NOK]')
     except ftplib.all_errors:
         now = time.strftime("%Y-%m-%d %H:%M:%S")
         print(now +' Could not upload panorama '+FileName+' to FTP [NOK]')
