@@ -16,7 +16,7 @@ while True:
 	
     #Convert to proper size and apply circle mask
     os.system("convert -size 1280x960 xc:none -fill snapshot.jpeg -draw 'circle 640,480,1,480' domeflat.png")
-    os.system("convert domeflat.png -resize 1024x1024 domeflatter.png")
+    os.system("convert domeflat.png -flop -resize 1024x1024 domeflatter.png")
     os.system("convert -size 1024x1024 xc:none domeflatter.png -geometry +0+128 -composite dome.png")
     now = time.strftime("%Y-%m-%d %H:%M:%S")
     print(now + ' Generated panorama [OK]')
