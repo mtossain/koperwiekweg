@@ -10,7 +10,9 @@ import time
 import ftplib
 import vstarcam
 import os
-   
+
+print ('Camera script started [OK]')
+
 IP = "192.168.178.25" #IP Camera ip or series NO
 Port = 81 #IP Camera port
 User = "admin" #IP Camera account
