@@ -1,0 +1,20 @@
+#!/bin/bash
+ffmpeg -y -i rtsp://admin:123456@192.168.178.254:554/mpeg4 -r 10 -f image2 snapshot.jpeg
+
+convert snapshot.jpeg \( +clone -threshold -1 -negate -fill white -draw "circle 64,64 64,0" \) -alpha off -compose copy_opacity -composite dome.jpeg
+convert dome.jpeg -resize 1024x1024 dome.png
+
+HOST='server2.bhosted.nl'
+USER='hjvveluw'
+PASSWD='Snoetje01'
+FILE='dome.png'
+DIR='www/www.koperwiekweg.nl'
+
+ftp -n -v $HOST << EOT
+bin
+user $USER $PASSWD
+prompt
+cd $DIR
+put $FILE
+bye
+EOT
