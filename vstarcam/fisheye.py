@@ -5,7 +5,7 @@ import time
 import ftplib
 import os
 
-UpdateRate = 60 # In seconds
+UpdateRate = 10 # In seconds
 
 while True:
     
