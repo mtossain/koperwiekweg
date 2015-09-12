@@ -4,13 +4,15 @@ Password = open('/home/pi/AuthBhostedFTP.txt','r').read().split('\n')[0]
 import time
 import ftplib
 import os
+import requests
 
-UpdateRate = 10 # In seconds
+UpdateRate = 45 # In seconds
 
 while True:
     
-	# Make the snapshot
-    os.system("ffmpeg -y -i rtsp://admin:123456@192.168.178.254:554/mpeg4 -r 1 -vframes 1 -f image2 snapshot.jpeg")
+    # Make the snapshot
+    os.system("ffmpeg -rtsp_transport tcp -y -i rtsp://admin:123456@192.168.178.254:554/mpeg4 -vcodec copy -t 3 snapshot.mp4")
+    os.system("ffmpeg -ss 00:00:02 -t 1 -y -i snapshot.mp4 -f mjpeg snapshot.jpeg")
     now = time.strftime("%Y-%m-%d %H:%M:%S")
     print(now + ' Snapshot taken [OK]')
 	
@@ -29,10 +31,15 @@ while True:
         file = open(FileName,'rb') # file to send
         session.storbinary('STOR '+FileName, file) # send the file
         file.close() # close file and FTP
+        #file =open('snapshot.mp4','rb')
+        #session.storbinary('STOR snapshot.mp4', file)
+        #file.close()
         session.quit()
         print(now +' Uploaded panorama '+FileName+' to FTP [OK]')
     except ftplib.all_errors:
         now = time.strftime("%Y-%m-%d %H:%M:%S")
         print(now +' Could not upload panorama '+FileName+' to FTP [NOK]')
+
+    r = requests.get('http://www.koperwiekweg.nl/copy_dome.php')
 		
     time.sleep(UpdateRate)
