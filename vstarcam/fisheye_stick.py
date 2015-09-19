@@ -1,9 +1,11 @@
 Password = open('/home/pi/AuthBhostedFTP.txt','r').read().split('\n')[0]
+PasswordMysql = open("/home/pi/AuthBhostedMysql.txt",'r').read().split('\n')[0]
 
 import time
 import ftplib
 import os
 import requests
+import mysql.connector
 
 dirstick = "/dev/test/"
 UpdateRate = 90 # In seconds
@@ -43,6 +45,26 @@ while True:
         now = time.strftime("%Y-%m-%d %H:%M:%S")
         print(now +' Could not upload panorama '+FileName+' to FTP [NOK]')
 
+    # Copy on the server, to avoid partly images on site when FTP ongoing
     r = requests.get('http://www.koperwiekweg.nl/copy_dome.php')
+
+    # Upload it to the database
+    try:
+        time.sleep(10)
+        cnx = mysql.connector.connect(
+             host="127.0.0.1", # your host, usually localhost
+             port=3307,
+             user="mtossain", # your username
+             passwd=PasswordMysql, # your password
+             database="wopr") # name of the data base
+        # Use all the SQL you like
+        cursor = cnx.cursor()
+        cursor.execute("INSERT INTO Camera (CameraDateTime) VALUES ('" + now + "')")
+        cnx.commit()
+        cursor.close()
+        cnx.close()
+        print('Data uploaded to database [OK]')
+    except mysql.connector.Error as err:
+        print("Could not connect to database [NOK]")
 		
     time.sleep(UpdateRate)
