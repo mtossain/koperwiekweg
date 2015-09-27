@@ -218,7 +218,6 @@ print(now + ' T:'+str(Temp)+ ' P:'+str(Baro)+' H:'+str(Humid)+' R:'+str(Rain)+' 
 
 # Upload it to the database
 try:
-    time.sleep(10)
     cnx = mysql.connector.connect(
          host="127.0.0.1", # your host, usually localhost
          port=3307,
