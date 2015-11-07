@@ -7,6 +7,26 @@ import ftplib
 import os
 import requests
 import mysql.connector
+import subprocess as sub
+import threading
+
+class RunCmd(threading.Thread):
+    def __init__(self, cmd, timeout):
+        threading.Thread.__init__(self)
+        self.cmd = cmd
+        self.timeout = timeout
+
+    def run(self):
+        self.p = sub.Popen(self.cmd)
+        self.p.wait()
+
+    def Run(self):
+        self.start()
+        self.join(self.timeout)
+
+        if self.is_alive():
+            self.p.terminate()      #use self.p.kill() if process needs a kill -9
+            self.join()
 
 dirstick = "/media/DRAAKJE/"
 UpdateRate = 45
@@ -16,7 +36,8 @@ while True:
     # Make the snapshot
     now = time.strftime("%Y-%m-%d %H:%M:%S")
     snapshot = dirstick+"snapshot"+time.strftime("_%Y%m%d_%H%M%S")
-    os.system("avconv -rtsp_transport tcp -y -i rtsp://admin:123456@192.168.178.254:554/mpeg4 -vcodec copy -t 1 movie.mp4")
+    RunCmd(["./avconvv.sh", ""], 30).Run()
+    #os.system("avconv -rtsp_transport tcp -y -i rtsp://admin:123456@192.168.178.254:554/mpeg4 -vcodec copy -t 1 movie.mp4")
     os.system("avconv -ss 00:00:00.5 -t 1 -y -i movie.mp4 -f mjpeg "+snapshot+".jpeg")
     os.system("rm -f movie.mp4")
     print(now + ' Snapshot taken [OK]')
