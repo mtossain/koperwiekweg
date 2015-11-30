@@ -36,7 +36,7 @@ while True:
     # Make the snapshot
     now = time.strftime("%Y-%m-%d %H:%M:%S")
     snapshot = dirstick+"snapshot"+time.strftime("_%Y%m%d_%H%M%S")
-    RunCmd(["./avconvv.sh", ""], 20).Run()
+    RunCmd(["./avconvv.sh", "test"], 20).Run()
     time.sleep(20)
     #os.system("avconv -rtsp_transport tcp -y -i rtsp://admin:123456@192.168.178.254:554/mpeg4 -vcodec copy -t 1 movie.mp4")
     os.system("avconv -ss 00:00:00.5 -t 1 -y -i movie.mp4 -f mjpeg "+snapshot+".jpeg")
