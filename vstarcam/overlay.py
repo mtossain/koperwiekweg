@@ -18,7 +18,6 @@ while True:
     
     if (avail==0 or avail=1):
 	
-        # Make the snapshot
         print('1 Make the first snapshot\n\n')
         now = time.strftime("%Y-%m-%d %H:%M:%S")
         snapshot = dirstick+"snapshot"+time.strftime("_%Y%m%d_%H%M%S")+".jpeg"
@@ -27,7 +26,6 @@ while True:
         os.system("rm -f movie.mp4")
         print(now + ' Snapshot taken [OK]')
 		
-	#Convert to proper size and apply circle mask
         print('2 Convert the snapshot\n\n')
         os.system("convert "+snapshot+" -crop 2070x1920+285+0 "+dirstick+"dome1.png")
         os.system("convert 2070x1920 xc:none -fill "+dirstick+"dome1.png -draw 'circle 1035,1010,2065,1010' "+dirstick+"dome2.png")
@@ -35,15 +33,14 @@ while True:
         os.system("convert -size 1024x1024 xc:none "+dirstick+"dome3.png -geometry +0+60 -composite "+dirstick+"dome4.png")
         now = time.strftime("%Y-%m-%d %H:%M:%S")
 
-        # Move snapshot to directory
+        print('3 Move first fisheye to external drive\n\n')
         dailydir = dirstick+time.strftime("%Y%m%d")
         os.system("mkdir "+dailydir)
         os.system("mv "+snapshot+" "+dailydir)
 
     if (avail==0 or avail=2):
 	
-	# Make the second snapshot
-        print('3 Make the second snapshot\n\n')
+        print('4 Make the second snapshot\n\n')
         now = time.strftime("%Y-%m-%d %H:%M:%S")
         snapshot = dirstick+"snapshot"+time.strftime("_%Y%m%d_%H%M%S")+".jpeg"
         os.system("avconv -r 6  -rtsp_transport tcp -y -i "+RtspFisheye2+" -f mp4 -an -vcodec copy -t 1 movie.mp4")
@@ -51,8 +48,7 @@ while True:
         os.system("rm -f movie.mp4")
         print(now + ' Snapshot taken [OK]')
 		
-	#Convert to proper size and apply circle mask
-        print('4 Convert the second snapshot\n\n')
+        print('5 Convert the second snapshot\n\n')
 	os.system("del back*.png")
         os.system("convert -size 1280x960 xc:none -fill "+snapshot+" -draw 'circle 640,480,1,480' "+dirstick+"back1.png")
         os.system("convert "+dirstick+"back1.png -resize 1024x1024 -flip "+dirstick+"back2.png")
@@ -60,20 +56,18 @@ while True:
         os.system("convert -size 1024x1024 xc:none "+dirstick+"back3.png -rotate "-90" -composite "+dirstick+"back4.png")
         now = time.strftime("%Y-%m-%d %H:%M:%S")
 
- 	# Move second snapshot to directory
+        print('6 Move first fisheye to external drive\n\n')
         os.system("mv "+snapshot+" "+dailydir)
 
-    print('5 Merge the pictures together\n\n')
+    print('7 Merge the pictures together\n\n')
     if (avail==0):
-        # Finally merge them together
 	os.system("composite -gravity center "+dirstick+"dome4.png "+dirstick+"back4.png "+dirstick+"dome.png")
     if (avail==1)
         os.system("mv "+dirstick+"dome4.png "+dirstick+"dome.png")
     if (avail==2)
         os.system("mv "+dirstick+"back4.png "+dirstick+"dome.png")
 
-    #Upload to FTP server
-    print('6 Move fisheye to FTP server')
+    print('8 Move fisheye to FTP server')
     try:
         time.sleep(2)
         FileName = dirstick+"dome.png"
