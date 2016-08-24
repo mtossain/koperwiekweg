@@ -16,13 +16,13 @@ Password = open('/home/pi/AuthBhostedFTP.txt','r').read().split('\n')[0] # passw
 
 while True:
     
-    if (avail==0 or avail=1):
+    if (avail==0 or avail==1):
 	
         print('1 Make the first snapshot\n\n')
         now = time.strftime("%Y-%m-%d %H:%M:%S")
         snapshot = dirstick+"snapshot"+time.strftime("_%Y%m%d_%H%M%S")+".jpeg"
         os.system("avconv -r 6  -rtsp_transport tcp -y -i "+RtspFisheye1+" -f mp4 -an -vcodec copy -t 1 movie.mp4")
-        os.system("avconv -ss 00:00:00.5 -t 1 -y -i movie.mp4 -f mjpeg "+snapshot
+        os.system("avconv -ss 00:00:00.5 -t 1 -y -i movie.mp4 -f mjpeg "+snapshot)
         os.system("rm -f movie.mp4")
         print(now + ' Snapshot taken [OK]')
 		
@@ -38,22 +38,22 @@ while True:
         os.system("mkdir "+dailydir)
         os.system("mv "+snapshot+" "+dailydir)
 
-    if (avail==0 or avail=2):
+    if (avail==0 or avail==2):
 	
         print('4 Make the second snapshot\n\n')
         now = time.strftime("%Y-%m-%d %H:%M:%S")
         snapshot = dirstick+"snapshot"+time.strftime("_%Y%m%d_%H%M%S")+".jpeg"
         os.system("avconv -r 6  -rtsp_transport tcp -y -i "+RtspFisheye2+" -f mp4 -an -vcodec copy -t 1 movie.mp4")
-        os.system("avconv -ss 00:00:00.5 -t 1 -y -i movie.mp4 -f mjpeg "+snapshot
+        os.system("avconv -ss 00:00:00.5 -t 1 -y -i movie.mp4 -f mjpeg "+snapshot)
         os.system("rm -f movie.mp4")
         print(now + ' Snapshot taken [OK]')
 		
         print('5 Convert the second snapshot\n\n')
-	os.system("del back*.png")
+        os.system("del back*.png")
         os.system("convert -size 1280x960 xc:none -fill "+snapshot+" -draw 'circle 640,480,1,480' "+dirstick+"back1.png")
         os.system("convert "+dirstick+"back1.png -resize 1024x1024 -flip "+dirstick+"back2.png")
         os.system("convert -size 1024x1024 xc:none "+dirstick+"back2.png -geometry +0+128 -composite "+dirstick+"back3.png")
-        os.system("convert -size 1024x1024 xc:none "+dirstick+"back3.png -rotate "-90" -composite "+dirstick+"back4.png")
+        os.system("convert -size 1024x1024 xc:none "+dirstick+"back3.png -rotate '-90' -composite "+dirstick+"back4.png")
         now = time.strftime("%Y-%m-%d %H:%M:%S")
 
         print('6 Move first fisheye to external drive\n\n')
@@ -61,10 +61,10 @@ while True:
 
     print('7 Merge the pictures together\n\n')
     if (avail==0):
-	os.system("composite -gravity center "+dirstick+"dome4.png "+dirstick+"back4.png "+dirstick+"dome.png")
-    if (avail==1)
+        os.system("composite -gravity center "+dirstick+"dome4.png "+dirstick+"back4.png "+dirstick+"dome.png")
+    if (avail==1):
         os.system("mv "+dirstick+"dome4.png "+dirstick+"dome.png")
-    if (avail==2)
+    if (avail==2):
         os.system("mv "+dirstick+"back4.png "+dirstick+"dome.png")
 
     print('8 Move fisheye to FTP server')
@@ -79,7 +79,7 @@ while True:
         session.quit()
         print(now +' Uploaded fisheye '+FileName+' to FTP [OK]')
     except (socket.error, ftplib.all_errors) as e:
-        print e
+        print (e)
         now = time.strftime("%Y-%m-%d %H:%M:%S")
         print(now + ' Could not upload fisheye '+FileName+' to FTP [NOK]')
 
@@ -87,7 +87,7 @@ while True:
     try:
         r = requests.get('http://www.koperwiekweg.nl/copy_dome.php',timeout=15)
     except (requests.ConnectionError, requests.Timeout, socket.timeout) as e:
-        print e
+        print (e)
         print(now +' Could not copy dome.png on server [NOK]')
     
     time.sleep(UpdateRate)
