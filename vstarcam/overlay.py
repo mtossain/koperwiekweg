@@ -3,6 +3,26 @@ import time
 import ftplib
 import os
 import requests
+import subprocess as sub
+import threading
+
+class RunCmd(threading.Thread):
+    def __init__(self, cmd, timeout):
+        threading.Thread.__init__(self)
+        self.cmd = cmd
+        self.timeout = timeout
+
+    def run(self):
+        self.p = sub.Popen(self.cmd)
+        self.p.wait()
+
+    def Run(self):
+        self.start()
+        self.join(self.timeout)
+
+        if self.is_alive():
+            self.p.terminate()      #use self.p.kill() if process needs a kill -9
+            self.join()
 
 avail = 0 # which camera(s) is/are available 
 # 0  -both Fisheye
@@ -11,6 +31,7 @@ avail = 0 # which camera(s) is/are available
 RtspFisheye1 = 'rtsp://admin:admin@192.168.178.168:554/0/'
 RtspFisheye2 = 'rtsp://admin:123456@192.168.178.254:554/mpeg4'
 dirstick = "/media/DRAAKJE/" # where to put the snapshot pictures for archive
+dirstick = "/home/pi/" # where to put the snapshot pictures for archive
 UpdateRate = 45 # in s how often to make the snapshots
 Password = open('/home/pi/AuthBhostedFTP.txt','r').read().split('\n')[0] # password bhosted not stored in this script
 
@@ -21,8 +42,10 @@ while True:
         print('1 Make the first snapshot\n\n')
         now = time.strftime("%Y-%m-%d %H:%M:%S")
         snapshot = dirstick+"snapshot"+time.strftime("_%Y%m%d_%H%M%S")+".jpeg"
-        os.system("avconv -r 6  -rtsp_transport tcp -y -i "+RtspFisheye1+" -f mp4 -an -vcodec copy -t 1 movie.mp4")
-        os.system("avconv -ss 00:00:00.5 -t 1 -y -i movie.mp4 -f mjpeg "+snapshot)
+        RunCmd(["./avconvv1.sh", "test"], 20).Run()
+        time.sleep(20)
+        #os.system("avconv -r 6  -rtsp_transport tcp -y -i "+RtspFisheye1+" -f mp4 -an -vcodec copy -t 1 movie.mp4")
+        os.system("avconv -ss 00:00:00.5 -t 1 -y -i /ramtmp/movie.mp4 -f mjpeg "+snapshot)
         os.system("rm -f movie.mp4")
         print(now + ' Snapshot taken [OK]')
 		
@@ -43,8 +66,10 @@ while True:
         print('4 Make the second snapshot\n\n')
         now = time.strftime("%Y-%m-%d %H:%M:%S")
         snapshot = dirstick+"snapshot"+time.strftime("_%Y%m%d_%H%M%S")+".jpeg"
-        os.system("avconv -r 6  -rtsp_transport tcp -y -i "+RtspFisheye2+" -f mp4 -an -vcodec copy -t 1 movie.mp4")
-        os.system("avconv -ss 00:00:00.5 -t 1 -y -i movie.mp4 -f mjpeg "+snapshot)
+        RunCmd(["./avconvv2.sh", "test"], 20).Run()
+        time.sleep(20)
+        #os.system("avconv -r 6  -rtsp_transport tcp -y -i "+RtspFisheye2+" -f mp4 -an -vcodec copy -t 1 movie.mp4")
+        os.system("avconv -ss 00:00:00.5 -t 1 -y -i /ramtmp/movie.mp4 -f mjpeg "+snapshot)
         os.system("rm -f movie.mp4")
         print(now + ' Snapshot taken [OK]')
 		
