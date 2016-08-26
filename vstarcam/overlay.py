@@ -78,6 +78,7 @@ while True:
         os.system("convert "+dirstick+"back1.png -resize 1024x1024 "+dirstick+"back2.png")
         os.system("convert -size 1024x1024 xc:none "+dirstick+"back2.png -geometry +0+128 -composite "+dirstick+"back3.png")
         os.system("convert -size 1024x1024 xc:none "+dirstick+"back3.png -rotate '-90' -composite "+dirstick+"back4.png")
+        os.system("convert "+dirstick+"back4.png +level-colors navy,lemonchiffon "+dirstick+"back5.png")
         now = time.strftime("%Y-%m-%d %H:%M:%S")
 
         print('6 Move first fisheye to external drive\n\n')
@@ -85,11 +86,11 @@ while True:
 
     print('7 Merge the pictures together\n\n')
     if (avail==0):
-        os.system("composite -gravity center "+dirstick+"dome4.png "+dirstick+"back4.png "+dirstick+"dome.png")
+        os.system("composite -gravity center "+dirstick+"dome4.png "+dirstick+"back5.png "+dirstick+"dome.png")
     if (avail==1):
         os.system("mv "+dirstick+"dome4.png "+dirstick+"dome.png")
     if (avail==2):
-        os.system("mv "+dirstick+"back4.png "+dirstick+"dome.png")
+        os.system("mv "+dirstick+"back5.png "+dirstick+"dome.png")
 
     print('8 Move fisheye to FTP server')
     try:
