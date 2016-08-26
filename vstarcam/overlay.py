@@ -51,7 +51,7 @@ while True:
 		
         print('2 Convert the snapshot\n\n')
         os.system("convert "+snapshot+" -crop 2070x1920+285+0 "+dirstick+"dome1.png")
-        os.system("convert 2070x1920 xc:none -fill "+dirstick+"dome1.png -draw 'circle 1035,1010,2065,1010' "+dirstick+"dome2.png")
+        os.system("convert -size 2070x1920 xc:none -fill "+dirstick+"dome1.png -draw 'circle 1035,1010,2065,1010' "+dirstick+"dome2.png")
         os.system("convert "+dirstick+"dome2.png -resize 1024x1024 -flip "+dirstick+"dome3.png")
         os.system("convert -size 1024x1024 xc:none "+dirstick+"dome3.png -geometry +0+60 -composite "+dirstick+"dome4.png")
         now = time.strftime("%Y-%m-%d %H:%M:%S")
@@ -74,9 +74,8 @@ while True:
         print(now + ' Snapshot taken [OK]')
 		
         print('5 Convert the second snapshot\n\n')
-        os.system("del back*.png")
         os.system("convert -size 1280x960 xc:none -fill "+snapshot+" -draw 'circle 640,480,1,480' "+dirstick+"back1.png")
-        os.system("convert "+dirstick+"back1.png -resize 1024x1024 -flip "+dirstick+"back2.png")
+        os.system("convert "+dirstick+"back1.png -resize 1024x1024 "+dirstick+"back2.png")
         os.system("convert -size 1024x1024 xc:none "+dirstick+"back2.png -geometry +0+128 -composite "+dirstick+"back3.png")
         os.system("convert -size 1024x1024 xc:none "+dirstick+"back3.png -rotate '-90' -composite "+dirstick+"back4.png")
         now = time.strftime("%Y-%m-%d %H:%M:%S")
