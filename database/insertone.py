@@ -46,8 +46,11 @@ try:
         WindDir = "N"
         RainRate = 0
         SunPower = 0;
-    
-        DateTimeNow = Date[0:4] + "-" + Date[4:6] + "-" + Date[6:8] + ' '+ str(Hour).zfill(2)  + ":00:00"
+        Min=00
+        if (Hour==24):
+			Hour=23
+			Min =59
+        DateTimeNow = Date[0:4] + "-" + Date[4:6] + "-" + Date[6:8] + ' '+ str(Hour).zfill(2)  + ":"+str(Min).zfill(2)+":00"
         print('Upload datetime: '+DateTimeNow)
                                    
         # Update the row to the database
@@ -55,7 +58,7 @@ try:
         sql_statement = "UPDATE AcuRiteSensor SET "+fieldname+"="+str(Wind)+" WHERE SensorDateTime BETWEEN DATE_SUB('"+DateTimeNow+"', INTERVAL 1 HOUR) AND '"+DateTimeNow+"'"
         cursor.execute(sql_statement)
         #print(sql_statement)
-        print('Updated '+fieldname+' to: '+str(Wind)+' on: '+str(cursor.rowcount)+' fields.' )   
+        print('Updated '+fieldname+' to: '+str(Wind)+' on: '+str(cursor.rowcount)+' rows.' )   
         cnx.commit()
     
     cnx.close()        
