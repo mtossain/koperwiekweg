@@ -47,7 +47,7 @@ SunPower=shelve['SunPower']
 # now get the data from Aculink
 
 try:
-    r = requests.get('https://acu-link.com/login', auth=('h.j.van.veluw@gmail.com', PasswordAculink))
+    r = requests.get('https://acu-link.com/login', auth=('h.j.van.veluw@gmail.com', PasswordAculink),timeout=6)
 
     FindTemp = r.text.find("<div class=\"sensor-widget-label\">Temperature</div>")
     if FindTemp>0:

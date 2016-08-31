@@ -32,7 +32,7 @@ RtspFisheye1 = 'rtsp://admin:admin@192.168.178.168:554/0/'
 RtspFisheye2 = 'rtsp://admin:123456@192.168.178.254:554/mpeg4'
 dirstick = "/media/pi/DRAAKJE/" # where to put the snapshot pictures for archive
 #dirstick = "/home/pi/" # where to put the snapshot pictures for archive
-UpdateRate = 45 # in s how often to make the snapshots
+UpdateRate = 90 # in s how often to make the snapshots
 Password = open('/home/pi/AuthBhostedFTP.txt','r').read().split('\n')[0] # password bhosted not stored in this script
 
 while True:
