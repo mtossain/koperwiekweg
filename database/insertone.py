@@ -2,6 +2,17 @@ import time
 import mysql.connector
 import csv
 
+##############################################################################
+# Update one variable only for a certain time interval, taken from a KNMI file
+# 0: Wind speed
+# 1: Wind direction
+# 2: Pressure
+# 3: Humidity
+# 4: UV Index
+# 5: Rain
+##############################################################################
+variable = 4
+		
 PasswordMysql = open("/home/pi/AuthBhostedMysql.txt",'r').read().split('\n')[0]
 
 # Upload the row to the database
@@ -43,9 +54,11 @@ try:
                 Humid = int(col)
             colnum += 1       
     
-        WindDir = "N"
-        RainRate = 0
-        SunPower = 0;
+        WindDir = "N" # TBD
+        RainRate = 0 # TBD
+        SunPower = 0 # TBD
+        
+        # Correct for KNMI flaw of hour 24
         Min=00
         if (Hour==24):
 			Hour=23
@@ -54,11 +67,27 @@ try:
         print('Upload datetime: '+DateTimeNow)
                                    
         # Update the row to the database
-        fieldname = "WindSpeed"
-        sql_statement = "UPDATE AcuRiteSensor SET "+fieldname+"="+str(Wind)+" WHERE SensorDateTime BETWEEN DATE_SUB('"+DateTimeNow+"', INTERVAL 1 HOUR) AND '"+DateTimeNow+"'"
+        if variable == 0:
+			fieldname = 'WindSpeed'
+			valuesens = Wind
+        if variable == 1:
+			fieldname = 'WindDirection'
+			valuesens = WindDirAngle
+        if variable == 2:
+			fieldname = 'Pressure'
+			valuesens = Baro
+        if variable == 3:
+			fieldname = 'Humidity'
+			valuesens = Humid
+        if variable == 4:
+			fieldname = 'UVIndex'
+			valuesens = UVIndex
+        if variable == 5:
+			fieldname = 'Rainfall'
+			valuesens = Rain
+        sql_statement = "UPDATE AcuRiteSensor SET "+fieldname+"="+str(valuesens)+" WHERE SensorDateTime BETWEEN DATE_SUB('"+DateTimeNow+"', INTERVAL 1 HOUR) AND '"+DateTimeNow+"'"
         cursor.execute(sql_statement)
-        #print(sql_statement)
-        print('Updated '+fieldname+' to: '+str(Wind)+' on: '+str(cursor.rowcount)+' rows.' )   
+        print('Updated '+fieldname+' to: '+str(valuesens)+' on: '+str(cursor.rowcount)+' rows.' )   
         cnx.commit()
     
     cnx.close()        
