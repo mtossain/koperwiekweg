@@ -1,8 +1,12 @@
 import time
 import mysql.connector
 import csv
-
+##############################################################################
+# Update all variables for a certain time interval, taken from a KNMI file
+##############################################################################
+# Run variables:
 PasswordMysql = open("/home/pi/AuthBhostedMysql.txt",'r').read().split('\n')[0]
+##############################################################################
 
 # Upload the row to the database
 try:
@@ -41,14 +45,17 @@ try:
                 Baro = int(int(col)/10)
             if colnum == 17:
                 Humid = int(col)
-            colnum += 1       
-    
-        WindDir = "N"
+            colnum += 1
+        
+        # Find from angle the wind direction name
+        WindDirStr = ["N","NEN","NE","NEE","E","SEE","SE","ESS","S","SWS","SW","SWW","W","NWW","NW","NWN","N"] # At 350 still has to go
+        condition = np.abs(np.arange(0.0,361.0,22.5) - WindDirAngle)<11.25 # returns an array with true/false
+        WindDir = np.extract(condition, WindDirStr) # use extract to get the winddir where true
         
         RainRate = 0
         SunPower = 0;
     
-        for i in range(0, 60, 3): # Simulate there was a measurement every 3 minutes...
+        for i in range(0, 59, 3): # Simulate there was a measurement every 3 minutes...
             # Small mistake at end of the day... if end of month... not often
             DateStr = Date[6:8]
             if Hour==24:
@@ -60,6 +67,7 @@ try:
             cursor = cnx.cursor()
             cursor.execute("INSERT INTO AcuRiteSensor (SensorDateTime, Temperature, Pressure, Humidity, WindSpeed, WindDirection, WindDirectionAngle, Rainfall, RainfallRate, UVIndex, SunPower) " +
                            "VALUES ('" + DateTimeNow + "','" + str(Temp)+ "','" + str(Baro)+ "','" + str(Humid)+ "','" + str(Wind)+ "','" + WindDir+ "','" + str(WindDirAngle)+ "','" + str(Rain)+ "','" + str(RainRate)+ "','" + str(UVIndex)+ "','"  + str(SunPower) + "')")
+            print(DateTimeNow + "','" + str(Temp)+ "','" + str(Baro)+ "','" + str(Humid)+ "','" + str(Wind)+ "','" + WindDir+ "','" + str(WindDirAngle)+ "','" + str(Rain)+ "','" + str(RainRate)+ "','" + str(UVIndex)+ "','"  + str(SunPower))
             cnx.commit()
             cursor.close()
     

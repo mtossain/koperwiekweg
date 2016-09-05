@@ -1,7 +1,6 @@
 import time
 import mysql.connector
 import csv
-
 ##############################################################################
 # Update one variable only for a certain time interval, taken from a KNMI file
 # 0: Wind speed
@@ -11,9 +10,10 @@ import csv
 # 4: UV Index
 # 5: Rain
 ##############################################################################
+# Run variables:
 variable = 4
-		
 PasswordMysql = open("/home/pi/AuthBhostedMysql.txt",'r').read().split('\n')[0]
+##############################################################################
 
 # Upload the row to the database
 try:
@@ -54,7 +54,11 @@ try:
                 Humid = int(col)
             colnum += 1       
     
-        WindDir = "N" # TBD
+        # Find from angle the wind direction name
+        WindDirStr = ["N","NEN","NE","NEE","E","SEE","SE","ESS","S","SWS","SW","SWW","W","NWW","NW","NWN","N"] # At 350 still has to go
+        condition = np.abs(np.arange(0.0,361.0,22.5) - WindDirAngle)<11.25
+        WindDir = np.extract(condition, WindDirStr)
+ 
         RainRate = 0 # TBD
         SunPower = 0 # TBD
         
