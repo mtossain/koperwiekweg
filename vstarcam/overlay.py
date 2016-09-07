@@ -5,6 +5,7 @@ import os
 import requests
 import subprocess as sub
 import threading
+from requests.auth import HTTPBasicAuth
 
 class RunCmd(threading.Thread):
     def __init__(self, cmd, timeout):
@@ -38,7 +39,17 @@ Password = open('/home/pi/AuthBhostedFTP.txt','r').read().split('\n')[0] # passw
 while True:
     
     if (avail==0 or avail==1):
-	
+        
+        print('0 Set the camera in the right mode\n\n')
+        try:
+            r = requests.get('http://192.168.178.168/vb.htm?title=IP-Camera&videocodec=0&localdisplay=1&mirctrl=0&videocodeccombo=4&setvideoencbitratelevel=5&iframeinterval=30&codelevel=0', auth=HTTPBasicAuth('admin', 'admin'),timeout=15)
+        except (requests.ConnectionError, requests.Timeout, socket.timeout) as e:
+            print (e)
+            print(now +' Could not update camera settings [NOK]')
+        #with urllib.request.urlopen('http://vb.htm?title=IP-Camera&videocodec=0&localdisplay=1&mirctrl=0&videocodeccombo=4&setvideoencbitratelevel=5&iframeinterval=30&codelevel=0') as response:
+        #    print(response.read())
+        time.sleep(3)
+		
         print('1 Make the first snapshot\n\n')
         now = time.strftime("%Y-%m-%d %H:%M:%S")
         snapshot = dirstick+"snapshot"+time.strftime("_%Y%m%d_%H%M%S")+".jpeg"
