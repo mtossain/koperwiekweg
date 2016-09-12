@@ -9,7 +9,7 @@ GPIO.setmode(GPIO.BCM)
  
 sensor = RPi_AS3935(address=0x03, bus=1)
 sensor.reset()
-sensor.set_indoors(True)
+sensor.set_indoors(False)
 sensor.set_noise_floor(0)
 sensor.calibrate(tun_cap=0x07)
 sensor.set_disp_lco(False)
@@ -34,9 +34,9 @@ def handle_interrupt(channel):
   sensor.set_mask_disturber(True)
  elif reason == 0x08:
   distance = sensor.get_distance()
-  print ("lightning detected, distance: %s km at %s" %  (str(distance), now))
+  print ("%s - lightning distance in km: %s" %  (now, str(distance)))
   f = open("/var/log/lightning.log","a+")
-  f.write("lightning detected, distance: %s km at %s" % (str(distance), now) + "\n")
+  f.write("%s - lightning distance in km: %s" % (now, str(distance)) + "\n")
   f.close()
  
 pin = 17
