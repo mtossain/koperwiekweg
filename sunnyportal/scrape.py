@@ -5,6 +5,7 @@ import serial
 import mysql.connector
 import subprocess
 import shelve
+from datetime import datetime
 
 PasswordAculink = open("/home/pi/AuthAculinkWebsite.txt",'r').read().split('\n')[0]
 PasswordMysql = open("/home/pi/AuthBhostedMysql.txt",'r').read().split('\n')[0]
@@ -22,6 +23,7 @@ WindDirAngle=shelve['WindDirAngle']
 UVIndex=shelve['UVIndex']
 TransmitPower=0
 SunPower=shelve['SunPower']
+LightningDist=999999
 
 # Get the sun power data value
 #command = ["scrapy", "crawl", "sunnyportal"]    
@@ -181,8 +183,27 @@ except serial.SerialException, e:
     print("Could not find data from UV Sensor [NOK]")
     UVIndex=shelve['UVIndex']
 
+# Get the lightning sensor data
+try:
+    fname = '/var/log/lightning.log' 
+    with open(fname, 'rb') as fh:
+    	for line in fh:
+    	     pass
+        last = line
+        print('Found Lightning Sensor data [OK]')
+        now = datetime.now().strftime('"%Y-%m-%d %H:%M:%S"')
+        LightningDate = datetime.strptime(line[:17, '%Y-%m-%d %H:%M:%S') # date object
+        minutes  = math.floor(((now - LightningDate).seconds) / 60)
+        if minutes < 30:
+            LightningDist = float(line[-2:])
+        else:
+            LightningDist = 999999
+except: #handle other exceptions such as attribute errors
+    print "Unexpected error:", sys.exc_info()[0]
+    print("Could not find Lightning Sensor data [NOK]")
+
 now = time.strftime("%Y-%m-%d %H:%M:%S")
-print(now + ' T:'+str(Temp)+ ' P:'+str(Baro)+' H:'+str(Humid)+' R:'+str(Rain)+' W:'+str(Wind)+' WD:'+WindDir+' WDA:'+str(WindDirAngle)+ ' SP:'+str(SunPower)+' UVI:'+str(UVIndex))     
+print(now + ' T:'+str(Temp)+ ' P:'+str(Baro)+' H:'+str(Humid)+' R:'+str(Rain)+' W:'+str(Wind)+' WD:'+WindDir+' WDA:'+str(WindDirAngle)+' UVI:'+str(UVIndex)+' LD:'+str(LightningDist))     
 
 # Get the RF Sensor data     
 #os.system('rtl_power -f 87.5M:108M:10k -1 rflog.csv')
@@ -215,8 +236,8 @@ print(now + ' T:'+str(Temp)+ ' P:'+str(Baro)+' H:'+str(Humid)+' R:'+str(Rain)+' 
 #print("Max Power: "+str(PowerMax) + " Min Power: " + str(PowerMin))
 #print("Max Freq: "+str(FreqMax/1e6) + "[MHz] Min Freq: " + str(FreqMin/1e6)+"[MHz]")
 #print('Found RF Power from sensor [OK]')
-
 # Upload it to the database
+
 try:
     cnx = mysql.connector.connect(
          host="127.0.0.1", # your host, usually localhost
@@ -227,8 +248,8 @@ try:
 
     # Use all the SQL you like
     cursor = cnx.cursor()
-    cursor.execute("INSERT INTO AcuRiteSensor (SensorDateTime, Temperature, Pressure, Humidity, WindSpeed, WindDirection, WindDirectionAngle, Rainfall, RainfallRate, UVIndex,TransmitPowerkW, SunPower) " +
-                                   "VALUES ('" + now + "','" + str(Temp)+ "','" + str(Baro)+ "','" + str(Humid)+ "','" + str(Wind)+ "','" + WindDir+ "','" + str(WindDirAngle)+ "','" + str(Rain)+ "','" + str(RainRate)+ "','" + str(UVIndex)+ "','" + str(TransmitPower)+ "','" + str(SunPower) + "')")
+    cursor.execute("INSERT INTO AcuRiteSensor (SensorDateTime, Temperature, Pressure, Humidity, WindSpeed, WindDirection, WindDirectionAngle, Rainfall, RainfallRate, UVIndex,TransmitPowerkW, SunPower, LightingDist) " +
+                                   "VALUES ('" + now + "','" + str(Temp)+ "','" + str(Baro)+ "','" + str(Humid)+ "','" + str(Wind)+ "','" + WindDir+ "','" + str(WindDirAngle)+ "','" + str(Rain)+ "','" + str(RainRate)+ "','" + str(UVIndex)+ "','" + str(TransmitPower)+ "','" + str(SunPower) + "','" + str(LightningDist) + "')")
     cnx.commit()
     cursor.close()
     cnx.close()
