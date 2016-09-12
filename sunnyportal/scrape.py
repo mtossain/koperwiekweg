@@ -6,6 +6,7 @@ import mysql.connector
 import subprocess
 import shelve
 from datetime import datetime
+import math
 
 PasswordAculink = open("/home/pi/AuthAculinkWebsite.txt",'r').read().split('\n')[0]
 PasswordMysql = open("/home/pi/AuthBhostedMysql.txt",'r').read().split('\n')[0]
@@ -183,23 +184,23 @@ except serial.SerialException, e:
     print("Could not find data from UV Sensor [NOK]")
     UVIndex=shelve['UVIndex']
 
+
 # Get the lightning sensor data
 try:
     fname = '/var/log/lightning.log' 
     with open(fname, 'rb') as fh:
     	for line in fh:
-    	     pass
+            pass
         last = line
         print('Found Lightning Sensor data [OK]')
-        now = datetime.now().strftime('"%Y-%m-%d %H:%M:%S"')
-        LightningDate = datetime.strptime(line[:17, '%Y-%m-%d %H:%M:%S') # date object
+        now = datetime.now()
+        LightningDate = datetime.strptime(line[:19], '%Y-%m-%d %H:%M:%S') # date object
         minutes  = math.floor(((now - LightningDate).seconds) / 60)
         if minutes < 30:
             LightningDist = float(line[-2:])
         else:
-            LightningDist = 999999
-except: #handle other exceptions such as attribute errors
-    print "Unexpected error:", sys.exc_info()[0]
+            LightningDist = 99.0
+except IOError: #handle other exceptions such as attribute errors
     print("Could not find Lightning Sensor data [NOK]")
 
 now = time.strftime("%Y-%m-%d %H:%M:%S")
@@ -248,7 +249,7 @@ try:
 
     # Use all the SQL you like
     cursor = cnx.cursor()
-    cursor.execute("INSERT INTO AcuRiteSensor (SensorDateTime, Temperature, Pressure, Humidity, WindSpeed, WindDirection, WindDirectionAngle, Rainfall, RainfallRate, UVIndex,TransmitPowerkW, SunPower, LightingDist) " +
+    cursor.execute("INSERT INTO AcuRiteSensor (SensorDateTime, Temperature, Pressure, Humidity, WindSpeed, WindDirection, WindDirectionAngle, Rainfall, RainfallRate, UVIndex,TransmitPowerkW, SunPower, LightningDist) " +
                                    "VALUES ('" + now + "','" + str(Temp)+ "','" + str(Baro)+ "','" + str(Humid)+ "','" + str(Wind)+ "','" + WindDir+ "','" + str(WindDirAngle)+ "','" + str(Rain)+ "','" + str(RainRate)+ "','" + str(UVIndex)+ "','" + str(TransmitPower)+ "','" + str(SunPower) + "','" + str(LightningDist) + "')")
     cnx.commit()
     cursor.close()
@@ -258,6 +259,7 @@ try:
     
 except mysql.connector.Error as err:
     print("Could not connect to database [NOK]")
+    print(err)
 
 shelve.close()
  

@@ -9,14 +9,14 @@ GPIO.setmode(GPIO.BCM)
  
 sensor = RPi_AS3935(address=0x03, bus=1)
 sensor.reset()
-sensor.set_indoors(True)
+sensor.set_indoors(False)
 sensor.set_noise_floor(0)
 sensor.calibrate(tun_cap=0x07)
 sensor.set_disp_lco(False)
 
  
 def handle_interrupt(channel):
- now = datetime.now().strftime('"%Y-%m-%d %H:%M:%S"')
+ now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
  time.sleep(0.004)
  global sensor
  reason = sensor.get_interrupt()
@@ -28,7 +28,7 @@ def handle_interrupt(channel):
   f.close()
  elif reason == 0x04:
   print (now + ": Disturber detected - masking")
-  f = open("/var/log/lightning.log","a+")
+  f = open("/var/log/noise.log","a+")
   f.write(now + ": Disturber detected - masking\n")
   f.close()
   sensor.set_mask_disturber(True)
