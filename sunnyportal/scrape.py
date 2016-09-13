@@ -195,7 +195,7 @@ try:
         print('Found Lightning Sensor data [OK]')
         now = datetime.now()
         LightningDate = datetime.strptime(line[:19], '%Y-%m-%d %H:%M:%S') # date object
-        minutes  = math.floor(((now - LightningDate).seconds) / 60)
+        minutes  = (now - LightningDate).total_seconds() / 60
         if minutes < 30:
             LightningDist = float(line[-2:])
         else:
