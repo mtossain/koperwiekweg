@@ -9,7 +9,7 @@ GPIO.setmode(GPIO.BCM)
  
 sensor = RPi_AS3935(address=0x03, bus=1)
 sensor.reset()
-sensor.set_indoors(False)
+sensor.set_indoors(True)
 sensor.set_noise_floor(0)
 sensor.calibrate(tun_cap=0x07)
 sensor.set_disp_lco(False)

@@ -7,6 +7,9 @@ import subprocess
 import shelve
 from datetime import datetime
 import math
+import json
+import urllib2
+
 
 PasswordAculink = open("/home/pi/AuthAculinkWebsite.txt",'r').read().split('\n')[0]
 PasswordMysql = open("/home/pi/AuthBhostedMysql.txt",'r').read().split('\n')[0]
@@ -26,12 +29,15 @@ TransmitPower=0
 SunPower=shelve['SunPower']
 LightningDist=999999
 
-# Get the sun power data value
+#Get the sun power data value
 #command = ["scrapy", "crawl", "sunnyportal"]    
 #with open(os.devnull, "w") as fnull:
-#    result = subprocess.call(command, stderr = fnull, stdout = fnull)
+    #result = subprocess.call(command, stderr = fnull, stdout = fnull)
+#time.sleep(10)
 #with open ("FixedPages", "r") as myfile:
-#    data = myfile.read()
+    #data = myfile.read()
+#print(data)
+#time.sleep(1000)
 #test = data.find('<span id="CurrentPlantPowerValue">')
 #if test > 0:
 #    text2 = data[test:]
@@ -50,109 +56,130 @@ LightningDist=999999
 # now get the data from Aculink
 
 try:
-    r = requests.get('https://acu-link.com/login', auth=('h.j.van.veluw@gmail.com', PasswordAculink),timeout=6)
+    #r = requests.get('https://acu-link.com/login', auth=('h.j.van.veluw@gmail.com', PasswordAculink),timeout=6)
 
-    FindTemp = r.text.find("<div class=\"sensor-widget-label\">Temperature</div>")
-    if FindTemp>0:
-        test = r.text[FindTemp:]
-        test2 = test[test.find('<div class=\"reading\">'):]
-        Temp = float(test2[21:24])
-        dummy =test.find("<div class=\"sensor-decimal\">")
-        if dummy > 0:
-            test2 = test[dummy:]
-            Temp = Temp + float(test2[30:45])
-            print('Found temperature from Aculink.com [OK]')
-            shelve['Temp']=Temp
-        else:
-            Temp=shelve['Temp']
+    #FindTemp = r.text.find("<div class=\"sensor-widget-label\">Temperature</div>")
+    #if FindTemp>0:
+        #test = r.text[FindTemp:]
+        #test2 = test[test.find('<div class=\"reading\">'):]
+        #Temp = float(test2[21:24])
+        #dummy =test.find("<div class=\"sensor-decimal\">")
+        #if dummy > 0:
+            #test2 = test[dummy:]
+            #Temp = Temp + float(test2[30:45])
+            #print('Found temperature from Aculink.com [OK]')
+            #shelve['Temp']=Temp
+        #else:
+            #Temp=shelve['Temp']
 
 
-    FindBaro = r.text.find("<div class=\"sensor-widget-label\">Barometric Pressure</div>")
-    if FindBaro>0:
-        test = r.text[FindBaro:]
-        test2 = test[test.find('<div class=\"reading\">'):]
-        Baro = int(test2[21:25])
-        print('Found pressure fromform Aculink.com [OK]')
-        shelve['Baro']=Baro
-    else:
-        Baro=shelve['Baro']
+    #FindBaro = r.text.find("<div class=\"sensor-widget-label\">Barometric Pressure</div>")
+    #if FindBaro>0:
+        #test = r.text[FindBaro:]
+        #test2 = test[test.find('<div class=\"reading\">'):]
+        #Baro = int(test2[21:25])
+        #print('Found pressure fromform Aculink.com [OK]')
+        #shelve['Baro']=Baro
+    #else:
+        #Baro=shelve['Baro']
         
-    FindHumid = r.text.find("<div class=\"sensor-widget-label\">Humidity</div>")
-    if FindHumid>0:
-        test = r.text[FindHumid:]
-        test2 = test[test.find('<div class=\"reading\">'):]
-        Humid = int(test2[21:24])
-        print('Found humidity from Aculink.com [OK]')
-        shelve['Humid']=Humid
-    else:
-        Humid=shelve['Humid']
+    #FindHumid = r.text.find("<div class=\"sensor-widget-label\">Humidity</div>")
+    #if FindHumid>0:
+        #test = r.text[FindHumid:]
+        #test2 = test[test.find('<div class=\"reading\">'):]
+        #Humid = int(test2[21:24])
+        #print('Found humidity from Aculink.com [OK]')
+        #shelve['Humid']=Humid
+    #else:
+        #Humid=shelve['Humid']
 
-    FindRain = r.text.find("<div class=\"sensor-widget-label\">Rainfall</div>")
-    if FindRain>0:
-        test = r.text[FindRain:]
-        test2 = test[test.find('<div class=\"reading\">'):]
-        Rain = float(test2[21:25])
-        print('Found rainfall from Aculink.com [OK]')
-        shelve['Rain']=Rain
-    else:
-        Rain=shelve['Rain']
+    #FindRain = r.text.find("<div class=\"sensor-widget-label\">Rainfall</div>")
+    #if FindRain>0:
+        #test = r.text[FindRain:]
+        #test2 = test[test.find('<div class=\"reading\">'):]
+        #Rain = float(test2[21:25])
+        #print('Found rainfall from Aculink.com [OK]')
+        #shelve['Rain']=Rain
+    #else:
+        #Rain=shelve['Rain']
 
-    FindWind = r.text.find("<div class=\"wind-speed-label\">Wind Speed</div>")
-    if FindWind>0:
-        test = r.text[FindWind:]
-        test2 = test[test.find('<div class=\"wind-speed-reading\">'):]
-        test3 = test2.find("</div>")
-        Wind = float(test2[32:test3])
-        print('Found windspeed from Aculink.com [OK]')
-        shelve['Wind']=Wind
-    else:
-        Wind=shelve['Wind']
+    #FindWind = r.text.find("<div class=\"wind-speed-label\">Wind Speed</div>")
+    #if FindWind>0:
+        #test = r.text[FindWind:]
+        #test2 = test[test.find('<div class=\"wind-speed-reading\">'):]
+        #test3 = test2.find("</div>")
+        #Wind = float(test2[32:test3])
+        #print('Found windspeed from Aculink.com [OK]')
+        #shelve['Wind']=Wind
+    #else:
+        #Wind=shelve['Wind']
 
-    FindWindDir = r.text.find("100x_winddirect_")
-    if FindWindDir>0:
-        test = r.text[FindWindDir+5:]
-        FindWindDir = test.find("100x_winddirect_")
-        if FindWindDir>0:
-            test = test[FindWindDir:]
-            test4 = test.find('.png')
-            WindDir = test[16:test4]
-            if WindDir == 'N':
-                WindDirAngle = 0
-            if WindDir== "NEN" or WindDir=="ENN" or WindDir=="NNE":
-                WindDirAngle = 22.5
-            if WindDir== "NE":
-                WindDirAngle = 45
-            if WindDir== "NEE" or WindDir=="ENE" or WindDir=="EEN":
-                WindDirAngle = 67.5
-            if WindDir== "E":
-                WindDirAngle = 90
-            if WindDir== "SEE" or WindDir=="ESE" or WindDir=="EES":
-                WindDirAngle = 112.5
-            if WindDir== "SE":
-                WindDirAngle = 135
-            if WindDir== "ESS" or WindDir=="SES" or WindDir=="SSE":
-                WindDirAngle = 157.5
-            if WindDir== "S":
-                WindDirAngle = 180
-            if WindDir== "SWS" or WindDir=="WSS" or WindDir=="SSW":
-                WindDirAngle = 202.5
-            if WindDir== "SW":
-                WindDirAngle = 225
-            if WindDir== "SWW" or WindDir=="WSW" or WindDir=="WWS":
-                WindDirAngle = 247.5
-            if WindDir== "W":
-                WindDirAngle = 270
-            if WindDir== "NWW" or WindDir=="WNW" or WindDir=="WWN":
-                WindDirAngle = 292.5
-            if WindDir== "NW":
-                WindDirAngle = 315
-            if WindDir== "NWN" or WindDir=="WNN" or WindDir=="NNW":
-                WindDirAngle = 337.5
-            print('Found winddirection from Aculink.com [OK]')
-            shelve['WindDirAngle']=WindDirAngle
-    else:
-        WindDirAngle=shelve['WindDirAngle']
+    #FindWindDir = r.text.find("100x_winddirect_")
+    #if FindWindDir>0:
+        #test = r.text[FindWindDir+5:]
+        #FindWindDir = test.find("100x_winddirect_")
+        #if FindWindDir>0:
+            #test = test[FindWindDir:]
+            #test4 = test.find('.png')
+            #WindDir = test[16:test4]
+            #if WindDir == 'N':
+                #WindDirAngle = 0
+            #if WindDir== "NEN" or WindDir=="ENN" or WindDir=="NNE":
+                #WindDirAngle = 22.5
+            #if WindDir== "NE":
+                #WindDirAngle = 45
+            #if WindDir== "NEE" or WindDir=="ENE" or WindDir=="EEN":
+                #WindDirAngle = 67.5
+            #if WindDir== "E":
+                #WindDirAngle = 90
+            #if WindDir== "SEE" or WindDir=="ESE" or WindDir=="EES":
+                #WindDirAngle = 112.5
+            #if WindDir== "SE":
+                #WindDirAngle = 135
+            #if WindDir== "ESS" or WindDir=="SES" or WindDir=="SSE":
+                #WindDirAngle = 157.5
+            #if WindDir== "S":
+                #WindDirAngle = 180
+            #if WindDir== "SWS" or WindDir=="WSS" or WindDir=="SSW":
+                #WindDirAngle = 202.5
+            #if WindDir== "SW":
+                #WindDirAngle = 225
+            #if WindDir== "SWW" or WindDir=="WSW" or WindDir=="WWS":
+                #WindDirAngle = 247.5
+            #if WindDir== "W":
+                #WindDirAngle = 270
+            #if WindDir== "NWW" or WindDir=="WNW" or WindDir=="WWN":
+                #WindDirAngle = 292.5
+            #if WindDir== "NW":
+                #WindDirAngle = 315
+            #if WindDir== "NWN" or WindDir=="WNN" or WindDir=="NNW":
+                #WindDirAngle = 337.5
+            #print('Found winddirection from Aculink.com [OK]')
+            #shelve['WindDirAngle']=WindDirAngle
+    #else:
+        #WindDirAngle=shelve['WindDirAngle']
 
+    f = urllib2.urlopen('http://api.wunderground.com/api/c76852885ada6b8a/conditions/q/pws:IIJSSELS27.json')
+    json_string = f.read()
+    parsed_json = json.loads(json_string)
+    #location = parsed_json['location']['city']
+    Baro = float(parsed_json['current_observation']['pressure_mb'])
+    Temp = float(parsed_json['current_observation']['temp_c'])
+    Wind = parsed_json['current_observation']['wind_kph']
+    WindDir = parsed_json['current_observation']['wind_dir']
+    WindDirAngle = parsed_json['current_observation']['wind_degrees']
+    Rain = float(parsed_json['current_observation']['precip_today_in'])*25.4
+    humidity_str = parsed_json['current_observation']['relative_humidity']
+    Humid = float(humidity_str[:-1])
+    shelve['Temp']=Temp
+    shelve['Baro']=Baro
+    shelve['Humid']=Humid
+    shelve['Rain']=Rain
+    shelve['Wind']=Wind
+    shelve['WindDir']=WindDir
+    shelve['WindDirAngle']=WindDirAngle
+    print('Found data from wunderground.com [OK]')
+    
 except requests.exceptions.RequestException as e:
     print('Could not get the Aculink webpage [NOK]')
     Temp=shelve['Temp']
@@ -191,13 +218,14 @@ try:
     with open(fname, 'rb') as fh:
     	for line in fh:
             pass
-        last = line
         print('Found Lightning Sensor data [OK]')
         now = datetime.now()
         LightningDate = datetime.strptime(line[:19], '%Y-%m-%d %H:%M:%S') # date object
         minutes  = (now - LightningDate).total_seconds() / 60
         if minutes < 30:
             LightningDist = float(line[-2:])
+            if LightningDist ==1:
+                LightningDist = 99.0
         else:
             LightningDist = 99.0
 except IOError: #handle other exceptions such as attribute errors

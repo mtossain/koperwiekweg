@@ -2,20 +2,21 @@ import scrapy
 
 Password = open('/home/pi/AuthSunnyportalWebsite.txt','r').read().split('\n')[0]
 	
-class DmozSpider(scrapy.Spider):
+class (scrapy.Spider):
     
     name = "sunnyportal"
-    allowed_domains = ["www.sunnyportal.com"]
+    
+    allowed_domains = ["www.myacurite.com"]
+    
     start_urls = [
-        "https://www.sunnyportal.com/Templates/Start.aspx?ReturnUrl=%2fTemplates%2fNoticePage.aspx",
-        "https://www.sunnyportal.com/FixedPages/HoManLive.aspx",
-		"https://www.sunnyportal.com/FixedPages/Dashboard.aspx"
+        "https://www.myacurite.com/#/login",
+        "https://www.myacurite.com/#/dashboard"
          ]
 
     def parse(self, response):
 	    return scrapy.FormRequest.from_response(
 		    response,
-		    formdata={'ctl00$ContentPlaceHolder1$Logincontrol1$txtUserName': 'h.j.van.veluw@hccnet.nl', 'ctl00$ContentPlaceHolder1$Logincontrol1$txtPassword': Password,  'ctl00$ContentPlaceHolder1$Logincontrol1$LoginBtn': ''},
+		    formdata={'ctl00$ContentPlaceHolder1$Logincontrol1$txtUserName': 'h.j.van.veluw@gmail.nl', 'ctl00$ContentPlaceHolder1$Logincontrol1$txtPassword': Password,  'ctl00$ContentPlaceHolder1$Logincontrol1$LoginBtn': ''},
 		    callback=self.after_login
 		)
 	   
