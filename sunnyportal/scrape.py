@@ -9,7 +9,8 @@ from datetime import datetime
 import math
 import json
 import urllib2
-
+from dateutil.parser import *
+import datetime as dt
 
 PasswordAculink = open("/home/pi/AuthAculinkWebsite.txt",'r').read().split('\n')[0]
 PasswordMysql = open("/home/pi/AuthBhostedMysql.txt",'r').read().split('\n')[0]
@@ -162,15 +163,32 @@ try:
     f = urllib2.urlopen('http://api.wunderground.com/api/c76852885ada6b8a/conditions/q/pws:IIJSSELS27.json')
     json_string = f.read()
     parsed_json = json.loads(json_string)
-    #location = parsed_json['location']['city']
-    Baro = float(parsed_json['current_observation']['pressure_mb'])
+    station_time = parse(parsed_json['current_observation']['observation_time_rfc822']).replace(tzinfo=None)
+    now = dt.datetime.now()
+    seconds = (now-station_time).total_seconds()
+    if seconds > 5*60:
+        print('Station IIJSELS27 is not updated since: '+str(int(seconds/60))+'min, taking Ijsselstein [NOK]')
+        f = urllib2.urlopen('http://api.wunderground.com/api/c76852885ada6b8a/conditions/q/Ijsselstein.json')
+        json_string = f.read()
+        parsed_json = json.loads(json_string)
+    Baro = int(float(parsed_json['current_observation']['pressure_mb']))
     Temp = float(parsed_json['current_observation']['temp_c'])
-    Wind = parsed_json['current_observation']['wind_kph']
+    Wind = int(float(parsed_json['current_observation']['wind_kph']))
     WindDir = parsed_json['current_observation']['wind_dir']
-    WindDirAngle = parsed_json['current_observation']['wind_degrees']
-    Rain = float(parsed_json['current_observation']['precip_today_in'])*25.4
+    WindDirAngle = int(float(parsed_json['current_observation']['wind_degrees']))
+    Rain = int(float(parsed_json['current_observation']['precip_today_in'])*25.4)
     humidity_str = parsed_json['current_observation']['relative_humidity']
-    Humid = float(humidity_str[:-1])
+    Humid = int(float(humidity_str[:-1]))
+    if Temp<-50 or Temp>50:
+        Temp = shelve['Temp']
+    if Baro<750 or Baro>1250:
+        Baro = shelve['Baro']
+    if Wind<0 or Wind>1000:
+        Wind = shelve['Wind']
+    if Humid<0 or Humid>100:
+        Humid = shelve['Humid']
+    if Rain<0 or Rain>100:
+        Rain = shelve['Rain']
     shelve['Temp']=Temp
     shelve['Baro']=Baro
     shelve['Humid']=Humid
@@ -224,7 +242,7 @@ try:
         minutes  = (now - LightningDate).total_seconds() / 60
         if minutes < 30:
             LightningDist = float(line[-2:])
-            if LightningDist ==1:
+            if LightningDist ==1 or LightningDist==5:
                 LightningDist = 99.0
         else:
             LightningDist = 99.0
