@@ -1,6 +1,8 @@
 import time
 import mysql.connector
 import csv
+import numpy as np
+
 ##############################################################################
 # Update all variables for a certain time interval, taken from a KNMI file
 ##############################################################################
@@ -50,8 +52,9 @@ try:
         # Find from angle the wind direction name
         WindDirStr = ["N","NEN","NE","NEE","E","SEE","SE","ESS","S","SWS","SW","SWW","W","NWW","NW","NWN","N"] # At 350 still has to go
         condition = np.abs(np.arange(0.0,361.0,22.5) - WindDirAngle)<11.25 # returns an array with true/false
-        WindDir = np.extract(condition, WindDirStr) # use extract to get the winddir where true
-        
+        WindDirNP = np.extract(condition, WindDirStr) # use extract to get the winddir where true
+        WindDir = str(WindDirNP[0])
+ 
         RainRate = 0
         SunPower = 0;
     
@@ -67,7 +70,7 @@ try:
             cursor = cnx.cursor()
             cursor.execute("INSERT INTO AcuRiteSensor (SensorDateTime, Temperature, Pressure, Humidity, WindSpeed, WindDirection, WindDirectionAngle, Rainfall, RainfallRate, UVIndex, SunPower) " +
                            "VALUES ('" + DateTimeNow + "','" + str(Temp)+ "','" + str(Baro)+ "','" + str(Humid)+ "','" + str(Wind)+ "','" + WindDir+ "','" + str(WindDirAngle)+ "','" + str(Rain)+ "','" + str(RainRate)+ "','" + str(UVIndex)+ "','"  + str(SunPower) + "')")
-            print(DateTimeNow + "','" + str(Temp)+ "','" + str(Baro)+ "','" + str(Humid)+ "','" + str(Wind)+ "','" + WindDir+ "','" + str(WindDirAngle)+ "','" + str(Rain)+ "','" + str(RainRate)+ "','" + str(UVIndex)+ "','"  + str(SunPower))
+            print(DateTimeNow + "','" + str(Temp)+ "','" + str(Baro)+ "','" + str(Humid)+ "','" + str(Wind)+ "','" + str(WindDir)+ "','" + str(WindDirAngle)+ "','" + str(Rain)+ "','" + str(RainRate)+ "','" + str(UVIndex)+ "','"  + str(SunPower))
             cnx.commit()
             cursor.close()
     
