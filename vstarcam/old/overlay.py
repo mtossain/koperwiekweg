@@ -25,7 +25,7 @@ class RunCmd(threading.Thread):
             self.p.terminate()      #use self.p.kill() if process needs a kill -9
             self.join()
 
-avail = 1 # which camera(s) is/are available 
+avail = 0 # which camera(s) is/are available 
 # 0  -both Fisheye
 # 1  -Fisheye1 only
 # 2  -Fisheye2 only
@@ -89,7 +89,7 @@ while True:
         os.system("convert "+dirstick+"back1.png -resize 1024x1024 "+dirstick+"back2.png")
         os.system("convert -size 1024x1024 xc:none "+dirstick+"back2.png -geometry +0+128 -composite "+dirstick+"back3.png")
         os.system("convert -size 1024x1024 xc:none "+dirstick+"back3.png -rotate '-90' -composite "+dirstick+"back4.png")
-        #os.system("convert "+dirstick+"back4.png +level-colors navy,lemonchiffon "+dirstick+"back5.png") # blueish filter...
+        #os.system("convert "+dirstick+"back4.png +level-colors navy,lemonchiffon "+dirstick+"back5.png")
         now = time.strftime("%Y-%m-%d %H:%M:%S")
 
         print('6 Move first fisheye to external drive\n\n')
@@ -99,10 +99,7 @@ while True:
     if (avail==0):
         os.system("composite -gravity center "+dirstick+"dome4.png "+dirstick+"back4.png "+dirstick+"dome.png")
     if (avail==1):
-        # Make an overlay of the same rotated image, to fake the second camera
-        os.system("convert -size 1024x1024 xc:none "+dirstick+"dome4.png -rotate '90' -composite "+dirstick+"back4.png")            
-        os.system("composite -gravity center "+dirstick+"dome4.png "+dirstick+"back4.png "+dirstick+"dome.png")
-        #os.system("mv "+dirstick+"dome4.png "+dirstick+"dome.png")
+        os.system("mv "+dirstick+"dome4.png "+dirstick+"dome.png")
     if (avail==2):
         os.system("mv "+dirstick+"back4.png "+dirstick+"dome.png")
 
