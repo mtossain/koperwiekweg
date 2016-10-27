@@ -8,6 +8,6 @@ while true; do
         echo mlu | sudo python scrape.py
         echo mlu | sudo kill -9 $PID
         echo 'Closed SSH tunnel [OK]'
-        sleep 200
+        sleep 300
 done
 

@@ -25,7 +25,7 @@ class RunCmd(threading.Thread):
             self.p.terminate()      #use self.p.kill() if process needs a kill -9
             self.join()
 
-avail = 1 # which camera(s) is/are available 
+avail = 0 # which camera(s) is/are available 
 # 0  -both Fisheye
 # 1  -Fisheye1 only
 # 2  -Fisheye2 only

@@ -171,12 +171,13 @@ try:
         f = urllib2.urlopen('http://api.wunderground.com/api/c76852885ada6b8a/conditions/q/Ijsselstein.json')
         json_string = f.read()
         parsed_json = json.loads(json_string)
+    #print(json.dumps(parsed_json, sort_keys=True,indent=4, separators=(',', ': ')))
     Baro = int(float(parsed_json['current_observation']['pressure_mb']))
     Temp = float(parsed_json['current_observation']['temp_c'])
     Wind = int(float(parsed_json['current_observation']['wind_kph']))
     WindDir = parsed_json['current_observation']['wind_dir']
     WindDirAngle = int(float(parsed_json['current_observation']['wind_degrees']))
-    Rain = int(float(parsed_json['current_observation']['precip_today_in'])*25.4)
+    Rain = int(float(parsed_json['current_observation']['precip_today_metric']))
     humidity_str = parsed_json['current_observation']['relative_humidity']
     Humid = int(float(humidity_str[:-1]))
     if Temp<-50 or Temp>50:
