@@ -177,7 +177,10 @@ try:
     Wind = int(float(parsed_json['current_observation']['wind_kph']))
     WindDir = parsed_json['current_observation']['wind_dir']
     WindDirAngle = int(float(parsed_json['current_observation']['wind_degrees']))
-    Rain = int(float(parsed_json['current_observation']['precip_today_metric']))
+    try:
+        Rain = int(float(parsed_json['current_observation']['precip_today_metric']))
+    except:
+        Rain = shelve['Rain']
     humidity_str = parsed_json['current_observation']['relative_humidity']
     Humid = int(float(humidity_str[:-1]))
     if Temp<-50 or Temp>50:
