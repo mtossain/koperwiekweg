@@ -165,14 +165,14 @@ try:
     #else:
         #WindDirAngle=shelve['WindDirAngle']
 
-    f = urllib2.urlopen('http://api.wunderground.com/api/c76852885ada6b8a/conditions/q/pws:IIJSSELS27.json')
+    f = urllib2.urlopen('http://api.wunderground.com/api/c76852885ada6b8a/conditions/q/pws:IIJSSELS30.json')
     json_string = f.read()
     parsed_json = json.loads(json_string)
     station_time = parse(parsed_json['current_observation']['observation_time_rfc822']).replace(tzinfo=None)
     now = dt.datetime.now()
     seconds = (now-station_time).total_seconds()
     if seconds > 5*60:
-        print('Station IIJSELS27 is not updated since: '+str(int(seconds/60))+'min, taking Ijsselstein [NOK]')
+        print('Station IIJSELS30 is not updated since: '+str(int(seconds/60))+'min, taking Ijsselstein [NOK]')
         f = urllib2.urlopen('http://api.wunderground.com/api/c76852885ada6b8a/conditions/q/Ijsselstein.json')
         json_string = f.read()
         parsed_json = json.loads(json_string)
