@@ -191,7 +191,8 @@ try:
 
     humidity_str = parsed_json['current_observation']['relative_humidity']
     Humid = int(float(humidity_str[:-1]))
-    HumidReadings.append(Humid)
+    if (Humid > 30):
+	HumidReadings.append(Humid)
     Humid = mean(HumidReadings)
     if len(HumidReadings) == max_samples:
         HumidReadings.pop(0)
