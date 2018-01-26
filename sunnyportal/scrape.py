@@ -197,13 +197,13 @@ try:
     if len(HumidReadings) == max_samples:
         HumidReadings.pop(0)
 
-    if Temp<-50 or Temp>50:
+    if Temp<-50 or Temp>75:
         Temp = shelve['Temp']
     if Baro<750 or Baro>1250:
         Baro = shelve['Baro']
-    if Wind<0 or Wind>1000:
+    if Wind<0 or Wind>500:
         Wind = shelve['Wind']
-    if Humid<0 or Humid>100:
+    if Humid<30 or Humid>100:
         Humid = shelve['Humid']
     if Rain<0 or Rain>100:
         Rain = shelve['Rain']
