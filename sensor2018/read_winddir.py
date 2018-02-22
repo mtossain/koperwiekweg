@@ -3,8 +3,8 @@ from time import sleep
 import math
 
 # Connect windspeed on one side to GND and another to ADC channel 0 pin???
-#adc = Adafruit_ADS1x15.ADS1015() # default address 0x48
-adc = Adafruit_ADS1x15.ADS1015(address=0x49, busnum=1)
+adc = Adafruit_ADS1x15.ADS1015() # default address 0x48
+#adc = Adafruit_ADS1x15.ADS1015(address=0x49, busnum=1)
 
 def map2volt(x, in_min, in_max, out_min, out_max):
     return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
