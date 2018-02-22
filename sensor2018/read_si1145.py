@@ -240,6 +240,7 @@ class SI1145(object):
         def readProx(self):
                 return self._device.readU16LE(0x26)
 
+#sensor = SI1145.SI1145(address=0x49, busnum=1)
 sensor = SI1145.SI1145()
 
 print 'Press Cntrl + Z to cancel'
