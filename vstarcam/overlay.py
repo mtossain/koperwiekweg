@@ -104,8 +104,8 @@ while True:
         time.sleep(2)
         FileName = dirstick+"dome.png"
         file = open(FileName,'rb') # file to send
-        session = ftplib.FTP('server2.bhosted.nl','hjvveluw',Password,timeout=30)
-        session.cwd('www/www.koperwiekweg.nl')
+        session = ftplib.FTP('s14.servitnow.nl','hjvveluw',Password,timeout=30)
+        session.cwd('/domains/koperwiekweg.nl/public_html')
         session.storbinary('STOR dome.png', file) # send the file
         file.close() # close file and FTP
         session.quit()
