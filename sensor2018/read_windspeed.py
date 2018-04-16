@@ -13,11 +13,14 @@ import math
 pinReadSpeed = 26       # GPIO Pin for input
 count = 0               # Rotation Counter
 radius_cm = 9.0		# Radius of the anemometer
-interval = 5		# How often to report speed
+interval = 2		# Duration to report on speed
 ADJUSTMENT = 1.18	# Adjustment for weight of cups
 
 CM_IN_A_KM = 100000.0
 SECS_IN_AN_HOUR = 3600
+
+wind_speed_sensor = DigitalInputDevice(pinReadSpeed,pull_up=True)
+wind_speed_sensor.when_activated = spin
 
 def calculate_speed(time_sec):
     global count
@@ -33,11 +36,8 @@ def spin():
     global count
     count = count + 1
 
-wind_speed_sensor = DigitalInputDevice(pinReadSpeed,pull_up=True)
-wind_speed_sensor.when_activated = spin
+def get_windspeed():
 
-while True:
     count = 0
     sleep(interval)
-    print ( str(count), "Counts")
-    print ( calculate_speed(interval), "kph")
+    return calculate_speed(interval)

@@ -2,10 +2,6 @@ import Adafruit_ADS1x15
 from time import sleep
 import math
 
-# Connect windspeed on one side to GND and another to ADC channel 0 pin???
-adc = Adafruit_ADS1x15.ADS1015() # default address 0x48
-#adc = Adafruit_ADS1x15.ADS1015(address=0x49, busnum=1)
-
 def map2volt(x, in_min, in_max, out_min, out_max):
     return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
 
@@ -67,12 +63,12 @@ def wind_dir( WindDirVoltage):
 
   return Angle, AngleStr
 
-while True:
-  count = 0
-  sleep(interval)
-  values[i] = adc.read_adc(i, gain=1/1.25) # Scale gain for values up to 5V (NOTE: reverse gain values...)
-  volt = map2volt(wind_dir, 1, 2047, 1, 5000); # Read from A0 values from 0-2047 (12bit) and map to volt
-  Angle, AngleStr = wind_dir(volt)
+def get_wind_dir_all():
+    # Connect winddir on one side to GND and another to ADC channel 0 pin with par resistor
+    adc = Adafruit_ADS1x15.ADS1015() # default address 0x48 on bus 1
+    #adc = Adafruit_ADS1x15.ADS1015(address=0x49, busnum=1)
 
-  print ( str(Angle), "direction_angle")
-  print ( AngleStr, "direction")
+    values[i] = adc.read_adc(0, gain=1/1.25) # Scale gain for values up to 5V (NOTE: reverse gain values...)
+    volt = map2volt(wind_dir, 1, 2047, 1, 5000); # Read from A0 values from 0-2047 (12bit) and map to volt
+
+    return wind_dir(volt) # Angle, AngleStr

@@ -26,7 +26,6 @@ from ctypes import c_ubyte
 
 DEVICE = 0x76 # Default device I2C address
 
-
 bus = smbus.SMBus(1) # Rev 2 Pi, Pi 2 & Pi 3 uses bus 1
                      # Rev 1 Pi uses bus 0
 
@@ -155,20 +154,3 @@ def readBME280All(addr=DEVICE):
     humidity = 0
 
   return temperature/100.0,pressure/100.0,humidity
-
-def main():
-
-  (chip_id, chip_version) = readBME280ID()
-  print "Chip ID     :", chip_id
-  print "Version     :", chip_version
-
-  temperature,pressure,humidity = readBME280All()
-
-  print "Temperature : ", temperature, "C"
-  print "Pressure : ", pressure, "hPa"
-  print "Humidity : ", humidity, "%"
-
-  time.sleep(2)
-
-if __name__=="__main__":
-   main()

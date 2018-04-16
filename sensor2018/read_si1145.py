@@ -240,18 +240,14 @@ class SI1145(object):
         def readProx(self):
                 return self._device.readU16LE(0x26)
 
-#sensor = SI1145.SI1145(address=0x49, busnum=1)
-sensor = SI1145.SI1145()
+def read_si1145all():
 
-print 'Press Cntrl + Z to cancel'
+    #sensor = SI1145.SI1145(address=0x49, busnum=1)
+    sensor = SI1145.SI1145()
 
-while True:
-        vis = sensor.readVisible()
-        IR = sensor.readIR()
-        UV = sensor.readUV()
-        uvIndex = UV / 100.0
-        print 'Vis:             ' + str(vis)
-        print 'IR:              ' + str(IR)
-        print 'UV Index:        ' + str(uvIndex)
+    vis = sensor.readVisible()
+    IR = sensor.readIR()
+    UV = sensor.readUV()
+    uvIndex = UV / 100.0
 
-        time.sleep(3)
+    return vis,IR,uvIndex
