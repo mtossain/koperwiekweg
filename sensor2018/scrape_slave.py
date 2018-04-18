@@ -6,10 +6,10 @@ import os
 import shelve
 import ftplib
 
-ftp_server = '192.168.1.1'
+ftp_server = '192.168.1.156'
 ftp_username = 'pi'
 ftp_password = open("/home/pi/AuthMasterPi.txt",'r').read().split('\n')[0]
-ftp_remote_path = "/ramtmp/"
+ftp_remote_path = "/home/pi/"
 
 # Get the values from the last run
 shelve = shelve.open("data_slave.db") # Save the data to file
@@ -26,43 +26,43 @@ light_intensity=shelve['light_intensity']
 from read_bme280 import *
 try:
     temperature_bme280,pressure,humidity = readBME280All()
+    print('[OK] T_BME280: '+str(temperature_bme280)+' P: '+str(pressure) + ' H: '+str(humidity))
 except:
     print('[NOK] Could not find the data from the BME280 pressure and humidity')
 
 from read_mcp9808 import *
 try:
     temperature = get_temp_mcp9808()
+    print('[OK] T_MCP9808: '+str(temperature))
 except:
     print('[NOK] Could not find the data from the MCP9808 temperature')
 
 from read_si1145 import *
 try:
     light_intensity,ir_value,uv_index = read_si1145all()
+    print('[OK] L: '+str(light_intensity)+' IR: '+str(ir_value)+' UV: '+str(uv_index))
 except:
     print('[NOK] Could not find the data from the SI1145 light and uv_index')
 
 from read_winddir import *
 try:
     wind_dir_angle, wind_dir_str = get_wind_dir_all()
+    print('[OK] WA: '+str(wind_dir_angle)+' WD'+wind_dir_str)
 except:
     print('[NOK] Could not find the data from the Wind direction sensor')
 
 from read_windspeed import *
 try:
     wind_speed = get_windspeed()
+    print('[OK] W: '+str(wind_speed))
 except:
     print('[NOK] Could not find the data from the Wind speed sensor')
 
 try:
     os.system('raspistill -o cam.jpg') # Take the camera image
+    print('[OK] Got the camera image')
 except:
     print('[NOK] Could not take the camera image')
-
-print('[OK] T:'+str(temperature)
-         +' P:'+str(pressure)
-         +' H:'+str(humidity)
-         +' W:'+str(wind_speed)
-         +' WD:'+str(wind_dir_angle))
 
 try:
     shelve['temperature']=temperature
