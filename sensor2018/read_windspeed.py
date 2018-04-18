@@ -20,7 +20,6 @@ CM_IN_A_KM = 100000.0
 SECS_IN_AN_HOUR = 3600
 
 wind_speed_sensor = DigitalInputDevice(pinReadSpeed,pull_up=True)
-wind_speed_sensor.when_activated = spin
 
 def calculate_speed(time_sec):
     global count
@@ -35,6 +34,8 @@ def calculate_speed(time_sec):
 def spin():
     global count
     count = count + 1
+
+wind_speed_sensor.when_activated = spin
 
 def get_windspeed():
 

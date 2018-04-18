@@ -1,9 +1,8 @@
-
 import logging
 import time
 
 # Get from here: https://github.com/adafruit/Adafruit_Python_GPIO
-import Adafruit_GPIO.I2C as I2C
+import I2C
 
 # COMMANDS
 SI1145_PARAM_QUERY                      = 0x80
@@ -242,8 +241,7 @@ class SI1145(object):
 
 def read_si1145all():
 
-    #sensor = SI1145.SI1145(address=0x49, busnum=1)
-    sensor = SI1145.SI1145()
+    sensor = SI1145(address=0x60, busnum=1)
 
     vis = sensor.readVisible()
     IR = sensor.readIR()

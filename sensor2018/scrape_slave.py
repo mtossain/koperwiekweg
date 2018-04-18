@@ -29,7 +29,7 @@ try:
 except:
     print('[NOK] Could not find the data from the BME280 pressure and humidity')
 
-from read_mcp9898 import *
+from read_mcp9808 import *
 try:
     temperature = get_temp_mcp9808()
 except:
@@ -58,20 +58,32 @@ try:
 except:
     print('[NOK] Could not take the camera image')
 
-shelve['temperature']=temperature
-shelve['pressure']=pressure
-shelve['humidity']=humidity
-shelve['wind_speed']=wind_speed
-shelve['wind_dir_str']=wind_dir_str
-shelve['wind_dir_angle']=wind_dir_angle
-shelve['uv_index']=uv_index
-shelve['light_intensity']=light_intensity
-shelve.close()
+print('[OK] T:'+str(temperature)
+         +' P:'+str(pressure)
+         +' H:'+str(humidity)
+         +' W:'+str(wind_speed)
+         +' WD:'+str(wind_dir_angle))
 
-ftp_connection = ftplib.FTP(ftp_server, ftp_username, ftp_password)
-ftp_connection.cwd(ftp_remote_path)
-fh = open("data_slave.db", 'rb')
-ftp_connection.storbinary('STOR data_slave.db', fh)
-fh = open("cam.jpg", 'rb')
-ftp_connection.storbinary('STOR cam.jpg', fh)
-fh.close()
+try:
+    shelve['temperature']=temperature
+    shelve['pressure']=pressure
+    shelve['humidity']=humidity
+    shelve['wind_speed']=wind_speed
+    shelve['wind_dir_str']=wind_dir_str
+    shelve['wind_dir_angle']=wind_dir_angle
+    shelve['uv_index']=uv_index
+    shelve['light_intensity']=light_intensity
+    shelve.close()
+except:
+    print('[NOK] Could not shelve the data')
+
+try:
+    ftp_connection = ftplib.FTP(ftp_server, ftp_username, ftp_password)
+    ftp_connection.cwd(ftp_remote_path)
+    fh = open("data_slave.db", 'rb')
+    ftp_connection.storbinary('STOR data_slave.db', fh)
+    fh = open("cam.jpg", 'rb')
+    ftp_connection.storbinary('STOR cam.jpg', fh)
+    fh.close()
+except:
+    print('[NOK] Could not upload the data to the master')

@@ -26,7 +26,7 @@
 
 import time
 
-import Adafruit_MCP9808.MCP9808 as MCP9808
+import MCP9808
 
 # Default constructor will use the default I2C address (0x18) and pick a default I2C bus.
 #
@@ -34,7 +34,7 @@ import Adafruit_MCP9808.MCP9808 as MCP9808
 # from the main GPIO header and the library will figure out the bus number based
 # on the Pi's revision.
 
-def get_temp_mcp9808()
+def get_temp_mcp9808():
 
 	sensor = MCP9808.MCP9808()
 
