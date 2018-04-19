@@ -23,7 +23,7 @@ import json
 import datetime
 
 cmd = [ '/usr/local/bin/rtl_433', '-F', 'json', '-R', '10', '-R', '40']
-shelve_name = "data_acurite.db"
+shelve_name = "/ramtmp/data_acurite.db"
 
 def nowStr():
     return( datetime.datetime.now().strftime( '%Y-%m-%d %H:%M:%S'))
@@ -104,7 +104,7 @@ while True:
 
                 shelve = shelve.open(shelve_name) # Save the data to file
                 shelve['temperature']=record[ 'temp']
-                shelve['rain']record[ 'rain gauge']
+                shelve['rain']=record[ 'rain gauge']
                 shelve['humidity']=record[ 'humidity']
                 shelve['wind_speed']=record['wind speed']
                 shelve['wind_dir_str']=record['wind direction']
