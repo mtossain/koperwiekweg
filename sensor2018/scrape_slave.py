@@ -11,26 +11,11 @@ upload_to_master = True
 ftp_server = '192.168.1.156'
 ftp_username = 'pi'
 ftp_password = open("/home/pi/AuthMasterPi.txt",'r').read().split('\n')[0]
-ftp_remote_path = "/ramtmp/"
-shelve_name_slave = "data_slave.db"
+local_path = '/ramtmp/'
+shelve_name_slave = local_path + 'data_slave.db'
 
 def nowStr():
     return( datetime.datetime.now().strftime( '%Y-%m-%d %H:%M:%S'))
-
-# Get the values from the last run
-try:
-    shelve = shelve.open(shelve_name_slave) # Save the data to file
-    temperature=shelve['temperature']
-    pressure=shelve['pressure']
-    humidity=shelve['humidity']
-    wind_speed=shelve['wind_speed']
-    wind_dir_str=shelve['wind_dir_str']
-    wind_dir_angle=shelve['wind_dir_angle']
-    uv_index=shelve['uv_index']
-    light_intensity=shelve['light_intensity']
-    shelve.close()
-except:
-    print('[NOK] Could not read data from last run')
 
 # Read the sensor data
 from read_bme280 import *
@@ -69,12 +54,13 @@ except:
     print('[NOK] '+nowStr()+' Could not find the data from the Wind speed sensor')
 
 try:
-    os.system('raspistill -o cam.jpg') # Take the camera image
+    os.system('raspistill -o '+local_path+'cam.jpg') # Take the camera image
     print('[OK] '+nowStr()+' Got the camera image')
 except:
     print('[NOK] '+nowStr()+' Could not take the camera image')
 
 try:
+    #shelve = shelve.open('data_slave.db') # Save the data to file
     shelve = shelve.open(shelve_name_slave) # Save the data to file
     shelve['temperature']=temperature
     shelve['pressure']=pressure
@@ -85,18 +71,18 @@ try:
     shelve['uv_index']=uv_index
     shelve['light_intensity']=light_intensity
     shelve.close()
+    print('[OK] '+nowStr()+' Shelved the data to file')
 except:
     print('[NOK] '+nowStr()+' Could not shelve the data')
 
 if upload_to_master:
     try:
         ftp_connection = ftplib.FTP(ftp_server, ftp_username, ftp_password)
-        ftp_connection.cwd(ftp_remote_path)
-        fh = open("data_slave.db", 'rb')
+        fh = open(local_path+"data_slave.db", 'rb')
         ftp_connection.storbinary('STOR data_slave.db', fh)
-        fh = open("cam.jpg", 'rb')
-        ftp_connection.storbinary('STOR cam.jpg', fh)
-        fh.close()
+        fh2 = open(local_path+"cam.jpg", 'rb')
+        ftp_connection.storbinary('STOR cam.jpg', fh2)
+        fh2.close()
         print('[OK] '+nowStr()+' Uploaded data to the ftp master.')
     except:
         print('[NOK] '+nowStr()+' Could not upload the data to the master.')
