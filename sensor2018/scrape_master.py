@@ -10,6 +10,7 @@ import json
 import urllib2
 from dateutil.parser import *
 import datetime as dt
+import datetime
 
 ###############################################################################
 # CONFIGURATION
@@ -33,7 +34,7 @@ shelve_name_slave    = ram_drive+"data_slave.db"
 ###############################################################################
 # PART 1: Camera image
 def nowStr():
-    return( datetime.datetime.now().strftime( '%Y-%m-%d %H:%M:%S')
+    return( datetime.datetime.now().strftime( '%Y-%m-%d %H:%M:%S'))
 
 if upload_fisheye:
     try:
@@ -127,7 +128,7 @@ if upload_database:
 
 ###############################################################################
 # PART 3: Upload to wunderground
-if upload_wunderground():
+if upload_wunderground:
 
     print(' *** Upload to Wunderground')
     temp_str = "{0:.2f}".format(degc_to_degf(temperature))
