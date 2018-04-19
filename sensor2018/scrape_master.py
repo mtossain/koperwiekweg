@@ -11,12 +11,13 @@ import urllib2
 from dateutil.parser import *
 import datetime as dt
 import datetime
+import ftplib
 
 ###############################################################################
 # CONFIGURATION
-upload_database      = False
-upload_wunderground  = False
 upload_fisheye       = False
+upload_database      = True
+upload_wunderground  = False
 read_acurite         = False
 
 WU_url               = 'https://weatherstation.wunderground.com/weatherstation/updateweatherstation.php?'
@@ -38,9 +39,10 @@ def nowStr():
 
 if upload_fisheye:
     try:
-        os.system("convert -size 2592x1944 xc:none -fill back1.png -draw 'circle 1296,972 1296,1' "+ram_drive+"back2.png") # cut out the circle
+        print('*** Converting camera fisheye image')
+        os.system("convert -size 2592x1944 xc:none -fill "+ram_drive+"cam.jpg -draw 'circle 1296,972 1296,1' "+ram_drive+"back2.png") # cut out the circle
         os.system("convert "+ram_drive+"back2.png -crop 1944x1944+325+00 "+ram_drive+"back3.png") # take square around circle
-        os.system("convert "+v+"back3.png -resize 1024x1024 "+ram_drive+"back4.png") # take square around circle
+        os.system("convert "+ram_drive+"back3.png -resize 1024x1024 "+ram_drive+"back4.png") # take square around circle
         os.system("convert -size 1024x1024 xc:none "+ram_drive+"back4.png -rotate '-90' -composite "+ram_drive+"dome.png") # rotate around axis
         print('[OK] '+nowStr()+' Converted camera image')
     except:
@@ -54,7 +56,7 @@ if upload_fisheye:
         file.close() # close file and FTP
         session.quit()
         print('[OK] '+nowStr() +' Uploaded fisheye '+FileName+' to FTP')
-    except (socket.error, ftplib.all_errors) as e:
+    except (ftplib.all_errors) as e:
         print (e)
         now = time.strftime("%Y-%m-%d %H:%M:%S")
         print('[NOK] '+nowStr() + ' Could not upload fisheye '+FileName+' to FTP')
@@ -86,7 +88,7 @@ else:
 ###############################################################################
 # PART 3: Weather station data
 try:
-    shelve = shelve.open(shelve_name_slave)
+    shelve = shelve.open(shelve_name_slave,flag='r')
     temperature=shelve['temperature']
     pressure=shelve['pressure']
     humidity=shelve['humidity']
@@ -96,8 +98,9 @@ try:
     uv_index=shelve['uv_index']
     light_intensity=shelve['light_intensity']
     shelve.close()
-    print('[OK] ' + nowStr() + ' T:'+str(temperature)+ ' P:'+str(pressure)+' H:'+str(humidity)+' R:'+str(rain)+' W:'+str(wind_speed)+
-    ' WD:'+wind_dir_str+' WDA:'+str(wind_dir_angle)+' UVI:'+str(uv_index)+' LI:'+str(light_intensity))
+    print('[OK] ' + nowStr() + ' T:'+str(temperature)+ ' P:'+str(pressure)+' H:'+\
+    str(humidity)+' R:'+str(rain)+' W:'+str(wind_speed)+' WD:'+wind_dir_str+\
+    ' WDA:'+str(wind_dir_angle)+' UVI:'+str(uv_index)+' LI:'+str(light_intensity))
 except:
     print('[NOK] '+nowStr()+' Could not read data from acurite')
 
@@ -108,15 +111,15 @@ if upload_database:
              port=3306,
              user=database_user, # your username
              passwd=PasswordMysql, # your password
-             database=database_pass) # name of the data base
+             database='hjvveluw_wopr') # name of the data base
         cursor = cnx.cursor() # Use all the SQL you like
-        cursor.execute("INSERT INTO AcuRiteSensor (SensorDateTime, Temperature, Pressure,"+\
-        " Humidity, WindSpeed, WindDirection, WindDirectionAngle, Rainfall, RainfallRate, "+\
-        "UVIndex,TransmitPowerkW, SunPower, LightningDist) " + \
-        "VALUES ('" + now + "','" + str(temperature)+ "','" + str(pressure)+ "','" + \
-        str(humidity)+ "','" + str(wind_speed)+ "','" + wind_dir_str+ "','" + str(wind_dir_angle)+ \
-        "','" + str(rain)+ "','" + str(rain_rate)+ "','" + str(uv_index)+ "','" + str(0)+ "','" + \
-        str(light_intensity) + "','" + str(lightning_distance) + "')")
+        now = time.strftime("%Y-%m-%d %H:%M:%S")
+        cursor.execute("INSERT INTO AcuRiteSensor (SensorDateTime, Temperature, Pressure, Humidity, " + \
+        "WindSpeed, WindDirection, WindDirectionAngle, Rainfall, RainfallRate, UVIndex,TransmitPowerkW, SunPower, LightningDist) VALUES " + \
+        "(\'"+ now +"\',\'" + str(temperature)+ "\',\'" + str(pressure)+ "\',\'" + \
+        str(humidity)+ "\',\'" + str(wind_speed)+ "\',\'" + wind_dir_str+ "\',\'" + str(wind_dir_angle)+ \
+        "\',\'" + str(rain)+ "\',\'" + str(rain_rate)+ "\',\'" + str(uv_index)+ "\',\'" + str(0)+ "\',\'" + \
+        str(light_intensity) + "\',\'" + str(lightning_distance) + "\')")
         cnx.commit()
         cursor.close()
         cnx.close()
@@ -128,9 +131,21 @@ if upload_database:
 
 ###############################################################################
 # PART 3: Upload to wunderground
+def hpa_to_inches(pressure_in_hpa):
+    pressure_in_inches_of_m = pressure_in_hpa * 0.02953
+    return pressure_in_inches_of_m
+def mm_to_inches(rainfall_in_mm):
+    rainfall_in_inches = rainfall_in_mm * 0.0393701
+    return rainfall_in_inches
+def degc_to_degf(temperature_in_c):
+    temperature_in_f = (temperature_in_c * (9/5.0)) + 32
+    return temperature_in_f
+def kmh_to_mph(speed_in_kmh):
+    speed_in_mph = speed_in_kmh * 0.621371
+    return speed_in_mph
+
 if upload_wunderground:
 
-    print(' *** Upload to Wunderground')
     temp_str = "{0:.2f}".format(degc_to_degf(temperature))
     ground_temp_str = "{0:.2f}".format(degc_to_degf(temperature))
     humidity_str = "{0:.2f}".format(humidity)
