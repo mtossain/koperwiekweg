@@ -21,6 +21,9 @@ def nowStr():
 from read_bme280 import *
 try:
     temperature_bme280,pressure,humidity = readBME280All()
+    temperature_bme280 = round(temperature_bme280,1)
+    pressure = round(pressure,1)
+    humidity = round(humidity,1)
     print('[OK] '+nowStr()+' T_BME280: '+str(temperature_bme280)+' P: '+str(pressure) + ' H: '+str(humidity))
 except:
     print('[NOK] '+nowStr()+' Could not find the data from the BME280 pressure and humidity')
@@ -28,6 +31,7 @@ except:
 from read_mcp9808 import *
 try:
     temperature = get_temp_mcp9808()
+    temperature = round(temperature,1)
     print('[OK] '+nowStr()+' T_MCP9808: '+str(temperature))
 except:
     print('[NOK] '+nowStr()+' Could not find the data from the MCP9808 temperature')
@@ -42,13 +46,14 @@ except:
 from read_winddir import *
 try:
     wind_dir_angle, wind_dir_str = get_wind_dir_all()
-    print('[OK] '+nowStr()+' WA: '+str(wind_dir_angle)+' WD'+wind_dir_str)
+    print('[OK] '+nowStr()+' WA: '+str(wind_dir_angle)+' WD: '+wind_dir_str)
 except:
     print('[NOK] '+nowStr()+' Could not find the data from the Wind direction sensor')
 
 from read_windspeed import *
 try:
     wind_speed = get_windspeed()
+    wind_speed = round(wind_speed,1)
     print('[OK] '+nowStr()+' W: '+str(wind_speed))
 except:
     print('[NOK] '+nowStr()+' Could not find the data from the Wind speed sensor')
