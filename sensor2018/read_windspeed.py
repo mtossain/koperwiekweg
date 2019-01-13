@@ -13,7 +13,7 @@ import math
 pinReadSpeed = 26       # GPIO Pin for input
 count = 0               # Rotation Counter
 radius_cm = 9.0		# Radius of the anemometer
-interval = 0.5     	# Duration to report on speed
+interval = 1.0     	# Duration to report on speed
 ADJUSTMENT = 1.18	# Adjustment for weight of cups
 
 CM_IN_A_KM = 100000.0
