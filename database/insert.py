@@ -16,10 +16,10 @@ try:
     print('Connect to wopr database')
     cnx = mysql.connector.connect(
          host="127.0.0.1", # your host, usually localhost
-         port=3307,
-         user="mtossain", # your username
+         port=3306,
+         user="hjvveluw_mtossain", # your username
          passwd=PasswordMysql, # your password
-         database="wopr") # name of the data base
+         database="hjvveluw_wopr") # name of the data base
 
 
     print('Get the date from the insert file')

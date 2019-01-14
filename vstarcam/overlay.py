@@ -31,8 +31,7 @@ avail = 0 # which camera(s) is/are available
 # 2  -Fisheye2 only
 RtspFisheye1 = 'rtsp://admin:admin@192.168.178.168:554/0/'
 RtspFisheye2 = 'rtsp://admin:123456@192.168.178.254:554/mpeg4'
-dirstick = "/ramtmp/" # where to put the snapshot pictures for archive
-#dirstick = "/media/pi/DRAAKJE/" # where to put the snapshot pictures for archive
+dirstick = "/ramtmp2/" # where to put the snapshot pictures for archive
 #dirstick = "/home/pi/" # where to put the snapshot pictures for archive
 UpdateRate = 90 # in s how often to make the snapshots
 Password = open('/home/pi/AuthBhostedFTP.txt','r').read().split('\n')[0] # password bhosted not stored in this script
@@ -46,7 +45,7 @@ while True:
             r = requests.get('http://192.168.178.168/vb.htm?title=IP-Camera&videocodec=0&localdisplay=1&mirctrl=0&videocodeccombo=4&setvideoencbitratelevel=5&iframeinterval=30&codelevel=0', auth=HTTPBasicAuth('admin', 'admin'),timeout=15)
         except (requests.ConnectionError, requests.Timeout, socket.timeout) as e:
             print (e)
-            print(now +' Could not update camera settings [NOK]')
+            print(' Could not update camera settings [NOK]')
         #with urllib.request.urlopen('http://vb.htm?title=IP-Camera&videocodec=0&localdisplay=1&mirctrl=0&videocodeccombo=4&setvideoencbitratelevel=5&iframeinterval=30&codelevel=0') as response:
         #    print(response.read())
         time.sleep(3)
@@ -57,7 +56,7 @@ while True:
         RunCmd(["./avconvv1.sh", "test"], 20).Run()
         time.sleep(20)
         #os.system("avconv -r 6  -rtsp_transport tcp -y -i "+RtspFisheye1+" -f mp4 -an -vcodec copy -t 1 movie.mp4")
-        os.system("avconv -ss 00:00:00.5 -t 1 -y -i /ramtmp/movie.mp4 -f mjpeg "+snapshot)
+        os.system("sudo avconv -ss 00:00:00.5 -t 1 -y -i "+dirstick+"movie.mp4 -f mjpeg "+snapshot)
         os.system("rm -f movie.mp4")
         print(now + ' Snapshot taken [OK]')
 		
@@ -76,7 +75,7 @@ while True:
         RunCmd(["./avconvv2.sh", "test"], 20).Run()
         time.sleep(20)
         #os.system("avconv -r 6  -rtsp_transport tcp -y -i "+RtspFisheye2+" -f mp4 -an -vcodec copy -t 1 movie.mp4")
-        os.system("avconv -ss 00:00:00.5 -t 1 -y -i /ramtmp/movie.mp4 -f mjpeg "+snapshot)
+        os.system("sudo avconv -ss 00:00:00.5 -t 1 -y -i "+dirstick+"movie.mp4 -f mjpeg "+snapshot)
         os.system("rm -f movie.mp4")
         print(now + ' Snapshot taken [OK]')
 		

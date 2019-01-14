@@ -105,8 +105,18 @@ else:
 # PART 3: Read slave station data
 if read_slave:
     try:
+        s1 = shelve.open(shelve_name_slave,flag='r')
+        pressure1=s1['pressure']
+        s1.close()
+        time.sleep(1)
+        s2 = shelve.open(shelve_name_slave,flag='r')
+        pressure2=s2['pressure']
+        if pressure1!=pressure2:
+            time.sleep(0.5)
+            s2.close()
+            print(CRED+'[NOK] Slave file being ftped'+CEND)
         shelve = shelve.open(shelve_name_slave,flag='r')
-        temperature=shelve['temperature']
+        temperature=shelve['temperature']  
         pressure=shelve['pressure']
         humidity=shelve['humidity']
         wind_speed=shelve['wind_speed']
