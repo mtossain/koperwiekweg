@@ -38,7 +38,7 @@ def spin():
 wind_speed_sensor.when_activated = spin
 
 def get_windspeed():
-
+    global count
     count = 0
     sleep(interval)
     return calculate_speed(interval)

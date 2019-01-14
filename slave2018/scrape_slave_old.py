@@ -17,7 +17,6 @@ ftp_username          = 'pi'
 ftp_password          = open("/home/pi/AuthMasterPi.txt",'r').read().split('\n')[0]
 local_path            = '/ramtmp/'
 shelve_name_slave     = local_path + 'data_slave.db'
-shelve_wind           = local_path + 'wind.db'
 
 def nowStr():
     return( datetime.datetime.now().strftime( '%Y-%m-%d %H:%M:%S'))
@@ -51,16 +50,20 @@ try:
 except:
     print(CRED+'[NOK] '+nowStr()+' Could not find SI1145 light and uv_index'+CEND)
 
+from read_winddir import *
 try:
-    s1 = shelve.open(shelve_wind)
-    wind_speed = s1['wind_10mn_speed']
-    wind_dir_str = s1['wind_10mn_dir_str']
-    wind_dir_angle = s1['wind_10mn_dir_angle']
-    s1.close()
-    print('[OK]  '+nowStr()+' Wind Angle: '+str(wind_dir_angle)+' Wind Dir: '+wind_dir_str+' Speed: '+str(wind_speed))
+    wind_dir_angle, wind_dir_str = get_wind_dir_all()
+    print('[OK]  '+nowStr()+' Wind Angle: '+str(wind_dir_angle)+' Wind Dir: '+wind_dir_str)
 except:
     print(CRED+'[NOK] '+nowStr()+' Could not find Wind direction sensor'+CEND)
 
+from read_windspeed import *
+try:
+    wind_speed = get_windspeed()
+    wind_speed = round(wind_speed,1)
+    print('[OK]  '+nowStr()+' Wind Speed: '+str(wind_speed)+' [km/h]')
+except:
+    print(CRED+'[NOK] '+nowStr()+' Could not find Wind speed sensor'+CEND)
 
 if flag_camera:
     try:
