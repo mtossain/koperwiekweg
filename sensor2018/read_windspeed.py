@@ -14,7 +14,7 @@ pinReadSpeed = 26       # GPIO Pin for input
 count = 0               # Rotation Counter
 radius_cm = 9.0		# Radius of the anemometer
 interval = 1.0     	# Duration to report on speed
-ADJUSTMENT = 1.18	# Adjustment for weight of cups
+ADJUSTMENT = 2   	# Adjustment for weight of cups
 
 CM_IN_A_KM = 100000.0
 SECS_IN_AN_HOUR = 3600
