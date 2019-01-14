@@ -1,7 +1,0 @@
-#!/bin/bash
-# My first script
-
-while true; do
-  echo mlu | sudo python scrape_slave.py
-  sleep 300
-done
