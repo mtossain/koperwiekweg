@@ -57,7 +57,7 @@ try:
     wind_dir_str = s1['wind_10mn_dir_str']
     wind_dir_angle = s1['wind_10mn_dir_angle']
     s1.close()
-    print('[OK]  '+nowStr()+' Wind Angle: '+str(wind_dir_angle)+' Wind Dir: '+wind_dir_str+' Speed: '+str(wind_speed))
+    print('[OK]  '+nowStr()+' Wind Angle: '+str(wind_dir_angle)+' [deg] Wind Dir: '+wind_dir_str+' Speed: '+str(wind_speed)+' [km/h]')
 except:
     print(CRED+'[NOK] '+nowStr()+' Could not find Wind direction sensor'+CEND)
 
