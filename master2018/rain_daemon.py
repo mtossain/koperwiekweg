@@ -19,16 +19,19 @@ def nowStr():
     return( datetime.datetime.now().strftime( '%Y-%m-%d %H:%M:%S'))
 
 def getRainTicks():
+    ticks = 0
+    temperature=0
     os.system('rm -Rf '+json_rain_sensor)
     time.sleep(0.5)
     os.system("rtl_433 -R 37 -E -F json:"+json_rain_sensor)
-    with open(json_rain_sensor) as json_data:
-        data = json.load(json_data)
-        if "temperature_C" in data:
-            temperature = float(data["temperature_C"])
-        if "rain" in data:
-            ticks = int(data["rain"])
-            print(CRED+'[OK] ' + nowStr() + ' T:'+str(temperature)+' [degC] R:'+str(ticks)+' [ticks]'+CEND)
+    time.sleep(0.2)
+    with open(json_rain_sensor) as f:
+        data = json.loads(f.readline())
+    if "temperature_C" in data:
+        temperature = float(data["temperature_C"])
+    if "rain" in data:
+        ticks = int(data["rain"])
+    print(CRED+'[OK] ' + nowStr() + ' T:'+str(temperature)+' [degC] R:'+str(ticks)+' [ticks]'+CEND)
     return ticks
     
 
