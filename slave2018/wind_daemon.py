@@ -8,6 +8,9 @@ import math
 import numpy as np
 from read_winddir import *
 from read_windspeed import *
+CRED = '\033[91m'
+CGREEN = '\033[92m'
+CEND = '\033[0m'
 
 # Compute the values over the last 10mn: meanspeed, maxspeed, meandir
 
@@ -18,7 +21,7 @@ def nowStr():
     return( datetime.datetime.now().strftime( '%Y-%m-%d %H:%M:%S'))
 
 def meanangle(angles,weights=0,setting='degrees'):
-    '''computes the mean angle'''
+    #computes the mean angle
     if weights==0:
          weights=np.ones(len(angles))
     sumsin=0
@@ -34,25 +37,24 @@ def meanangle(angles,weights=0,setting='degrees'):
     return average
 
 def deg2compass(deg):
-     if (deg<0):
-        deg=deg+360
      arr = ['NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW', 'N']
      return arr[int(abs((deg - 11.25) % 360)/ 22.5)]
 
-
-
 def getDir():
+    wind_dir_angle = 0
+    wind_dir_str = ''
     try:
         wind_dir_angle, wind_dir_str = get_wind_dir_all()
     except:
-        print('[NOK] '+nowStr()+' Could not find the data from the Wind direction sensor')
+        print(CRED+'[NOK] '+nowStr()+' Could not find the data from the Wind direction sensor'+CEND)
     return wind_dir_angle
 
 def getSpeed():
+    wind_speed=0
     try:
         wind_speed = get_windspeed()
     except:
-        print('[NOK] '+nowStr()+' Could not find the data from the Wind speed sensor')
+        print(CRED+'[NOK] '+nowStr()+' Could not find the data from the Wind speed sensor'+CEND)
     return wind_speed
 
 speed_list = [getSpeed()] # initialise the list
@@ -61,7 +63,7 @@ dir_list = [getDir()] # initialise the list
 # Main loop
 while(1):
     for i in range(30):
-        speed = getSpeed()
+        speed = round(getSpeed(),1)
         dir = getDir()
         if len(speed_list)<(10*60): # still filling the last 10 min
             speed_list.insert(0,speed)
@@ -75,7 +77,12 @@ while(1):
     speed_last10 = round(sum(speed_list) / float(len(speed_list)),1)
     gust_last10 = round(max(speed_list),1)
     dir_last10 = round(meanangle(dir_list,0,'degrees'),1)
+    if dir_last10 < 0:
+       dir_last10 = dir_last10 + 360
     dirstr_last10 = deg2compass(dir_last10)
+
+    print(speed_list[0:15])
+    print(dir_list[0:15])
 
     # save to file
     d = shelve.open(shelve_wind) # Save the data to file
@@ -85,8 +92,8 @@ while(1):
     d['wind_10mn_dir_str']=dirstr_last10
     d.close()
 
-    print('[OK] ' + nowStr() + ' v_avg:'+str(speed_last10)+\
+    print(CGREEN+'[OK] ' + nowStr() + ' v_avg:'+str(speed_last10)+\
     ' [km/h] v_max:'+str(gust_last10)+\
     ' [km/h] ang:'+str(dir_last10)+\
-    ' [deg] ang_str:'+str(dirstr_last10)
-    )
+    ' [deg] '+str(dirstr_last10)+\
+    CEND)
