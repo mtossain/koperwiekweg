@@ -2,6 +2,15 @@ import time
 import mysql.connector
 import csv
 import numpy as np
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument("start_date")
+parser.add_argument("stop_date")
+args = parser.parse_args()
+
+print(args.start_date)
+raise SystemExit(0)
 
 ##############################################################################
 # Update all variables for a certain time interval, taken from a KNMI file
@@ -10,9 +19,18 @@ import numpy as np
 PasswordMysql = open("/home/pi/AuthBhostedMysql.txt",'r').read().split('\n')[0]
 ##############################################################################
 
+
 # Upload the row to the database
 try:
-    time.sleep(5)
+    time.sleep(2)
+   
+    
+
+
+
+
+
+
     print('Connect to wopr database')
     cnx = mysql.connector.connect(
          host="127.0.0.1", # your host, usually localhost
