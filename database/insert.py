@@ -10,7 +10,7 @@ parser.add_argument("stop_date")
 args = parser.parse_args()
 
 print(args.start_date)
-raise SystemExit(0)
+#raise SystemExit(0)
 
 ##############################################################################
 # Update all variables for a certain time interval, taken from a KNMI file
