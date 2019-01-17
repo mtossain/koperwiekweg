@@ -3,16 +3,16 @@ import mysql.connector
 import csv
 import numpy as np
 import argparse
+#from datetime import datetime
+import datetime
 
 parser = argparse.ArgumentParser()
 parser.add_argument("start_date")
 parser.add_argument("stop_date")
 args = parser.parse_args()
 
-print(args.start_date)
-
-startDatetime = datetime.strptime(args.start_date, '%Y%m%d')
-stopDatetime = datetime.strptime(args.stop_date, '%Y%m%d')
+startDatetime = datetime.datetime.strptime(args.start_date, '%Y%m%d')
+stopDatetime = datetime.datetime.strptime(args.stop_date, '%Y%m%d')+datetime.timedelta(days=1)
 
 ##############################################################################
 # Update all variables for a certain time interval, taken from a KNMI file
@@ -35,13 +35,14 @@ try:
     time.sleep(1)
     
     # Delete the rows first in the database
+    print(args.stop_date)
     cursor = cnx.cursor()
-    cursor.execute("DELETE FROM `AcuRiteSensor` WHERE SensorDateTime BETWEEN CAST('"+args.start_date+"' AS DATE) AND CAST('"+args.stop_date+"' AS DATE)")
+    cursor.execute("DELETE FROM AcuRiteSensor WHERE SensorDateTime BETWEEN "+\
+        "CAST('"+args.start_date+"' AS DATE) AND CAST('"+stopDatetime.strftime('%Y%m%d')+"' AS DATE)")
     cnx.commit()
     cursor.close()
     print('[OK] Deleted records from the database')
-    time.sleep(5)
-    raise SystemExit(0)
+    time.sleep(1)
     
     print('Get the date from the insert file')
     ifile  = open('knmi.txt', "rt")
