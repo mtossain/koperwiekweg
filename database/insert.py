@@ -10,7 +10,9 @@ parser.add_argument("stop_date")
 args = parser.parse_args()
 
 print(args.start_date)
-#raise SystemExit(0)
+
+startDatetime = datetime.strptime(args.start_date, '%Y%m%d')
+stopDatetime = datetime.strptime(args.stop_date, '%Y%m%d')
 
 ##############################################################################
 # Update all variables for a certain time interval, taken from a KNMI file
@@ -22,24 +24,26 @@ PasswordMysql = open("/home/pi/AuthBhostedMysql.txt",'r').read().split('\n')[0]
 
 # Upload the row to the database
 try:
-    time.sleep(2)
-   
-    
-
-
-
-
-
-
-    print('Connect to wopr database')
+    time.sleep(1)  
     cnx = mysql.connector.connect(
          host="127.0.0.1", # your host, usually localhost
          port=3306,
          user="hjvveluw_mtossain", # your username
          passwd=PasswordMysql, # your password
          database="hjvveluw_wopr") # name of the data base
-
-
+    print('[OK] Connected to database')
+    time.sleep(1)
+    
+    # Delete the rows first in the database
+    cursor = cnx.cursor()
+    cursor.execute("DELETE FROM `AcuRiteSensor` WHERE SensorDateTime BETWEEN "+\
+                   "CAST('"+args.start_date+"' AS DATE) AND CAST('"+args.stop_date+"' AS DATE)")
+    cnx.commit()
+    cursor.close()
+    print('[OK] Deleted records from the database')
+    time.sleep(5)
+    raise SystemExit(0)
+    
     print('Get the date from the insert file')
     ifile  = open('knmi.txt', "rt")
     reader = csv.reader(ifile)
