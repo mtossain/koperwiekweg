@@ -36,8 +36,7 @@ try:
     
     # Delete the rows first in the database
     cursor = cnx.cursor()
-    cursor.execute("DELETE FROM `AcuRiteSensor` WHERE SensorDateTime BETWEEN "+\
-                   "CAST('"+args.start_date+"' AS DATE) AND CAST('"+args.stop_date+"' AS DATE)")
+    cursor.execute("DELETE FROM `AcuRiteSensor` WHERE SensorDateTime BETWEEN CAST('"+args.start_date+"' AS DATE) AND CAST('"+args.stop_date+"' AS DATE)")
     cnx.commit()
     cursor.close()
     print('[OK] Deleted records from the database')
