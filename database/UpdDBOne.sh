@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ssh -Ng -L 3307:127.0.0.1:3307 hjvveluw@server2.bhosted.nl &
+ssh -Ng -L 3306:127.0.0.1:3306 hjvveluw@s14.servitnow.nl &
 echo 'Opened SSH tunnel [OK]'
 PID=$!
 echo mlu | sudo python insertone.py

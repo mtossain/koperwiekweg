@@ -1,6 +1,7 @@
 import time
 import mysql.connector
 import csv
+import numpy as np
 ##############################################################################
 # Update one variable only for a certain time interval, taken from a KNMI file
 # 0: Wind speed
@@ -11,7 +12,7 @@ import csv
 # 5: Rain
 ##############################################################################
 # Run variables:
-variable = 4
+variable = 0
 PasswordMysql = open("/home/pi/AuthBhostedMysql.txt",'r').read().split('\n')[0]
 ##############################################################################
 
@@ -21,10 +22,10 @@ try:
     print('Connect to wopr database')
     cnx = mysql.connector.connect(
          host="127.0.0.1", # your host, usually localhost
-         port=3307,
-         user="mtossain", # your username
+         port=3306,
+         user="hjvveluw_mtossain", # your username
          passwd=PasswordMysql, # your password
-         database="wopr") # name of the data base
+         database="hjvveluw_wopr") # name of the data base
     cursor = cnx.cursor()
 
     print('Get the date from the insert file')

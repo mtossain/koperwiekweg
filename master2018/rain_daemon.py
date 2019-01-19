@@ -1,14 +1,11 @@
 import shelve
 import datetime
 import os
-import random
 import time
 import json
+
 CRED = '\033[92m'
 CEND = '\033[0m'
-
-# DR        = Duur van de neerslag (in 0.1 uur) per uurvak
-# RH        = Uursom van de neerslag (in 0.1 mm) (-1 voor <0.05 mm)
 
 ram_drive            = '/ramtmp/'
 json_rain_sensor     = ram_drive+'rain.json'
@@ -24,7 +21,7 @@ def getRainTicks():
     os.system('rm -Rf '+json_rain_sensor)
     time.sleep(0.5)
     os.system("rtl_433 -R 37 -E -F json:"+json_rain_sensor)
-    time.sleep(0.2)
+    time.sleep(0.5)
     with open(json_rain_sensor) as f:
         data = json.loads(f.readline())
     if "temperature_C" in data:
@@ -32,7 +29,7 @@ def getRainTicks():
     if "rain" in data:
         ticks = int(data["rain"])
     print(CRED+'[OK] ' + nowStr() + ' T:'+str(temperature)+' [degC] R:'+str(ticks)+' [ticks]'+CEND)
-    return ticks
+    return ticks, temperature
     
 
 first_tick = getRainTicks() # get the first tick
@@ -41,7 +38,7 @@ last_hour = datetime.datetime.now().hour
 
 # Main loop
 while(1):
-    tick = getRainTicks()
+    tick, temperature = getRainTicks()
     hour = datetime.datetime.now().hour
     if (hour==0) and (hour!=last_hour):
         first_tick = tick
@@ -49,6 +46,8 @@ while(1):
     rain = (tick-first_tick)*scale_factor
     d = shelve.open(shelve_rain) # Save the data to file
     d['rain']=rain
-    print(CRED+'[OK] ' + nowStr() + ' Rain today:'+str(rain)+' [mm]'+CEND)
+    d['temperature']=temperature
     d.close()
+    time.sleep(1)
+    print(CRED+'[OK] ' + nowStr() + ' Rain today:'+str(rain)+' [mm]'+CEND)
     last_hour = hour
