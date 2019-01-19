@@ -32,7 +32,7 @@ def getRainTicks():
     return ticks, temperature
     
 
-first_tick = getRainTicks() # get the first tick
+first_tick,temperature = getRainTicks() # get the first tick
 print(CRED+'[OK] First tick: '+str(first_tick)+' [ticks]'+CEND)
 last_hour = datetime.datetime.now().hour
 
