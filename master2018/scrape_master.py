@@ -7,13 +7,13 @@ import shelve
 from datetime import datetime
 import math
 import json
-# import urllib.requests
-from dateutil.parser import *
+import rpyc
+#from dateutil.parser import *
 import datetime as dt
 import datetime
 import ftplib
 CRED   ='\033[91m'
-CGREEN ='\033[92m' 
+CGREEN ='\033[92m'
 CEND   ='\033[0m'
 
 ###############################################################################
@@ -33,8 +33,7 @@ PasswordMysql        = open("/home/pi/AuthBhostedMysql.txt",'r').read().split('\
 database_user        = "hjvveluw_mtossain"
 database_pass        = "hjvveluw_wopr"
 ram_drive            = "/ramtmp/"
-shelve_name_slave    = ram_drive+"data_slave.db"
-shelve_rain          = ram_drive+'rain.db'
+WeatherService = rpyc.connect("localhost", 18861)
 
 def hpa_to_inches(pressure_in_hpa):
     pressure_in_inches_of_m = pressure_in_hpa * 0.02953
@@ -84,52 +83,17 @@ if upload_fisheye:
         print (e)
         print(CRED+'[NOK] '+nowStr()+' Could not copy dome.png on server'+CEND)
 
-###############################################################################
-# PART 2: Get the rain data
-if read_master:
-    try:
-        d = shelve.open(shelve_rain,flag='r')
-        rain = d['rain']
-        d.close()
-        print(CGREEN+'[OK] ' + nowStr() + ' R: '+str(rain)+' [mm]'+CEND)
-        rain_rate=rain
-        lightning_distance=0
-    except:
-        print(CRED+'[NOK] '+nowStr()+' Could not read data from rain sensor'+CEND)
-else:
-    rain=0
-    rain_rate=0
-    lightning_distance=0
 
 ###############################################################################
-# PART 3: Read slave station data
-if read_slave:
-    try:
-        s1 = shelve.open(shelve_name_slave,flag='r')
-        pressure1=s1['pressure']
-        s1.close()
-        time.sleep(1)
-        s2 = shelve.open(shelve_name_slave,flag='r')
-        pressure2=s2['pressure']
-        if pressure1!=pressure2:
-            time.sleep(0.5)
-            s2.close()
-            print(CRED+'[NOK] Slave file being ftped'+CEND)
-        shelve = shelve.open(shelve_name_slave,flag='r')
-        temperature=shelve['temperature']  
-        pressure=shelve['pressure']
-        humidity=shelve['humidity']
-        wind_speed=shelve['wind_speed']
-        wind_dir_str=shelve['wind_dir_str']
-        wind_dir_angle=shelve['wind_dir_angle']
-        uv_index=shelve['uv_index']
-        light_intensity=shelve['light_intensity']
-        shelve.close()
-        print(CGREEN+'[OK] ' + nowStr() + ' T:'+str(temperature)+ ' P:'+str(pressure)+' H:'+\
-        str(humidity)+' R:'+str(rain)+' W:'+str(wind_speed)+' WD:'+wind_dir_str+\
-        ' WDA:'+str(wind_dir_angle)+' UVI:'+str(uv_index)+' LI:'+str(light_intensity)+CEND)
-    except:
-        print(CRED+'[NOK] '+nowStr()+' Could not read data from weather station'+CEND)
+# Get the data from the weather server
+try:
+    temperature,pressure,humidity,rain,rain_rate,wind_speed,wind_dir_str,wind_dir_angle,uv_index,light_intensity = WeatherService.root.get_all()
+    print(CGREEN+'[OK] ' + nowStr() + ' T:'+str(temperature)+ ' P:'+str(pressure)+' H:'+\
+    str(humidity)+' R:'+str(rain)+' W:'+str(wind_speed)+' WD:'+wind_dir_str+\
+    ' WDA:'+str(wind_dir_angle)+' UVI:'+str(uv_index)+' LI:'+str(light_intensity)+CEND)
+except:
+    print(CRED+'[NOK] Could not connect to weather server'+CEND)
+
 
 ###############################################################################
 # PART 4: Write data to database

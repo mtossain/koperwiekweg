@@ -7,6 +7,10 @@ import shelve
 import ftplib
 import datetime
 import rpyc
+<<<<<<< HEAD
+=======
+
+>>>>>>> 53d847a898d056b8cec5119e984d796f012887f4
 CRED = '\033[91m'
 CGREEN = '\033[92m'
 CEND = '\033[0m'
@@ -20,6 +24,8 @@ ftp_password          = open("/home/pi/AuthMasterPi.txt",'r').read().split('\n')
 local_path            = '/ramtmp/'
 shelve_name_slave     = local_path + 'data_slave.db'
 shelve_wind           = local_path + 'wind.db'
+WeatherService = rpyc.connect(ftp_server, 18861)
+
 WeatherService = rpyc.connect(ftp_server, 18861)
 
 def nowStr():
@@ -77,12 +83,21 @@ if flag_camera:
 
 try:
     WeatherService.root.update_sensor_2018(temperature,pressure,humidity,uv_index,light_intensity)
+<<<<<<< HEAD
     print(CGREEN+'[OK] Uploaded data to weather server'+CEND)
 except:
     print(CRED+'[NOK] Could not update weather service...'+CEND)
 
 
 '''try:
+=======
+    print(CRED+'[OK] ' + nowStr() + ' Rain today:'+str(rain)+' [mm]'+CEND)
+except:
+    print(CRED+'[NOK] Could not update weather service...'+CEND)
+
+'''
+try:
+>>>>>>> 53d847a898d056b8cec5119e984d796f012887f4
     shelve = shelve.open(shelve_name_slave) # Save the data to file
     shelve['temperature']=temperature
     shelve['pressure']=pressure
@@ -97,6 +112,7 @@ except:
 except:
     print(CRED+'[NOK] '+nowStr()+' Could not shelve the data'+CEND)
 '''
+<<<<<<< HEAD
 
 if flag_upload_to_master:
     try:
@@ -104,6 +120,16 @@ if flag_upload_to_master:
         #fh = open(local_path+"data_slave.db", 'rb')
         #ftp_connection.storbinary('STOR /ramtmp/data_slave.db', fh)
         #fh.close()
+=======
+if flag_upload_to_master:
+    try:
+        '''
+        ftp_connection = ftplib.FTP(ftp_server, ftp_username, ftp_password)
+        fh = open(local_path+"data_slave.db", 'rb')
+        ftp_connection.storbinary('STOR /ramtmp/data_slave.db', fh)
+        fh.close()
+        '''
+>>>>>>> 53d847a898d056b8cec5119e984d796f012887f4
         if flag_camera:
             fh2 = open(local_path+"cam.jpg", 'rb')
             ftp_connection.storbinary('STOR /ramtmp/cam.jpg', fh2)
