@@ -41,7 +41,7 @@ try:
                 Hour = int(col)
             if colnum == 3:
                 WindDirAngle = int(col)
-            if colnum == 5:
+            if colnum == 4:
                 Wind = int(int(col)/10*3.6) # Convert from 0.1m/s to km/h
             if colnum == 7:
                 Temp = float(col)/10
