@@ -6,6 +6,8 @@ import time
 import json
 import math
 import numpy as np
+import rpyc
+
 from read_winddir import *
 from read_windspeed import *
 CRED = '\033[91m'
@@ -14,8 +16,10 @@ CEND = '\033[0m'
 
 # Compute the values over the last 10mn: meanspeed, maxspeed, meandir
 
+ftp_server           = '192.168.178.11'
 ram_drive            = '/ramtmp/'
 shelve_wind          = ram_drive+'wind.db'
+WeatherService = rpyc.connect(ftp_server, 18861)
 
 def nowStr():
     return( datetime.datetime.now().strftime( '%Y-%m-%d %H:%M:%S'))
@@ -84,16 +88,27 @@ while(1):
     print(speed_list[0:15])
     print(dir_list[0:15])
 
-    # save to file
+    try:
+        WeatherService.root.update_sensor_wind(speed_last10,dirstr_last10,dir_last10)
+        print(CGREEN+'[OK] ' + nowStr() + ' v_avg:'+str(speed_last10)+\
+        ' [km/h] v_max:'+str(gust_last10)+\
+        ' [km/h] ang:'+str(dir_last10)+\
+        ' [deg] '+str(dirstr_last10)+\
+        CEND)
+    except:
+        print(CRED+'[NOK] Could not update weather service...'+CEND)
+
+    '''# save to file
     d = shelve.open(shelve_wind) # Save the data to file
     d['wind_10mn_speed']=speed_last10
     d['wind_10mn_gust']=gust_last10
     d['wind_10mn_dir_angle']=dir_last10
     d['wind_10mn_dir_str']=dirstr_last10
     d.close()
-
+    
     print(CGREEN+'[OK] ' + nowStr() + ' v_avg:'+str(speed_last10)+\
     ' [km/h] v_max:'+str(gust_last10)+\
     ' [km/h] ang:'+str(dir_last10)+\
     ' [deg] '+str(dirstr_last10)+\
     CEND)
+    '''
