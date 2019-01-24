@@ -1,9 +1,10 @@
 #!/bin/bash
 # My first script
-
+python wind_daemon &
+sleep 1
 while true; do 
         sudo python scrape_slave.py
         echo 'Finished scraping slave...[OK]'
         echo ''
-        sleep 120
+        sleep 60
 done
