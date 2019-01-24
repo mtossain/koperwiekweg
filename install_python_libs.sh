@@ -1,5 +1,4 @@
-sudo apt-get update
-sudo apt-get upgrade
+sudo apt-get update sudo apt-get upgrade
 
 sudo apt-get install -y python-pip
 sudo apt-get install -y libffi-dev
@@ -14,4 +13,6 @@ sudo pip install mysql-connector==2.1.6
 sudo pip install requests
 sudo pip install pyserial
 sudo pip install python-dateutil
-sudo pip install scrapy
+sudo pip install numpy
+sudo pip install easyprocess
+sudo pip install rpyc

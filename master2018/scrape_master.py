@@ -97,7 +97,7 @@ except:
 
 ###############################################################################
 # PART 4: Write data to database
-if upload_database:
+if upload_database and pressure>500: # valid data
     try:
         cnx = mysql.connector.connect(
              host="127.0.0.1", # your host, usually localhost

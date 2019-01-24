@@ -16,11 +16,9 @@ class WeatherService(rpyc.Service):
     light_intensity = 0
 
     def on_connect(self, conn):
-        print('[OK] Weather server started')
         pass
 
     def on_disconnect(self, conn):
-        print('[OK] Weather server stopped')
         pass
 
     def get_all(self): # this is an exposed method
@@ -32,20 +30,17 @@ class WeatherService(rpyc.Service):
         self.humidity = in_humidity
         self.uv_index = in_uv_index
         self.light_intensity = in_light_intensity
-        print('[OK] Updated server temp: '+str(self.temperature)+' [degC]')
         pass
     
     def update_sensor_rain(self,in_rain,in_rain_rate): # this is an exposed method
         self.rain = in_rain
         self.rain_rate = in_rain_rate
-        print('[OK] Updated server rain: '+str(self.rain)+' [mm]')
         pass
 
     def update_sensor_wind(self,in_wind_speed,in_wind_dir_str,in_wind_dir_angle): # this is an exposed method
         self.wind_speed = in_wind_speed
         self.wind_dir_str = in_wind_dir_str
         self.wind_dir_angle = in_wind_dir_angle
-        print('[OK] Updated server wind: '+str(self.wind_speed)+' [km/h]')
         pass
 
 if __name__ == "__main__":
