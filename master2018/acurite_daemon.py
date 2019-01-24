@@ -1,34 +1,22 @@
-# -------------------------------------------------------------------------------
-#
-#   rtl_433_wrapper.py
-#
-#   Wrapper script for executing "rtl_433" and processing the output as it occurs
-#   in realtime.
-#   As currently written it works with the "Aculink 5n1" weather station.
-#
-#   >>>---> Changes to handle other makes/models will likely be necessary, possibly
-#            to the rtl_433 source as well because ouputting data
-#           as JSON hasn't been implemented in  all of the protocol handlers :-/
-#
-#   The goal is to be able to use "rtl_433" unmodified so that is easy to stay
-#   current as support for additional devices/protocols are added.
-#   Note: To make this "real" some refactoring of the rtl_433 source will be
-#   needed to add consistent support for JSON across the various protocol handlers.
-#
-# ------------------------------------------------------------------------------
+import time
 import sys
 from subprocess import PIPE, Popen, STDOUT
 from threading  import Thread
 import json
 import datetime
 import shelve
+import rpyc
+from easyprocess import Proc
+import os
+
 CRED = '\033[91m'
 CGREEN = '\033[92m'
 CEND = '\033[0m'
 
-cmd = [ '/usr/local/bin/rtl_433', '-F', 'json', '-R', '40']
-shelve_name = "/ramtmp/data_acurite.db"
-shelve = shelve.open(shelve_name) # Save the data to file
+ram_drive            = '/ramtmp/'
+json_rain_sensor     = ram_drive+'rain.json'
+WeatherService = rpyc.connect("localhost", 18861)
+scale_factor         = 0.7 # For rain ticks to mm
 
 def deg2compass(deg):
      arr = ['NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW', 'N']
@@ -65,17 +53,48 @@ def enqueue_output(src, out, queue):
         queue.put(( src, line))
     out.close()
 
-# Create our sub-process...
-# Note that we need to either ignore output from STDERR or merge it with STDOUT
-# due to a limitation/bug somewhere under the covers of "subprocess"
-# > this took awhile to figure out a reliable approach for handling it...
+###############################################################################
+# Get the first rain ticks
+def nowStr():
+    return( datetime.datetime.now().strftime( '%Y-%m-%d %H:%M:%S'))
+
+ticks = 0
+temperature=0
+
+def getRainTicks():
+    global ticks
+    global temperature
+    os.system('rm -Rf '+json_rain_sensor)
+    time.sleep(0.5)
+    cmd = "rtl_433 -R 37 -E -F json:"+json_rain_sensor
+    try:
+        print(CGREEN+'[OK] Getting first rain data...'+CEND)
+        stdout=Proc(cmd).call(timeout=60).stdout
+        time.sleep(0.5)
+        with open(json_rain_sensor) as f:
+            data = json.loads(f.readline())
+        if "temperature_C" in data:
+            temperature = float(data["temperature_C"])
+        if "rain" in data:
+            ticks = int(data["rain"])
+        print(CGREEN+'[OK] ' + nowStr() + ' T:'+str(temperature)+' [degC] R:'+str(ticks)+' [ticks]'+CEND)
+    except:
+        print(CRED+'[NOK] rtl_433 timed out'+CEND)
+    return ticks, temperature
+
+
+first_tick,temperature = getRainTicks() # get the first tick
+print(CGREEN+'[OK] First tick: '+str(first_tick)+' [ticks]'+CEND)
+last_hour = datetime.datetime.now().hour
+
+###############################################################################
+cmd = ['rtl_433','-R','37','-R','40','-F','json']
 p = Popen( cmd, stdout=PIPE, stderr=STDOUT, bufsize=1, close_fds=ON_POSIX)
 q = Queue()
 t = Thread(target=enqueue_output, args=('stdout', p.stdout, q))
 t.daemon = True # thread dies with the program
 t.start()
 
-# ------------------------------------------------------------------------------
 record = {}
 pulse = 0
 while True:
@@ -87,39 +106,42 @@ while True:
     else: # got line
         pulse -= 1
         #   See if the data is something we need to act on...
-        if ( line.find( '"B"') != -1):
-            #   Sample data for our two message formats...
-            #   wind speed: 3 kph, wind direction: 180.0[degree], rain gauge: 0.00 in.
-            #   wind speed: 4 kph, temp: 52.5[degree] F, humidity: 51% RH
+        if (line.find( '"model"') != -1):
 
-            # Although data comes in as two rows I wanted to store it as a
-            # single row in the DB. As a result we need to piece it together
-            # to get a single record before we process it further...
-
-            # At this point our data is a JSON string...
-            # Convert our JSON string to a Python object,
-            # then move the data into a dictionary as we get each row...
             data = json.loads( line)
 
             for item in data:
                 record[ item] = data[ item]
 
             # we have processed two rows & now have a complete record...
-            if ( ( 'humidity' in record) and ( 'rain_inch' in record)):
-                #   sys.stdout.write( nowStr() + ' - record: ' + urllib.urlencode( record) + '\n')
-                sys.stdout.write(CGREEN+nowStr() + ' - Wind Speed: ' + str(record[ 'wind_speed_kph']) + \
-                ', Wind Dir: ' + str(record[ 'wind_dir_deg']) + ', Temp_C: ' + str(degf_to_degc(record['temperature_F'])) + \
-                ', Humidity: ' + str(record[ 'humidity']) + ', Rain: ' + str(record[ 'rain_inch'])+CEND+ '\n')
+            if ( ( 'humidity' in record) and ( 'rain' in record)):
 
-                shelve['temperature']=degf_to_degc(float(record['temperature_F']))
-                shelve['pressure']=1000
-                shelve['rain']=float(record['rain_inch'])*25.6
-                shelve['humidity']=float(record['humidity'])
-                shelve['wind_speed']=float(record['wind_speed_kph'])
-                shelve['wind_dir_angle']=float(record['wind_dir_deg'])
-                shelve['wind_dir_str']=deg2compass(float(record['wind_dir_deg']))
-                shelve['uv_index']=0
-                shelve['light_intensity']=0
+                pressure=1000
+                humidity=round(float(record['humidity']),1)
+                wind_speed=round(float(record['wind_speed_kph']),1)
+                wind_dir_angle=round(float(record['wind_dir_deg']),1)
+                temperature = round(degf_to_degc(record['temperature_F']),1)
+                wind_dir_str = deg2compass(wind_dir_angle)
+
+                hour = datetime.datetime.now().hour
+                ticks=int(record['rain'])
+                if (hour==0) and (hour!=last_hour):
+                    first_tick = ticks
+                    print(CGREEN+'[OK] First tick: '+str(first_tick)+' [ticks]'+CEND)
+                rain = (ticks-first_tick)*scale_factor
+
+                sys.stdout.write(CGREEN+nowStr() + ' - W_vel: ' + str(wind_speed) + \
+                ', W_dir: ' + str(wind_dir_angle) + ', T: ' + str(temperature) + \
+                ', H: ' + str(humidity) + ', R: ' + str(rain)+CEND+ '\n')
+
+                try: # Upload data to the master server
+                    WeatherService.root.update_sensor_rain(rain,0)
+                    WeatherService.root.update_sensor_2018(temperature,pressure,humidity,0,0)
+                    WeatherService.root.update_sensor_wind(wind_speed,wind_dir_str,wind_dir_angle)
+                except:
+                    print(CRED+'[NOK] Could not update weather service...'+CEND)
+                time.sleep(1)
+                last_hour = hour
 
                 record = {} # Empty the record for next time
         else:

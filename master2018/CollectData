@@ -1,10 +1,5 @@
 #!/bin/bash
-# Start the server first
-python server.py &
-sleep 1
-# Start the rain daemon
-python rain_daemon.py &
-sleep 1
+
 # Now upload all data to database and wunderground
 while true; do 
 	ssh -Ng -L 3306:127.0.0.1:3306 hjvveluw@s14.servitnow.nl &
