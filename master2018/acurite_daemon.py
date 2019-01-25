@@ -8,6 +8,7 @@ import shelve
 import rpyc
 from easyprocess import Proc
 import os
+import urllib2
 
 CRED = '\033[91m'
 CGREEN = '\033[92m'
@@ -38,8 +39,6 @@ def degf_to_degc(temperature_in_f):
 def kmh_to_mph(speed_in_kmh):
     speed_in_mph = speed_in_kmh * 0.621371
     return speed_in_mph
-
-stripped = lambda s: "".join(i for i in s if 31 < ord(i) < 127)
 
 #   We're using a queue to capture output as it occurs
 try:
@@ -114,9 +113,14 @@ while True:
                 record[ item] = data[ item]
 
             # we have processed two rows & now have a complete record...
-            if ( ( 'humidity' in record) and ( 'rain' in record)):
+            if ( ( 'humidity' in record) and ( 'rain' in record) and ('wind_dir_deg' in record)):
+                try:
+                    f = urllib2.urlopen('http://api.wunderground.com/api/c76852885ada6b8a/conditions/q/pws:IIJSSELS27.json')
+                    parsed_json = json.loads(f.read())
+                    pressure = int(float(parsed_json['current_observation']['pressure_mb']))
+                except:
+                    pressure = 0
 
-                pressure=1000
                 humidity=round(float(record['humidity']),1)
                 wind_speed=round(float(record['wind_speed_kph']),1)
                 wind_dir_angle=round(float(record['wind_dir_deg']),1)
@@ -132,7 +136,7 @@ while True:
 
                 sys.stdout.write(CGREEN+nowStr() + ' - W_vel: ' + str(wind_speed) + \
                 ', W_dir: ' + str(wind_dir_angle) + ', T: ' + str(temperature) + \
-                ', H: ' + str(humidity) + ', R: ' + str(rain)+CEND+ '\n')
+                ', P: '+str(pressure)+', H: ' + str(humidity) + ', R: ' + str(rain)+CEND+ '\n')
 
                 try: # Upload data to the master server
                     WeatherService.root.update_sensor_rain(rain,0)
