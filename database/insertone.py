@@ -12,7 +12,7 @@ import numpy as np
 # 5: Rain
 ##############################################################################
 # Run variables:
-variable = 0
+variable = 5
 PasswordMysql = open("/home/pi/AuthBhostedMysql.txt",'r').read().split('\n')[0]
 ##############################################################################
 

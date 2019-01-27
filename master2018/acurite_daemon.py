@@ -105,7 +105,7 @@ while True:
     else: # got line
         pulse -= 1
         #   See if the data is something we need to act on...
-        if (line.find( '"model"') != -1):
+        if (line.find( '"A"') != -1) or (line.find('Inovalley')!=-1):
 
             data = json.loads( line)
 
