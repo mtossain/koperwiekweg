@@ -4,11 +4,11 @@ from subprocess import PIPE, Popen, STDOUT
 from threading  import Thread
 import json
 import datetime
-import shelve
 import rpyc
 from easyprocess import Proc
 import os
 import urllib2
+import numpy as np
 
 CRED = '\033[91m'
 CGREEN = '\033[92m'
@@ -16,8 +16,42 @@ CEND = '\033[0m'
 
 ram_drive            = '/ramtmp/'
 json_rain_sensor     = ram_drive+'rain.json'
-WeatherService = rpyc.connect("localhost", 18861)
+WeatherService       = rpyc.connect("localhost", 18861)
 scale_factor         = 0.7 # For rain ticks to mm
+
+class Smooth:
+
+    # Smooth class with outlier removal
+
+    # Length: Length of the smoothing window
+    # Threshold: number STD above which to take out outliers
+
+    def __init__(self, length,threshold):
+        self.num_added = 0
+        self.length = length
+        self.threshold = threshold
+        self.data = np.array(np.zeros(length))
+
+    def add(self,number):
+
+       # Adds a number if it is not an outlier
+       # Returns the mean of the window
+
+        self.data = np.insert(self.data,0,number)
+        if self.num_added < self.length:
+            self.data = np.delete(self.data,self.length) # cannot be done at once
+            self.num_added += 1
+            return (self.data[0:self.num_added].mean())
+        else:
+            zscore = (self.data - self.data.mean())/self.data.std()
+            absolute_normalized = np.abs(zscore)
+            test_idx = absolute_normalized > self.threshold
+            if test_idx[0] == True:
+                self.data = np.delete(self.data,0)
+            else:
+                self.data = np.delete(self.data,self.length) # cannot be done at once
+            self.num_added += 1
+            return (self.data.mean())
 
 def deg2compass(deg):
      arr = ['NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW', 'N']
@@ -96,6 +130,8 @@ t.start()
 
 record = {}
 pulse = 0
+temperature_s = Smooth(10,2)
+
 while True:
 
     try:
@@ -124,7 +160,9 @@ while True:
                 humidity=round(float(record['humidity']),1)
                 wind_speed=round(float(record['wind_speed_kph']),1)
                 wind_dir_angle=round(float(record['wind_dir_deg']),1)
-                temperature = round(degf_to_degc(record['temperature_F']),1)
+                print(round(degf_to_degc(record['temperature_F']),1))
+                temperature = round(temperature_s.add(degf_to_degc(record['temperature_F'])),1)
+                print(temperature_s.data)
                 wind_dir_str = deg2compass(wind_dir_angle)
 
                 hour = datetime.datetime.now().hour
@@ -150,7 +188,7 @@ while True:
                 record = {} # Empty the record for next time
         else:
             False
-            sys.stdout.write( nowStr() + ' - stderr: ' + line)
+            #sys.stdout.write( nowStr() + ' - stderr: ' + line)
             if (( line.find( 'Failed') != -1) or ( line.find( 'No supported devices') != -1)):
                 sys.stdout.write( '   >>>---> ERROR, exiting...\n\n')
                 exit( 1)

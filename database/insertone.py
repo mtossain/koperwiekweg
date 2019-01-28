@@ -49,6 +49,8 @@ try:
                 UVIndex = float(col)/60 # Estimate from calibration with others
             if colnum == 13:
                 Rain = int(int(col)/10)
+                if Rain == -0.1:
+                    Rain = 0
             if colnum == 14:
                 Baro = int(int(col)/10)
             if colnum == 17:
