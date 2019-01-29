@@ -37,21 +37,27 @@ class Smooth:
        # Adds a number if it is not an outlier
        # Returns the mean of the window
 
-        self.data = np.insert(self.data,0,number)
-        if self.num_added < self.length:
-            self.data = np.delete(self.data,self.length) # cannot be done at once
+        if self.num_added < self.length: # array still not full
+            self.data = np.insert(self.data,0,number)
+            self.data = np.delete(self.data,self.length)
             self.num_added += 1
             return (self.data[0:self.num_added].mean())
         else:
-            zscore = (self.data - self.data.mean())/self.data.std()
-            absolute_normalized = np.abs(zscore)
-            test_idx = absolute_normalized > self.threshold
-            if test_idx[0] == True:
-                self.data = np.delete(self.data,0)
-            else:
-                self.data = np.delete(self.data,self.length) # cannot be done at once
-            self.num_added += 1
-            return (self.data.mean())
+            if self.data.std()>0.1:
+                self.data = np.insert(self.data,0,number)
+                zscore = (self.data - self.data.mean())/self.data.std()
+                absolute_normalized = np.abs(zscore)
+                test_idx = absolute_normalized > self.threshold
+                if test_idx[0] == True:
+                    self.data = np.delete(self.data,0)
+                else:
+                    self.data = np.delete(self.data,self.length) # cannot be done at once
+                self.num_added += 1
+                return (self.data.mean())
+            else: # all the same, std = 0 -> reset
+                self.data = np.zeros(self.length)
+                self.num_added = 0
+                return number
 
 def deg2compass(deg):
      arr = ['NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW', 'N']
@@ -130,7 +136,7 @@ t.start()
 
 record = {}
 pulse = 0
-temperature_s = Smooth(10,2)
+temperature_s = Smooth(25,4)
 
 while True:
 
