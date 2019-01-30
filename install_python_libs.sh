@@ -16,3 +16,4 @@ sudo pip install python-dateutil
 sudo pip install numpy
 sudo pip install easyprocess
 sudo pip install rpyc
+sudo pip install pandas
