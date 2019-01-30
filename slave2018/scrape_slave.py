@@ -12,14 +12,12 @@ CGREEN = '\033[92m'
 CEND = '\033[0m'
 
 flag_upload_to_master = True
-flag_camera           = False
+flag_camera           = True
 
-ftp_server            = '192.168.178.11'
+ftp_server            = next(open('/home/pi/MasterIP.txt')) 
 ftp_username          = 'pi'
 ftp_password          = open("/home/pi/AuthMasterPi.txt",'r').read().split('\n')[0]
 local_path            = '/ramtmp/'
-shelve_name_slave     = local_path + 'data_slave.db'
-shelve_wind           = local_path + 'wind.db'
 WeatherService = rpyc.connect(ftp_server, 18861)
 
 def nowStr():

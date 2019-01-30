@@ -16,7 +16,9 @@ CEND = '\033[0m'
 
 # Compute the values over the last 10mn: meanspeed, maxspeed, meandir
 
-ftp_server           = '192.168.178.11'
+#ftp_server           = '192.168.178.11'
+ftp_server = open('/home/pi/MasterIP.txt').readline().rstrip()
+print (CGREEN+'[OK] Connection to FTP Server: '+ftp_server) 
 WeatherService = rpyc.connect(ftp_server, 18861)
 
 def nowStr():
