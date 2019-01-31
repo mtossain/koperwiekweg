@@ -34,7 +34,7 @@ class Smooth:
         # Adds a number if it is not more than threshold away from previous number
         # Returns the mean of the window
 
-        if len(self.data) < self.length: # array still not full
+        if len(self.data) == 0: # array still not full
             self.data.appendleft(number)
         else:
             if np.abs(number-self.data[0])<self.threshold:

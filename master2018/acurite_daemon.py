@@ -122,9 +122,11 @@ while True:
                 try:
                     f = urllib2.urlopen('http://api.wunderground.com/api/c76852885ada6b8a/conditions/q/pws:IIJSSELS27.json')
                     parsed_json = json.loads(f.read())
+                    print(float(parsed_json['current_observation']['pressure_mb']))
                     pressure = round(pressure_s.add_step(float(parsed_json['current_observation']['pressure_mb'])),1)
+                    print(pressure_s.data)
                 except:
-                    pressure = 0
+                    pressure = pressure_s.add_step(0.0)
 
                 humidity=round(humidity_s.add_step(float(record['humidity'])),1)
                 wind_speed=round(float(record['wind_speed_kph']),1)
