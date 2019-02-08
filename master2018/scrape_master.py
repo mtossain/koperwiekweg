@@ -18,7 +18,7 @@ CEND   ='\033[0m'
 
 ###############################################################################
 # CONFIGURATION
-upload_fisheye       = True
+upload_fisheye       = False
 upload_database      = True
 upload_wunderground  = False
 read_master          = True
