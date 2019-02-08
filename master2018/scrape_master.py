@@ -8,7 +8,6 @@ from datetime import datetime
 import math
 import json
 import rpyc
-#from dateutil.parser import *
 import datetime as dt
 import datetime
 import ftplib
@@ -18,7 +17,7 @@ CEND   ='\033[0m'
 
 ###############################################################################
 # CONFIGURATION
-upload_fisheye       = False
+upload_fisheye       = True
 upload_database      = True
 upload_wunderground  = True
 read_master          = True
