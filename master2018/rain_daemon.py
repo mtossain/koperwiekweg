@@ -40,6 +40,8 @@ def getRainTicks():
             ticks = int(data["rain"])
     except:
         print(CRED+'[NOK] rtl_433 timed out'+CEND)
+        cmd = "sudo usbreset /dev/bus/usb/001/009"
+        stdout=Proc(cmd).call(timeout=60).stdout
     return ticks, temperature
 
 
