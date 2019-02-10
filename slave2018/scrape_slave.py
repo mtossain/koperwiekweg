@@ -58,7 +58,7 @@ except:
 
 if flag_camera:
     try:
-        os.system('raspistill -o '+local_path+'cam.jpg') # Take the camera image
+        os.system('raspistill -h 1024 -w 1024 -o '+local_path+'cam.jpg') # Take the camera image
         print('[OK]  '+nowStr()+' Got the camera image: '+local_path+'cam.jpg')
     except:
         print(CRED+'[NOK] '+nowStr()+' Could not take the camera image'+CEND)
@@ -73,6 +73,7 @@ except:
 if flag_upload_to_master:
     try:
         if flag_camera:
+            ftp_connection = ftplib.FTP(ftp_server, ftp_username, ftp_password)
             fh2 = open(local_path+"cam.jpg", 'rb')
             ftp_connection.storbinary('STOR /ramtmp/cam.jpg', fh2)
             fh2.close()

@@ -6,5 +6,5 @@ while true; do
         sudo python scrape_slave.py
         echo 'Finished scraping slave...[OK]'
         echo ''
-        sleep 60
+        sleep 90
 done
