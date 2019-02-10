@@ -54,11 +54,9 @@ def nowStr():
 if upload_fisheye:
     try:
         print('*** Converting camera fisheye image')
-        os.system("convert -size 1024x1024 xc:none -fill "+ram_drive+"cam.jpg -draw 'circle 512,512 512,1' "+ram_drive+"dome.png") # cut out the circle
-        #os.system("convert -size 2592x1944 xc:none -fill "+ram_drive+"cam.jpg -draw 'circle 1296,972 1296,1944' "+ram_drive+"back2.png") # cut out the circle
-        #os.system("convert "+ram_drive+"back2.png -crop 1944x1944+325+00 "+ram_drive+"back3.png") # take square around circle
-        #os.system("convert "+ram_drive+"back3.png -resize 1024x1024 "+ram_drive+"back4.png") # take square around circle
-        #os.system("convert -size 1024x1024 xc:none "+ram_drive+"back4.png -rotate '-90' -composite "+ram_drive+"dome.png") # rotate around axis
+        os.system("convert "+ram_drive+"cam.jpg -page -20+35 -background none -flatten "+ram_drive+"back.png" # translate the image to the middle
+        os.system("convert -size 1024x1024 xc:none -fill "+ram_drive+"back.png -draw 'circle 512,512 512,1' "+ram_drive+"back2.png") # cut out the circle
+        os.system("convert -size 1024x1024 xc:none "+ram_drive+"back2.png -rotate '90' -composite "+ram_drive+"dome.png") # rotate around axis
         print('[OK] '+nowStr()+' Converted camera image')
     except:
         print(CRED+'[NOK] '+nowStr()+' Could not convert camera image'+CEND)
