@@ -19,6 +19,10 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
+import logging
+import math
+
+
 # Default I2C address for device.
 MCP9808_I2CADDR_DEFAULT        = 0x18
 
@@ -48,12 +52,12 @@ class MCP9808(object):
 	board.
 	"""
 
-	def __init__(self, address, i2c=None, **kwargs):
+	def __init__(self, address=MCP9808_I2CADDR_DEFAULT, i2c=None, **kwargs):
 		"""Initialize MCP9808 device on the specified I2C address and bus number.
 		Address defaults to 0x18 and bus number defaults to the appropriate bus
 		for the hardware.
 		"""
-		#self._logger = getLogger('Adafruit_MCP9808.MCP9808')
+		self._logger = logging.getLogger('Adafruit_MCP9808.MCP9808')
 		if i2c is None:
 			import Adafruit_GPIO.I2C as I2C
 			i2c = I2C
@@ -67,15 +71,15 @@ class MCP9808(object):
 		# Check manufacturer and device ID match expected values.
 		mid = self._device.readU16BE(MCP9808_REG_MANUF_ID)
 		did = self._device.readU16BE(MCP9808_REG_DEVICE_ID)
-		#self._logger.debug('Read manufacturer ID: {0:04X}'.format(mid))
-		#self._logger.debug('Read device ID: {0:04X}'.format(did))
+		self._logger.debug('Read manufacturer ID: {0:04X}'.format(mid))
+		self._logger.debug('Read device ID: {0:04X}'.format(did))
 		return mid == 0x0054 and did == 0x0400
 
 	def readTempC(self):
 		"""Read sensor and return its value in degrees celsius."""
 		# Read temperature register value.
 		t = self._device.readU16BE(MCP9808_REG_AMBIENT_TEMP)
-		#self._logger.debug('Raw ambient temp register value: 0x{0:04X}'.format(t & 0xFFFF))
+		self._logger.debug('Raw ambient temp register value: 0x{0:04X}'.format(t & 0xFFFF))
 		# Scale and convert to signed value.
 		temp = (t & 0x0FFF) / 16.0
 		if t & 0x1000:

@@ -34,9 +34,9 @@ import MCP9808
 # from the main GPIO header and the library will figure out the bus number based
 # on the Pi's revision.
 
-def get_temp_mcp9808(address):
+def get_temp_mcp9808():
 
-	sensor = MCP9808.MCP9808(address)
+	sensor = MCP9808.MCP9808()
 
 	# Optionally you can override the address and/or bus number:
 	#sensor = MCP9808.MCP9808(address=0x20, busnum=2)
