@@ -217,6 +217,13 @@ class MCP9808(object):
 			temp -= 256.0
 		return temp
 
+def get_temp_mcp9808(address):
+	sensor = MCP9808(address)
+	# Optionally you can override the address and/or bus number:
+	#sensor = MCP9808.MCP9808(address=0x20, busnum=2)
+	# Initialize communication with the sensor.
+	sensor.begin()
+	return sensor.readTempC()
 
 # BME Part
 def getShort(data, index):
@@ -471,11 +478,9 @@ class SI1145(object):
 def read_si1145all(address):
 
   sensor = SI1145(address)
-  IR = 0
-  while (IR!=0):
-      vis = sensor.readVisible()
-      IR = sensor.readIR()
-      UV = sensor.readUV()
-      uvIndex = UV / 100.0
+  vis = sensor.readVisible()
+  IR = sensor.readIR()
+  UV = sensor.readUV()
+  uvIndex = UV / 100.0
 
   return vis,IR,uvIndex

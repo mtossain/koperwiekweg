@@ -7,19 +7,9 @@ import shelve
 import ftplib
 import datetime
 import rpyc
-<<<<<<< HEAD
-import logging
-import math
 import time
-import I2C
-from read_mcp9808 import *
-from read_si1145 import *
 import smooth
-=======
 import sensor
-import smooth
-import time
->>>>>>> 9876d5427e97a3b957f19c1c000c950411e53478
 
 CRED = '\033[91m'
 CGREEN = '\033[92m'
@@ -41,20 +31,14 @@ temperature_s = smooth.Smooth(5,5)
 pressure_s = smooth.Smooth(5,5)
 humidity_s = smooth.Smooth(5,5)
 
-<<<<<<< HEAD
-for i in range(1):
-#while (True):
-=======
 while (True):
->>>>>>> 9876d5427e97a3b957f19c1c000c950411e53478
 
     # Read the sensor data
     pressure=0
     humidity=0
     temperature_bme280=0
-<<<<<<< HEAD
     try:
-        #temperature_bme280,pressure,humidity = read_bme280.readBME280All(0x76)
+        temperature_bme280,pressure,humidity = sensor.readBME280All(0x76)
         temperature_bme280 = round(temperature_bme280,1)
         pressure=round(pressure_s.add_step(pressure),1) # smooth the data
         humidity=round(humidity_s.add_step(humidity),1) # smooth the data
@@ -64,7 +48,7 @@ while (True):
 
     temperature=0
     try:
-        temperature = read_mcp9808.get_temp_mcp9808(0x18)
+        temperature = sensor.get_temp_mcp9808(0x18)
         temperature=round(temperature_s.add_step(temperature),1) # smooth the data
         print('[OK]  '+nowStr()+' MCP9808 T: '+str(temperature)+' [degC]')
     except:
@@ -74,7 +58,7 @@ while (True):
     ir_value=0
     uv_index=0
     try:
-        light_intensity,ir_value,uv_index = read_si1145.read_si1145all(0x60)
+        light_intensity,ir_value,uv_index = sensor.read_si1145all(0x60)
         print('[OK]  '+nowStr()+' SI1145 I: '+str(light_intensity)+' [-] IR: '+str(ir_value)+' [-] UV: '+str(uv_index)+' [-]')
     except:
         print(CRED+'[NOK] '+nowStr()+' Could not find SI1145 light and uv_index'+CEND)
@@ -87,47 +71,6 @@ while (True):
             print(CRED+'[NOK] '+nowStr()+' Could not take the camera image'+CEND)
 
 
-=======
-    try:
-        temperature_bme280,pressure,humidity = readBME280All(0x76)
-        temperature_bme280 = round(temperature_bme280,1)
-        pressure=round(pressure_s.add_step(pressure),1) # smooth the data
-        humidity=round(humidity_s.add_step(humidity),1) # smooth the data
-        print('[OK]  '+nowStr()+' BME280 T: '+str(temperature_bme280)+' [degC] P: '+str(pressure) + ' [mBar] H: '+str(humidity)+' [%]')
-    except:
-        print(CRED+'[NOK] '+nowStr()+' Could not find the data from the BME280 pressure and humidity'+CEND)
-
-
-    temperature=0
-    try:
-        temperature = get_temp_mcp9808(0x18)
-        temperature=round(temperature_s.add_step(temperature),1) # smooth the data
-        print('[OK]  '+nowStr()+' MCP9808 T: '+str(temperature)+' [degC]')
-    except:
-        print(CRED+'[NOK] '+nowStr()+' Could not find MCP9808 temperature'+CEND)
-
-
-    light_intensity=0
-    ir_value=0
-    uv_index=0
-    try:
-        address = 0x60
-        print('I2C Address: '+str(address))
-        light_intensity,ir_value,uv_index = read_si1145all(0x60)
-        print('[OK]  '+nowStr()+' SI1145 I: '+str(light_intensity)+' [-] IR: '+str(ir_value)+' [-] UV: '+str(uv_index)+' [-]')
-    except:
-        print(CRED+'[NOK] '+nowStr()+' Could not find SI1145 light and uv_index'+CEND)
-
-
-    if flag_camera:
-        try:
-            os.system('raspistill -h 1054 -w 1054 -o '+local_path+'cam.jpg') # Take the camera image
-            print('[OK]  '+nowStr()+' Got the camera image: '+local_path+'cam.jpg')
-        except:
-            print(CRED+'[NOK] '+nowStr()+' Could not take the camera image'+CEND)
-
-
->>>>>>> 9876d5427e97a3b957f19c1c000c950411e53478
     if flag_upload_to_master:
         try:
             WeatherService.root.update_sensor_2018(temperature,pressure,humidity,uv_index,light_intensity)
@@ -135,10 +78,6 @@ while (True):
         except:
             print(CRED+'[NOK] Could not update weather service...'+CEND)
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 9876d5427e97a3b957f19c1c000c950411e53478
         try:
             if flag_camera:
                 ftp_connection = ftplib.FTP(ftp_server, ftp_username, ftp_password)
@@ -149,8 +88,4 @@ while (True):
         except:
             print(CRED+'[NOK] '+nowStr()+' Could not upload the data to the master.'+CEND)
 
-<<<<<<< HEAD
-    time.sleep(10)
-=======
     time.sleep(3)
->>>>>>> 9876d5427e97a3b957f19c1c000c950411e53478
