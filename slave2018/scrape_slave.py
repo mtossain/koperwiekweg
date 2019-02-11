@@ -7,9 +7,9 @@ import shelve
 import ftplib
 import datetime
 import rpyc
-import sensor
-import smooth
 import time
+import smooth
+import sensor
 
 CRED = '\033[91m'
 CGREEN = '\033[92m'
@@ -38,7 +38,7 @@ while (True):
     humidity=0
     temperature_bme280=0
     try:
-        temperature_bme280,pressure,humidity = readBME280All(0x76)
+        temperature_bme280,pressure,humidity = sensor.readBME280All(0x76)
         temperature_bme280 = round(temperature_bme280,1)
         pressure=round(pressure_s.add_step(pressure),1) # smooth the data
         humidity=round(humidity_s.add_step(humidity),1) # smooth the data
@@ -46,27 +46,22 @@ while (True):
     except:
         print(CRED+'[NOK] '+nowStr()+' Could not find the data from the BME280 pressure and humidity'+CEND)
 
-
     temperature=0
     try:
-        temperature = get_temp_mcp9808(0x18)
+        temperature = sensor.get_temp_mcp9808(0x18)
         temperature=round(temperature_s.add_step(temperature),1) # smooth the data
         print('[OK]  '+nowStr()+' MCP9808 T: '+str(temperature)+' [degC]')
     except:
         print(CRED+'[NOK] '+nowStr()+' Could not find MCP9808 temperature'+CEND)
 
-
     light_intensity=0
     ir_value=0
     uv_index=0
     try:
-        address = 0x60
-        print('I2C Address: '+str(address))
-        light_intensity,ir_value,uv_index = read_si1145all(0x60)
+        light_intensity,ir_value,uv_index = sensor.read_si1145all(0x60)
         print('[OK]  '+nowStr()+' SI1145 I: '+str(light_intensity)+' [-] IR: '+str(ir_value)+' [-] UV: '+str(uv_index)+' [-]')
     except:
         print(CRED+'[NOK] '+nowStr()+' Could not find SI1145 light and uv_index'+CEND)
-
 
     if flag_camera:
         try:

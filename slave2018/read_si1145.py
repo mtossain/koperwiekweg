@@ -1,8 +1,5 @@
-import logging
-import time
 
 # Get from here: https://github.com/adafruit/Adafruit_Python_GPIO
-import I2C
 
 # COMMANDS
 SI1145_PARAM_QUERY                      = 0x80
@@ -129,7 +126,9 @@ SI1145_REG_CHIPSTAT                     = 0x30
 SI1145_ADDR                             = 0x60
 
 class SI1145(object):
-        def __init__(self, address=SI1145_ADDR, busnum=I2C.get_default_bus()):
+        def __init__(self, address):
+
+                busnum=I2C.get_default_bus()
 
                 self._logger = logging.getLogger('SI1145')
 
@@ -239,10 +238,9 @@ class SI1145(object):
         def readProx(self):
                 return self._device.readU16LE(0x26)
 
-def read_si1145all():
+def read_si1145all(address):
 
-    sensor = SI1145(address=0x60, busnum=1)
-
+    sensor = SI1145(address)
     vis = sensor.readVisible()
     IR = sensor.readIR()
     UV = sensor.readUV()

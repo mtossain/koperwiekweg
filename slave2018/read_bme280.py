@@ -23,11 +23,7 @@ import time
 from ctypes import c_short
 from ctypes import c_byte
 from ctypes import c_ubyte
-
-DEVICE = 0x76 # Default device I2C address
-
-bus = smbus.SMBus(1) # Rev 2 Pi, Pi 2 & Pi 3 uses bus 1
-                     # Rev 1 Pi uses bus 0
+import I2C
 
 def getShort(data, index):
   # return two bytes from data as a signed 16-bit value
@@ -49,13 +45,19 @@ def getUChar(data,index):
   result =  data[index] & 0xFF
   return result
 
-def readBME280ID(addr=DEVICE):
+def readBME280ID(addr):
+
+  bus = smbus.SMBus(I2C.get_default_bus()) # Rev 2 Pi, Pi 2 & Pi 3 uses bus 1
+                         # Rev 1 Pi uses bus 0
   # Chip ID Register Address
   REG_ID     = 0xD0
   (chip_id, chip_version) = bus.read_i2c_block_data(addr, REG_ID, 2)
   return (chip_id, chip_version)
 
-def readBME280All(addr=DEVICE):
+def readBME280All(addr):
+
+  bus = smbus.SMBus(I2C.get_default_bus()) # Rev 2 Pi, Pi 2 & Pi 3 uses bus 1
+                         # Rev 1 Pi uses bus 0
   # Register Addresses
   REG_DATA = 0xF7
   REG_CONTROL = 0xF4
