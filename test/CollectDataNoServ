@@ -1,9 +1,0 @@
-#!/bin/bash
-# My first script
-sleep 1
-while true; do 
-        sudo python scrape_noserv.py
-        echo 'Finished scraping slave...[OK]'
-        echo ''
-        sleep 60
-done
