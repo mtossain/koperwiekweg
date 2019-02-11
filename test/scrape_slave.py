@@ -39,7 +39,7 @@ while (True):
     pressure=0
     humidity=0
     try:
-        temperature_bme280,pressure,humidity = read_bme280.readBME280All()
+        temperature_bme280,pressure,humidity = read_bme280.readBME280All(0x76)
         temperature_bme280 = round(temperature_bme280,1)
         pressure=round(pressure_s.add_step(pressure),1) # smooth the data
         humidity=round(humidity_s.add_step(humidity),1) # smooth the data
@@ -50,7 +50,7 @@ while (True):
 
     temperature=0
     try:
-        temperature = read_mcp9808.get_temp_mcp9808()
+        temperature = read_mcp9808.get_temp_mcp9808(0x18)
         temperature=round(temperature_s.add_step(temperature),1) # smooth the data
         print('[OK]  '+nowStr()+' MCP9808 T: '+str(temperature)+' [degC]')
     except:
@@ -61,7 +61,7 @@ while (True):
     ir_value=0
     uv_index=0
     try:
-        light_intensity,ir_value,uv_index = read_si1145.read_si1145all()
+        light_intensity,ir_value,uv_index = read_si1145.read_si1145all(0x60)
         print('[OK]  '+nowStr()+' SI1145 I: '+str(light_intensity)+' [-] IR: '+str(ir_value)+' [-] UV: '+str(uv_index)+' [-]')
     except:
         print(CRED+'[NOK] '+nowStr()+' Could not find SI1145 light and uv_index'+CEND)

@@ -52,7 +52,7 @@ class MCP9808(object):
 	board.
 	"""
 
-	def __init__(self, address=MCP9808_I2CADDR_DEFAULT, i2c=None, **kwargs):
+	def __init__(self, address, i2c=None, **kwargs):
 		"""Initialize MCP9808 device on the specified I2C address and bus number.
 		Address defaults to 0x18 and bus number defaults to the appropriate bus
 		for the hardware.
