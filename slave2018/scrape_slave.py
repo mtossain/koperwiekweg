@@ -58,7 +58,7 @@ except:
 
 if flag_camera:
     try:
-        os.system('raspistill -h 1024 -w 1024 -o '+local_path+'cam.jpg') # Take the camera image
+        os.system('raspistill -h 1054 -w 1054 -o '+local_path+'cam.jpg') # Take the camera image
         print('[OK]  '+nowStr()+' Got the camera image: '+local_path+'cam.jpg')
     except:
         print(CRED+'[NOK] '+nowStr()+' Could not take the camera image'+CEND)
