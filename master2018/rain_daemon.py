@@ -30,7 +30,7 @@ def getRainTicks():
     time.sleep(0.5)
     cmd = "rtl_433 -R 37 -E -F json:"+json_rain_sensor
     try:
-        stdout=Proc(cmd).call(timeout=60).stdout
+        stdout=Proc(cmd).call(timeout=120).stdout
         time.sleep(0.5)
         with open(json_rain_sensor) as f:
             data = json.loads(f.readline())
