@@ -62,11 +62,15 @@ if upload_fisheye:
         print(CRED+'[NOK] '+nowStr()+' Could not convert camera image'+CEND)
     try:
         FileName = ram_drive+"dome.png"
+        FileName2 = ram_drive+"cam_hd.jpg"
         file = open(FileName,'rb') # file to send
+        file2 = open(FileName2,'rb') # file to send
         session = ftplib.FTP('s14.servitnow.nl','hjvveluw',PasswordFTP,timeout=30)
         session.cwd('/domains/koperwiekweg.nl/public_html')
         session.storbinary('STOR dome.png', file) # send the file
+        session.storbinary('STOR cam_hd.jpg', file2) # send the file
         file.close() # close file and FTP
+        file2.close()
         session.quit()
         print('[OK] '+nowStr() +' Uploaded fisheye '+FileName+' to FTP')
     except (ftplib.all_errors) as e:
