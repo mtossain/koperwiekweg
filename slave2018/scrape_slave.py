@@ -61,6 +61,7 @@ except:
 if flag_camera:
     try:
         os.system('raspistill -h 1054 -w 1054 -o '+local_path+'cam.jpg') # Take the camera image
+        os.system('raspistill -h 1944 -w 1944 -o '+local_path+'cam_hd.jpg') # Take the camera image
         print('[OK]  '+nowStr()+' Got the camera image: '+local_path+'cam.jpg')
     except:
         print(CRED+'[NOK] '+nowStr()+' Could not take the camera image'+CEND)
@@ -78,6 +79,9 @@ if flag_upload_to_master:
             fh2 = open(local_path+"cam.jpg", 'rb')
             ftp_connection.storbinary('STOR /ramtmp/cam.jpg', fh2)
             fh2.close()
+            fh = open(local_path+"cam_hd.jpg", 'rb')
+            ftp_connection.storbinary('STOR /ramtmp/cam_hd.jpg', fh)
+            fh.close()
         print('[OK]  '+nowStr()+' Uploaded data to the ftp master: '+ftp_server)
     except:
         print(CRED+'[NOK] '+nowStr()+' Could not upload the data to the master.'+CEND)
