@@ -24,8 +24,8 @@ read_master          = True
 read_slave           = True
 
 WU_url               = 'https://weatherstation.wunderground.com/weatherstation/updateweatherstation.php?'
-WU_station_id        = "IIJSSELS27" # ID
-WU_station_pwd       = "t1j51fnq" # PASS
+WU_station_id        = "IIJSSELS41" # ID
+WU_station_pwd       = "2mpb4gmi" # PASS
 
 PasswordFTP          = open('/home/pi/AuthBhostedFTP.txt','r').read().split('\n')[0]
 PasswordMysql        = open("/home/pi/AuthBhostedMysql.txt",'r').read().split('\n')[0]
@@ -89,9 +89,9 @@ if upload_fisheye:
 ###############################################################################
 # Get the data from the weather server
 try:
-    temperature,pressure,humidity,rain,rain_rate,wind_speed,wind_dir_str,wind_dir_angle,uv_index,light_intensity = WeatherService.root.get_all()
+    temperature,pressure,humidity,rain,rain_rate,wind_speed,wind_gust,wind_dir_str,wind_dir_angle,uv_index,light_intensity = WeatherService.root.get_all()
     print(CGREEN+'[OK] ' + nowStr() + ' T:'+str(temperature)+ ' P:'+str(pressure)+' H:'+\
-    str(humidity)+' R:'+str(rain)+' W:'+str(wind_speed)+' WD:'+wind_dir_str+\
+    str(humidity)+' R:'+str(rain)+' W:'+str(wind_speed)+' WG:'+str(wind_gust)+' WD:'+wind_dir_str+\
     ' WDA:'+str(wind_dir_angle)+' UVI:'+str(uv_index)+' LI:'+str(light_intensity)+CEND)
 except:
     print(CRED+'[NOK] Could not connect to weather server'+CEND)
@@ -110,9 +110,9 @@ if upload_database and pressure>500: # valid data
         cursor = cnx.cursor() # Use all the SQL you like
         now = time.strftime("%Y-%m-%d %H:%M:%S")
         cursor.execute("INSERT INTO AcuRiteSensor (SensorDateTime, Temperature, Pressure, Humidity, " + \
-        "WindSpeed, WindDirection, WindDirectionAngle, Rainfall, RainfallRate, UVIndex,TransmitPowerkW, SunPower, LightningDist) VALUES " + \
+        "WindSpeed, WindGust, WindDirection, WindDirectionAngle, Rainfall, RainfallRate, UVIndex,TransmitPowerkW, SunPower, LightningDist) VALUES " + \
         "(\'"+ now +"\',\'" + str(temperature)+ "\',\'" + str(pressure)+ "\',\'" + \
-        str(humidity)+ "\',\'" + str(wind_speed)+ "\',\'" + wind_dir_str+ "\',\'" + str(wind_dir_angle)+ \
+        str(humidity)+ "\',\'" + str(wind_speed)+  "\',\'" + str(wind_gust)+"\',\'" + wind_dir_str+ "\',\'" + str(wind_dir_angle)+ \
         "\',\'" + str(rain)+ "\',\'" + str(rain_rate)+ "\',\'" + str(uv_index)+ "\',\'" + str(0)+ "\',\'" + \
         str(light_intensity) + "\',\'" + str(99999) + "\')")
         cnx.commit()
@@ -133,7 +133,7 @@ if upload_wunderground:
     humidity_str = "{0:.2f}".format(humidity)
     pressure_in_str = "{0:.2f}".format(hpa_to_inches(pressure))
     wind_speed_mph_str = "{0:.2f}".format(kmh_to_mph(wind_speed))
-    wind_gust_mph_str = "{0:.2f}".format(kmh_to_mph(wind_speed))
+    wind_gust_mph_str = "{0:.2f}".format(kmh_to_mph(wind_gust))
     wind_average_str = str(wind_speed)
     rainfall_in_str = "{0:.2f}".format(mm_to_inches(rain_rate))
     daily_rainfall_in_str = "{0:.2f}".format(mm_to_inches(rain))
