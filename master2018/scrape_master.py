@@ -1,3 +1,4 @@
+import numpy as np
 import os
 import time
 import requests
@@ -24,8 +25,8 @@ read_master          = True
 read_slave           = True
 
 WU_url               = 'https://weatherstation.wunderground.com/weatherstation/updateweatherstation.php?'
-WU_station_id        = "IIJSSELS27" # ID
-WU_station_pwd       = "t1j51fnq" # PASS
+WU_station_id        = "IIJSSELS41" # ID
+WU_station_pwd       = "2mpb4gmi" # PASS
 
 PasswordFTP          = open('/home/pi/AuthBhostedFTP.txt','r').read().split('\n')[0]
 PasswordMysql        = open("/home/pi/AuthBhostedMysql.txt",'r').read().split('\n')[0]
@@ -34,6 +35,11 @@ database_pass        = "hjvveluw_wopr"
 ram_drive            = "/ramtmp/"
 WeatherService = rpyc.connect("localhost", 18861)
 
+def dewpoint(T,RH):
+    a = 17.271
+    b = 237.7
+    gamma = (a * T / (b + T)) + np.log(RH/100.0)
+    return ((b * gamma) / (a - gamma))
 def hpa_to_inches(pressure_in_hpa):
     pressure_in_inches_of_m = pressure_in_hpa * 0.02953
     return pressure_in_inches_of_m
@@ -62,11 +68,15 @@ if upload_fisheye:
         print(CRED+'[NOK] '+nowStr()+' Could not convert camera image'+CEND)
     try:
         FileName = ram_drive+"dome.png"
+        FileName2 = ram_drive+"cam_hd.jpg"
         file = open(FileName,'rb') # file to send
+        file2 = open(FileName2,'rb') # file to send
         session = ftplib.FTP('s14.servitnow.nl','hjvveluw',PasswordFTP,timeout=30)
         session.cwd('/domains/koperwiekweg.nl/public_html')
         session.storbinary('STOR dome.png', file) # send the file
+        session.storbinary('STOR cam_hd.jpg', file2) # send the file
         file.close() # close file and FTP
+        file2.close()
         session.quit()
         print('[OK] '+nowStr() +' Uploaded fisheye '+FileName+' to FTP')
     except (ftplib.all_errors) as e:
@@ -85,9 +95,9 @@ if upload_fisheye:
 ###############################################################################
 # Get the data from the weather server
 try:
-    temperature,pressure,humidity,rain,rain_rate,wind_speed,wind_dir_str,wind_dir_angle,uv_index,light_intensity = WeatherService.root.get_all()
+    temperature,pressure,humidity,rain,rain_rate,wind_speed,wind_gust,wind_dir_str,wind_dir_angle,uv_index,light_intensity = WeatherService.root.get_all()
     print(CGREEN+'[OK] ' + nowStr() + ' T:'+str(temperature)+ ' P:'+str(pressure)+' H:'+\
-    str(humidity)+' R:'+str(rain)+' W:'+str(wind_speed)+' WD:'+wind_dir_str+\
+    str(humidity)+' R:'+str(rain)+' W:'+str(wind_speed)+' WG:'+str(wind_gust)+' WD:'+wind_dir_str+\
     ' WDA:'+str(wind_dir_angle)+' UVI:'+str(uv_index)+' LI:'+str(light_intensity)+CEND)
 except:
     print(CRED+'[NOK] Could not connect to weather server'+CEND)
@@ -106,9 +116,9 @@ if upload_database and pressure>500: # valid data
         cursor = cnx.cursor() # Use all the SQL you like
         now = time.strftime("%Y-%m-%d %H:%M:%S")
         cursor.execute("INSERT INTO AcuRiteSensor (SensorDateTime, Temperature, Pressure, Humidity, " + \
-        "WindSpeed, WindDirection, WindDirectionAngle, Rainfall, RainfallRate, UVIndex,TransmitPowerkW, SunPower, LightningDist) VALUES " + \
+        "WindSpeed, WindGust, WindDirection, WindDirectionAngle, Rainfall, RainfallRate, UVIndex,TransmitPowerkW, SunPower, LightningDist) VALUES " + \
         "(\'"+ now +"\',\'" + str(temperature)+ "\',\'" + str(pressure)+ "\',\'" + \
-        str(humidity)+ "\',\'" + str(wind_speed)+ "\',\'" + wind_dir_str+ "\',\'" + str(wind_dir_angle)+ \
+        str(humidity)+ "\',\'" + str(wind_speed)+  "\',\'" + str(wind_gust)+"\',\'" + wind_dir_str+ "\',\'" + str(wind_dir_angle)+ \
         "\',\'" + str(rain)+ "\',\'" + str(rain_rate)+ "\',\'" + str(uv_index)+ "\',\'" + str(0)+ "\',\'" + \
         str(light_intensity) + "\',\'" + str(99999) + "\')")
         cnx.commit()
@@ -125,12 +135,13 @@ if upload_database and pressure>500: # valid data
 if upload_wunderground:
 
     temp_str = "{0:.2f}".format(degc_to_degf(temperature))
+    dewpoint_str = "{0:.2f}".format(degc_to_degf(dewpoint(temperature,humidity)))
     ground_temp_str = "{0:.2f}".format(degc_to_degf(temperature))
     humidity_str = "{0:.2f}".format(humidity)
     pressure_in_str = "{0:.2f}".format(hpa_to_inches(pressure))
     wind_speed_mph_str = "{0:.2f}".format(kmh_to_mph(wind_speed))
-    wind_gust_mph_str = "{0:.2f}".format(kmh_to_mph(wind_speed))
-    wind_average_str = str(wind_speed)
+    wind_gust_mph_str = "{0:.2f}".format(kmh_to_mph(wind_gust))
+    wind_average_str = str(wind_dir_angle)
     rainfall_in_str = "{0:.2f}".format(mm_to_inches(rain_rate))
     daily_rainfall_in_str = "{0:.2f}".format(mm_to_inches(rain))
     uv_str = str(uv_index)
@@ -145,6 +156,7 @@ if upload_wunderground:
             "&windspeedmph=" + wind_speed_mph_str +
             "&windgustmph=" + wind_gust_mph_str +
             "&tempf=" + temp_str +
+            "&dewptf=" + dewpoint_str +
             "&dailyrainin=" + daily_rainfall_in_str +
             "&rainin=" + rainfall_in_str +
             "&soiltempf=" + ground_temp_str +

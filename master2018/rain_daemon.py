@@ -40,8 +40,13 @@ def getRainTicks():
             ticks = int(data["rain"])
     except:
         print(CRED+'[NOK] rtl_433 timed out'+CEND)
-        cmd = "sudo usbreset /dev/bus/usb/001/009"
-        stdout=Proc(cmd).call(timeout=60).stdout
+        from easyprocess import EasyProcess
+        s=EasyProcess("lsusb").call().stdout
+        for line in s.splitlines():
+            if line.find('Realtek')!=-1:
+                cmd = "sudo usb_reset /dev/bus/usb/"+line[4:7]+"/"+line[15:18]
+                stdout=Proc(cmd).call().stdout
+                print(cmd + ' ' +stdout)
     return ticks, temperature
 
 
