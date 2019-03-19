@@ -1,3 +1,4 @@
+import numpy as np
 import os
 import time
 import requests
@@ -34,6 +35,11 @@ database_pass        = "hjvveluw_wopr"
 ram_drive            = "/ramtmp/"
 WeatherService = rpyc.connect("localhost", 18861)
 
+def dewpoint(T,RH):
+    a = 17.271
+    b = 237.7
+    gamma = (a * T / (b + T)) + np.log(RH/100.0)
+    return ((b * gamma) / (a - gamma))
 def hpa_to_inches(pressure_in_hpa):
     pressure_in_inches_of_m = pressure_in_hpa * 0.02953
     return pressure_in_inches_of_m
@@ -129,12 +135,13 @@ if upload_database and pressure>500: # valid data
 if upload_wunderground:
 
     temp_str = "{0:.2f}".format(degc_to_degf(temperature))
+    dewpoint_str = "{0:.2f}".format(degc_to_degf(dewpoint(temperature,humidity)))
     ground_temp_str = "{0:.2f}".format(degc_to_degf(temperature))
     humidity_str = "{0:.2f}".format(humidity)
     pressure_in_str = "{0:.2f}".format(hpa_to_inches(pressure))
     wind_speed_mph_str = "{0:.2f}".format(kmh_to_mph(wind_speed))
     wind_gust_mph_str = "{0:.2f}".format(kmh_to_mph(wind_gust))
-    wind_average_str = str(wind_speed)
+    wind_average_str = str(wind_dir_angle)
     rainfall_in_str = "{0:.2f}".format(mm_to_inches(rain_rate))
     daily_rainfall_in_str = "{0:.2f}".format(mm_to_inches(rain))
     uv_str = str(uv_index)
@@ -149,6 +156,7 @@ if upload_wunderground:
             "&windspeedmph=" + wind_speed_mph_str +
             "&windgustmph=" + wind_gust_mph_str +
             "&tempf=" + temp_str +
+            "&dewptf=" + dewpoint_str +
             "&dailyrainin=" + daily_rainfall_in_str +
             "&rainin=" + rainfall_in_str +
             "&soiltempf=" + ground_temp_str +
