@@ -14,7 +14,6 @@ CEND = '\033[0m'
 
 flag_upload_to_master = True
 flag_camera           = True
-
 ftp_server            = next(open('/home/pi/MasterIP.txt'))
 ftp_username          = 'pi'
 ftp_password          = open("/home/pi/AuthMasterPi.txt",'r').read().split('\n')[0]
