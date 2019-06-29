@@ -53,6 +53,8 @@ uv_index=0
 try:
     light_intensity,ir_value,uv_index = read_si1145all()
     print('[OK]  '+nowStr()+' SI1145 I: '+str(light_intensity)+' [-] IR: '+str(ir_value)+' [-] UV: '+str(uv_index)+' [-]')
+    if uv_index>10:
+        uv_index=0
 except:
     print(CRED+'[NOK] '+nowStr()+' Could not find SI1145 light and uv_index'+CEND)
 
@@ -66,7 +68,7 @@ if flag_camera:
         print(CRED+'[NOK] '+nowStr()+' Could not take the camera image'+CEND)
 
 try:
-    WeatherService.root.update_sensor_2018(temperature,pressure,humidity,uv_index,light_intensity)
+    WeatherService.root.update_sensor_2018(temperature,pressure,humidity,uv_index,light_intensity,nowStr())
     print(CGREEN+'[OK] Uploaded data to weather server'+CEND)
 except:
     print(CRED+'[NOK] Could not update weather service...'+CEND)
