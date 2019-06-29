@@ -95,8 +95,8 @@ if upload_fisheye:
 ###############################################################################
 # Get the data from the weather server
 try:
-    temperature,pressure,humidity,rain,rain_rate,wind_speed,wind_gust,wind_dir_str,wind_dir_angle,uv_index,light_intensity = WeatherService.root.get_all()
-    print(CGREEN+'[OK] ' + nowStr() + ' T:'+str(temperature)+ ' P:'+str(pressure)+' H:'+\
+    temperature,pressure,humidity,rain,rain_rate,wind_speed,wind_gust,wind_dir_str,wind_dir_angle,uv_index,light_intensity,date_update = WeatherService.root.get_all()
+    print(CGREEN+'[OK] ' + date_update + ' T:'+str(temperature)+ ' P:'+str(pressure)+' H:'+\
     str(humidity)+' R:'+str(rain)+' W:'+str(wind_speed)+' WG:'+str(wind_gust)+' WD:'+wind_dir_str+\
     ' WDA:'+str(wind_dir_angle)+' UVI:'+str(uv_index)+' LI:'+str(light_intensity)+CEND)
 except:
@@ -117,7 +117,7 @@ if upload_database and pressure>500: # valid data
         now = time.strftime("%Y-%m-%d %H:%M:%S")
         cursor.execute("INSERT INTO AcuRiteSensor (SensorDateTime, Temperature, Pressure, Humidity, " + \
         "WindSpeed, WindGust, WindDirection, WindDirectionAngle, Rainfall, RainfallRate, UVIndex,TransmitPowerkW, SunPower, LightningDist) VALUES " + \
-        "(\'"+ now +"\',\'" + str(temperature)+ "\',\'" + str(pressure)+ "\',\'" + \
+        "(\'"+ date_update +"\',\'" + str(temperature)+ "\',\'" + str(pressure)+ "\',\'" + \
         str(humidity)+ "\',\'" + str(wind_speed)+  "\',\'" + str(wind_gust)+"\',\'" + wind_dir_str+ "\',\'" + str(wind_dir_angle)+ \
         "\',\'" + str(rain)+ "\',\'" + str(rain_rate)+ "\',\'" + str(uv_index)+ "\',\'" + str(0)+ "\',\'" + \
         str(light_intensity) + "\',\'" + str(99999) + "\')")
