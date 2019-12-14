@@ -18,7 +18,10 @@ ftp_server            = next(open('/home/pi/MasterIP.txt'))
 ftp_username          = 'pi'
 ftp_password          = open("/home/pi/AuthMasterPi.txt",'r').read().split('\n')[0]
 local_path            = '/ramtmp/'
-WeatherService = rpyc.connect(ftp_server, 18861)
+try:
+    WeatherService = rpyc.connect(ftp_server, 18861)
+except:
+    print(CRED+'[NOK]  '+nowStr()+' Could not make initial connection with RPYC')
 
 def nowStr():
     return( datetime.datetime.now().strftime( '%Y-%m-%d %H:%M:%S'))
