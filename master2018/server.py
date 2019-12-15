@@ -1,6 +1,9 @@
 import rpyc
 import os
 
+CRED ='\033[91m'
+CGREEN ='\033[92m'
+
 class WeatherService(rpyc.Service):
 
     # Class variables to be accessed from outside
@@ -33,11 +36,13 @@ class WeatherService(rpyc.Service):
         self.uv_index = in_uv_index
         self.light_intensity = in_light_intensity
         self.date_update = in_date_update
+        print(CGREEN+'[OK] Got the sensor2018 data, temp: '+str(self.temperature))
         pass
-    
+
     def update_sensor_rain(self,in_rain,in_rain_rate): # this is an exposed method
         self.rain = in_rain
         self.rain_rate = in_rain_rate
+        print(CGREEN+'[OK] Got the raincube data, rain: '+str(self.rain))
         pass
 
     def update_sensor_wind(self,in_wind_speed,in_wind_gust,in_wind_dir_str,in_wind_dir_angle): # this is an exposed method
@@ -45,6 +50,7 @@ class WeatherService(rpyc.Service):
         self.wind_gust = in_wind_gust
         self.wind_dir_str = in_wind_dir_str
         self.wind_dir_angle = in_wind_dir_angle
+        print(CGREEN+'[OK] Got the wind daemon data, wind_speed: '+str(self.wind_speed))
         pass
 
 if __name__ == "__main__":
