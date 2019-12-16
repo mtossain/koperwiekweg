@@ -12,42 +12,54 @@ CRED = '\033[91m'
 CGREEN = '\033[92m'
 CEND = '\033[0m'
 
-flag_upload_to_master = True
-flag_camera           = True
+flag_upload_to_master = False
+flag_camera           = False
+flag_mcp9808          = False
 ftp_server            = next(open('/home/pi/MasterIP.txt'))
 ftp_username          = 'pi'
 ftp_password          = open("/home/pi/AuthMasterPi.txt",'r').read().split('\n')[0]
 local_path            = '/ramtmp/'
-try:
-    WeatherService = rpyc.connect(ftp_server, 18861)
-except:
-    print(CRED+'[NOK]  '+nowStr()+' Could not make initial connection with RPYC')
 
 def nowStr():
     return( datetime.datetime.now().strftime( '%Y-%m-%d %H:%M:%S'))
+
+try:
+    print(CGREEN+'[OK]  Connected to the WeatherServer')
+except:
+    print(CRED+'[NOK]  Not connected to the WeatherServer')
 
 # Read the sensor data
 from read_bme280 import *
 pressure=0
 humidity=0
-temperature_bme280=0
+temperature=0
 try:
-    temperature_bme280,pressure,humidity = readBME280All()
-    temperature_bme280 = round(temperature_bme280,1)
+    temperature,pressure,humidity = readBME280All()
+    temperature = round(temperature,1)
     pressure = round(pressure,1)
     humidity = round(humidity,1)
-    print('[OK]  '+nowStr()+' BME280 T: '+str(temperature_bme280)+' [degC] P: '+str(pressure) + ' [mBar] H: '+str(humidity)+' [%]')
+    print(CGREEN+'[OK]  '+nowStr()+' BME280 T: '+str(temperature)+' [degC] P: '+str(pressure) + ' [mBar] H: '+str(humidity)+' [%]')
 except:
     print(CRED+'[NOK] '+nowStr()+' Could not find the data from the BME280 pressure and humidity'+CEND)
 
-from read_mcp9808 import *
-temperature=0
+if flag_mcp9808:
+
+    from read_mcp9808 import *
+    try:
+        temperature = get_temp_mcp9808()
+        temperature = round(temperature,1)
+        print('[OK]  '+nowStr()+' MCP9808 T: '+str(temperature)+' [degC]')
+    except:
+        print(CRED+'[NOK] '+nowStr()+' Could not find MCP9808 temperature'+CEND)
+
+# Assume temperature is from BME280 or MCP9808
+from read_ams811 import *
 try:
-    temperature = get_temp_mcp9808()
-    temperature = round(temperature,1)
-    print('[OK]  '+nowStr()+' MCP9808 T: '+str(temperature)+' [degC]')
+    co2,tvoc = get_ams811_data(temperature)
+    print(CGREEN+'[OK]  '+nowStr()+' AMS811 eCO2: '+str(co2)+' [ppm] TVOC: '+str(tvoc)+' [ppm]')
 except:
-    print(CRED+'[NOK] '+nowStr()+' Could not find MCP9808 temperature'+CEND)
+    print(CRED+'[NOK] '+nowStr()+' Could not find AMS811 CO2 data'+CEND)
+
 
 from read_si1145 import *
 light_intensity=0
@@ -55,7 +67,7 @@ ir_value=0
 uv_index=0
 try:
     light_intensity,ir_value,uv_index = read_si1145all()
-    print('[OK]  '+nowStr()+' SI1145 I: '+str(light_intensity)+' [-] IR: '+str(ir_value)+' [-] UV: '+str(uv_index)+' [-]')
+    print(CGREEN+'[OK]  '+nowStr()+' SI1145 I: '+str(light_intensity)+' [-] IR: '+str(ir_value)+' [-] UV: '+str(uv_index)+' [-]')
     if uv_index>10:
         uv_index=0
 except:
@@ -70,11 +82,13 @@ if flag_camera:
     except:
         print(CRED+'[NOK] '+nowStr()+' Could not take the camera image'+CEND)
 
-try:
-    WeatherService.root.update_sensor_2018(temperature,pressure,humidity,uv_index,light_intensity,nowStr())
-    print(CGREEN+'[OK] Uploaded data to weather server'+CEND)
-except:
-    print(CRED+'[NOK] Could not update weather service...'+CEND)
+#try:
+#    print(temperature,pressure,humidity,uv_index,light_intensity,nowStr())
+WeatherService2 = rpyc.connect('192.168.1.150', 18861)
+WeatherService2.root.update_sensor_2018(temperature,pressure,humidity,uv_index,light_intensity,nowStr())
+#    print(CGREEN+'[OK] Uploaded data to weather server'+CEND)
+#except:
+#    print(CRED+'[NOK] Could not update weather service...'+CEND)
 
 if flag_upload_to_master:
     try:

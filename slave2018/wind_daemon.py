@@ -18,8 +18,11 @@ CEND = '\033[0m'
 
 #ftp_server           = '192.168.178.11'
 ftp_server = open('/home/pi/MasterIP.txt').readline().rstrip()
-print (CGREEN+'[OK] Connection to FTP Server: '+ftp_server) 
-WeatherService = rpyc.connect(ftp_server, 18861)
+try:
+    WeatherService = rpyc.connect(ftp_server, 18861)
+    print (CGREEN+'[OK] Connection to Weather Server: '+ftp_server)
+except:
+    print (CRED+'[NOK] No Connection to Weather Server: '+ftp_server)
 
 def nowStr():
     return( datetime.datetime.now().strftime( '%Y-%m-%d %H:%M:%S'))
@@ -86,7 +89,7 @@ while(1):
     dirstr_last10 = deg2compass(dir_last10)
 
     print(speed_list[0:15])
-    #print(dir_list[0:15])
+    print(dir_list[0:15])
 
     try:
         WeatherService.root.update_sensor_wind(speed_last10, gust_last10,dirstr_last10,dir_last10)
