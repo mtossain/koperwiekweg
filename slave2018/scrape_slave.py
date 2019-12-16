@@ -15,8 +15,9 @@ CEND = '\033[0m'
 flag_upload_to_master = False
 flag_camera           = False
 flag_mcp9808          = False
-flag_sh3x             = True
-ftp_server            = next(open('/home/pi/MasterIP.txt'))
+flag_sht3x            = True
+flag_ams811           = True
+ftp_server            = open("/home/pi/MasterIP.txt",'r').read().split('\n')[0]
 ftp_username          = 'pi'
 ftp_password          = open("/home/pi/AuthMasterPi.txt",'r').read().split('\n')[0]
 local_path            = '/ramtmp/'
@@ -25,6 +26,7 @@ def nowStr():
     return( datetime.datetime.now().strftime( '%Y-%m-%d %H:%M:%S'))
 
 try:
+    WeatherService2 = rpyc.connect(ftp_server, 18861)
     print(CGREEN+'[OK] Connected to the WeatherServer')
 except:
     print(CRED+'[NOK] Not connected to the WeatherServer')
@@ -44,13 +46,13 @@ except:
     print(CRED+'[NOK] '+nowStr()+' Could not find the data from the BME280 pressure and humidity'+CEND)
 
 
-from read_sht3x import *
-if flag_sh3x:
+if flag_sht3x:
+    from read_sht3x import *
     try:
-        humidity, temperature_sh3x = get_sht3x_data()
-        temperature_sh3x = round(temperature_sh3x,1)
+        humidity, temperature_sht3x = get_sht3x_data()
+        temperature_sht3x = round(temperature_sht3x,1)
         humidity = round(humidity,1)
-        print(CGREEN+'[OK]  '+nowStr()+' SHT3X H:'+str(humidity)+' [%] T: '+str(temperature_sh3x)+' [degC] P: ')
+        print(CGREEN+'[OK]  '+nowStr()+' SHT3X H:'+str(humidity)+' [%] T: '+str(temperature_sht3x)+' [degC] P: ')
     except:
         print(CRED+'[NOK] '+nowStr()+' Could not find the data from the SHT3X data')
 
@@ -65,12 +67,13 @@ if flag_mcp9808:
         print(CRED+'[NOK] '+nowStr()+' Could not find MCP9808 temperature'+CEND)
 
 # Assume temperature is from BME280 or MCP9808
-from read_ams811 import *
-try:
-    co2,tvoc = get_ams811_data(temperature)
-    print(CGREEN+'[OK]  '+nowStr()+' AMS811 eCO2: '+str(co2)+' [ppm] TVOC: '+str(tvoc)+' [ppm]')
-except:
-    print(CRED+'[NOK] '+nowStr()+' Could not find AMS811 CO2 data'+CEND)
+if flag_ams811:
+    from read_ams811 import *
+    try:
+        co2,tvoc = get_ams811_data(temperature)
+        print(CGREEN+'[OK]  '+nowStr()+' AMS811 eCO2: '+str(co2)+' [ppm] TVOC: '+str(tvoc)+' [ppm]')
+    except:
+        print(CRED+'[NOK] '+nowStr()+' Could not find AMS811 CO2 data'+CEND)
 
 
 from read_si1145 import *
@@ -94,13 +97,11 @@ if flag_camera:
     except:
         print(CRED+'[NOK] '+nowStr()+' Could not take the camera image'+CEND)
 
-#try:
-#    print(temperature,pressure,humidity,uv_index,light_intensity,nowStr())
-WeatherService2 = rpyc.connect('192.168.1.150', 18861)
-WeatherService2.root.update_sensor_2018(temperature,pressure,humidity,uv_index,light_intensity,nowStr())
-#    print(CGREEN+'[OK] Uploaded data to weather server'+CEND)
-#except:
-#    print(CRED+'[NOK] Could not update weather service...'+CEND)
+try:
+    WeatherService2.root.update_sensor_2018(temperature,pressure,humidity,uv_index,light_intensity,nowStr())
+    print(CGREEN+'[OK] Uploaded data to weather server'+CEND)
+except:
+    print(CRED+'[NOK] Could not update weather service...'+CEND)
 
 if flag_upload_to_master:
     try:
