@@ -15,6 +15,7 @@ CEND = '\033[0m'
 flag_upload_to_master = False
 flag_camera           = False
 flag_mcp9808          = False
+flag_sh3x             = True
 ftp_server            = next(open('/home/pi/MasterIP.txt'))
 ftp_username          = 'pi'
 ftp_password          = open("/home/pi/AuthMasterPi.txt",'r').read().split('\n')[0]
@@ -24,9 +25,9 @@ def nowStr():
     return( datetime.datetime.now().strftime( '%Y-%m-%d %H:%M:%S'))
 
 try:
-    print(CGREEN+'[OK]  Connected to the WeatherServer')
+    print(CGREEN+'[OK] Connected to the WeatherServer')
 except:
-    print(CRED+'[NOK]  Not connected to the WeatherServer')
+    print(CRED+'[NOK] Not connected to the WeatherServer')
 
 # Read the sensor data
 from read_bme280 import *
@@ -42,8 +43,19 @@ try:
 except:
     print(CRED+'[NOK] '+nowStr()+' Could not find the data from the BME280 pressure and humidity'+CEND)
 
-if flag_mcp9808:
 
+from read_sht3x import *
+if flag_sh3x:
+    try:
+        humidity, temperature_sh3x = get_sht3x_data()
+        temperature_sh3x = round(temperature_sh3x,1)
+        humidity = round(humidity,1)
+        print(CGREEN+'[OK]  '+nowStr()+' SHT3X H:'+str(humidity)+' [%] T: '+str(temperature_sh3x)+' [degC] P: ')
+    except:
+        print(CRED+'[NOK] '+nowStr()+' Could not find the data from the SHT3X data')
+
+
+if flag_mcp9808:
     from read_mcp9808 import *
     try:
         temperature = get_temp_mcp9808()
