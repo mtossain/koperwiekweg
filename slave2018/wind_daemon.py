@@ -88,8 +88,8 @@ while(1):
        dir_last10 = dir_last10 + 360
     dirstr_last10 = deg2compass(dir_last10)
 
-    print(speed_list[0:15])
-    print(dir_list[0:15])
+    # print(speed_list[0:15])
+    # print(dir_list[0:15])
 
     try:
         WeatherService.root.update_sensor_wind(speed_last10, gust_last10,dirstr_last10,dir_last10)

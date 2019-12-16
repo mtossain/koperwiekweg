@@ -3,6 +3,9 @@
 # 2018 - M.Tossaint
 ###############################################################################
 import os
+os.system('modprobe i2c_bcm2835 baudrate=400000')
+import time
+time.sleep(3) # Wait for baudrate to change
 import shelve
 import ftplib
 import datetime
@@ -52,7 +55,7 @@ if flag_sht3x:
         humidity, temperature_sht3x = get_sht3x_data()
         temperature_sht3x = round(temperature_sht3x,1)
         humidity = round(humidity,1)
-        print(CGREEN+'[OK]  '+nowStr()+' SHT3X H:'+str(humidity)+' [%] T: '+str(temperature_sht3x)+' [degC] P: ')
+        print(CGREEN+'[OK]  '+nowStr()+' SHT3X H:'+str(humidity)+' [%] T: '+str(temperature_sht3x)+' [degC]')
     except:
         print(CRED+'[NOK] '+nowStr()+' Could not find the data from the SHT3X data')
 
@@ -66,15 +69,6 @@ if flag_mcp9808:
     except:
         print(CRED+'[NOK] '+nowStr()+' Could not find MCP9808 temperature'+CEND)
 
-# Assume temperature is from BME280 or MCP9808
-if flag_ams811:
-    from read_ams811 import *
-    try:
-        co2,tvoc = get_ams811_data(temperature)
-        print(CGREEN+'[OK]  '+nowStr()+' AMS811 eCO2: '+str(co2)+' [ppm] TVOC: '+str(tvoc)+' [ppm]')
-    except:
-        print(CRED+'[NOK] '+nowStr()+' Could not find AMS811 CO2 data'+CEND)
-
 
 from read_si1145 import *
 light_intensity=0
@@ -87,6 +81,18 @@ try:
         uv_index=0
 except:
     print(CRED+'[NOK] '+nowStr()+' Could not find SI1145 light and uv_index'+CEND)
+
+
+# Assume temperature is from BME280 or MCP9808
+os.system('modprobe i2c_bcm2835 baudrate=10000')
+time.sleep(3)
+if flag_ams811:
+    from read_ams811 import *
+    try:
+        co2,tvoc = get_ams811_data(temperature)
+        print(CGREEN+'[OK]  '+nowStr()+' AMS811 eCO2: '+str(co2)+' [ppm] TVOC: '+str(tvoc)+' [ppm]')
+    except:
+        print(CRED+'[NOK] '+nowStr()+' Could not find AMS811 CO2 data'+CEND)
 
 
 if flag_camera:
