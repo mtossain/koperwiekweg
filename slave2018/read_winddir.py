@@ -71,7 +71,8 @@ def get_wind_dir_all():
     adc = ADS1015(address=0x48, busnum=1)
     # Gain can be: 2/3 1 2 4 8 16
     value = adc.read_adc(0, gain=1) # Scale gain for values up to 5V (NOTE: reverse gain values...)
-    #print('ADC read value: '+str(value))
+    print('ADC read value: '+str(value))
     volt = map2volt(value, 1, 1535, 1, 4600); # Read from A0 values from 0-2047 (12bit) and map to volt
-    #print('ADC value 1-2047 mapped to 1-5000V: '+str(volt))
+    print('ADC value 1-2047 mapped to 1-5000V: '+str(volt))
     return wind_dir(volt) # Angle, AngleStr
+

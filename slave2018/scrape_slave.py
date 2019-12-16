@@ -82,6 +82,20 @@ try:
 except:
     print(CRED+'[NOK] '+nowStr()+' Could not find SI1145 light and uv_index'+CEND)
 
+if flag_camera:
+    try:
+        os.system('raspistill -h 1054 -w 1054 -o '+local_path+'cam.jpg') # Take the camera image
+        os.system('raspistill -h 1944 -w 1944 -o '+local_path+'cam_hd.jpg') # Take the camera image
+        print('[OK]  '+nowStr()+' Got the camera image: '+local_path+'cam.jpg')
+    except:
+        print(CRED+'[NOK] '+nowStr()+' Could not take the camera image'+CEND)
+
+try:
+    WeatherService2.root.update_sensor_2018(temperature,pressure,humidity,uv_index,light_intensity,nowStr())
+    print(CGREEN+'[OK] Uploaded data to weather server'+CEND)
+except:
+    print(CRED+'[NOK] Could not update weather service...'+CEND)
+
 
 # Assume temperature is from BME280 or MCP9808
 os.system('modprobe i2c_bcm2835 baudrate=10000')
@@ -94,14 +108,6 @@ if flag_ams811:
     except:
         print(CRED+'[NOK] '+nowStr()+' Could not find AMS811 CO2 data'+CEND)
 
-
-if flag_camera:
-    try:
-        os.system('raspistill -h 1054 -w 1054 -o '+local_path+'cam.jpg') # Take the camera image
-        os.system('raspistill -h 1944 -w 1944 -o '+local_path+'cam_hd.jpg') # Take the camera image
-        print('[OK]  '+nowStr()+' Got the camera image: '+local_path+'cam.jpg')
-    except:
-        print(CRED+'[NOK] '+nowStr()+' Could not take the camera image'+CEND)
 
 try:
     WeatherService2.root.update_sensor_2018(temperature,pressure,humidity,uv_index,light_intensity,nowStr())
@@ -119,6 +125,6 @@ if flag_upload_to_master:
             fh = open(local_path+"cam_hd.jpg", 'rb')
             ftp_connection.storbinary('STOR /ramtmp/cam_hd.jpg', fh)
             fh.close()
-        print('[OK]  '+nowStr()+' Uploaded data to the ftp master: '+ftp_server)
+        print('[OK]  '+nowStr()+' Uploaded skyview to the ftp master: '+ftp_server)
     except:
-        print(CRED+'[NOK] '+nowStr()+' Could not upload the data to the master.'+CEND)
+        print(CRED+'[NOK] '+nowStr()+' Could not upload skyview to the ftp master.'+CEND)
