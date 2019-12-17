@@ -91,12 +91,6 @@ if flag_camera:
     except:
         print(CRED+'[NOK] '+nowStr()+' Could not take the camera image'+CEND)
 
-try:
-    WeatherService2.root.update_sensor_2018(temperature,pressure,humidity,uv_index,light_intensity,nowStr())
-    print(CGREEN+'[OK] Uploaded data to weather server'+CEND)
-except:
-    print(CRED+'[NOK] Could not update weather service...'+CEND)
-
 
 # Assume temperature is from BME280 or MCP9808
 os.system('modprobe i2c_bcm2835 baudrate=10000')
@@ -113,10 +107,11 @@ if flag_ams811:
 
 
 try:
-    WeatherService2.root.update_sensor_2018(temperature,pressure,humidity,uv_index,light_intensity,nowStr())
-    print(CGREEN+'[OK] Uploaded data to weather server'+CEND)
+    #WeatherService2.root.update_sensor_2018(temperature,pressure,humidity,uv_index,light_intensity,nowStr())
+    WeatherService2.root.update_sensor_2019(temperature,pressure,humidity,uv_index,light_intensity,co2,tvoc,nowStr())
+    print(CGREEN+'[OK] Uploaded data to Weather server'+CEND)
 except:
-    print(CRED+'[NOK] Could not update weather service...'+CEND)
+    print(CRED+'[NOK] Could not update Weather server...'+CEND)
 
 if flag_upload_to_master:
     try:

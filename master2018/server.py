@@ -18,6 +18,8 @@ class WeatherService(rpyc.Service):
     wind_dir_angle = 0
     uv_index = 0
     light_intensity = 0
+    co2 = 0
+    tvoc = 0
     date_update =''
 
     def on_connect(self, conn):
@@ -38,6 +40,19 @@ class WeatherService(rpyc.Service):
         self.date_update = in_date_update
         print(CGREEN+'[OK] Got the sensor2018 data, temp: '+str(self.temperature))
         pass
+
+    def update_sensor_2019(self,in_temperature,in_pressure,in_humidity,in_uv_index,in_light_intensity,in_co2,in_tvoc,in_date_update): # this is an exposed method
+        self.temperature = in_temperature
+        self.pressure = in_pressure
+        self.humidity = in_humidity
+        self.uv_index = in_uv_index
+        self.light_intensity = in_light_intensity
+        self.co2 = in_co2
+        self.tvoc = in_tvoc
+        self.date_update = in_date_update
+        print(CGREEN+'[OK] Got the sensor2019 data, temp: '+str(self.temperature))
+        pass
+
 
     def update_sensor_rain(self,in_rain,in_rain_rate): # this is an exposed method
         self.rain = in_rain

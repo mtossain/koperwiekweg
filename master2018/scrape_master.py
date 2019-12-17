@@ -95,10 +95,11 @@ if upload_fisheye:
 ###############################################################################
 # Get the data from the weather server
 try:
-    temperature,pressure,humidity,rain,rain_rate,wind_speed,wind_gust,wind_dir_str,wind_dir_angle,uv_index,light_intensity,date_update = WeatherService.root.get_all()
+    temperature,pressure,humidity,rain,rain_rate,wind_speed,wind_gust,wind_dir_str,wind_dir_angle,uv_index,light_intensity,co2,tvoc,date_update = WeatherService.root.get_all()
     print(CGREEN+'[OK] ' + date_update + ' T:'+str(temperature)+ ' P:'+str(pressure)+' H:'+\
     str(humidity)+' R:'+str(rain)+' W:'+str(wind_speed)+' WG:'+str(wind_gust)+' WD:'+wind_dir_str+\
-    ' WDA:'+str(wind_dir_angle)+' UVI:'+str(uv_index)+' LI:'+str(light_intensity)+CEND)
+    ' WDA:'+str(wind_dir_angle)+' UVI:'+str(uv_index)+' LI:'+str(light_intensity)+' CO2:'+str(co2)+\
+    'TVOC:'+str(tvoc)+CEND)
 except:
     print(CRED+'[NOK] Could not connect to weather server'+CEND)
 
@@ -116,11 +117,11 @@ if upload_database and pressure>500: # valid data
         cursor = cnx.cursor() # Use all the SQL you like
         now = time.strftime("%Y-%m-%d %H:%M:%S")
         cursor.execute("INSERT INTO AcuRiteSensor (SensorDateTime, Temperature, Pressure, Humidity, " + \
-        "WindSpeed, WindGust, WindDirection, WindDirectionAngle, Rainfall, RainfallRate, UVIndex,TransmitPowerkW, SunPower, LightningDist) VALUES " + \
+        "WindSpeed, WindGust, WindDirection, WindDirectionAngle, Rainfall, RainfallRate, UVIndex,TransmitPowerkW, SunPower, LightningDist, CO2, TVOC) VALUES " + \
         "(\'"+ date_update +"\',\'" + str(temperature)+ "\',\'" + str(pressure)+ "\',\'" + \
         str(humidity)+ "\',\'" + str(wind_speed)+  "\',\'" + str(wind_gust)+"\',\'" + wind_dir_str+ "\',\'" + str(wind_dir_angle)+ \
         "\',\'" + str(rain)+ "\',\'" + str(rain_rate)+ "\',\'" + str(uv_index)+ "\',\'" + str(0)+ "\',\'" + \
-        str(light_intensity) + "\',\'" + str(99999) + "\')")
+        str(light_intensity) + "\',\'" + str(99999)  + "\',\'" +str(co2) + "\',\'" + str(tvoc) + "\')")
         cnx.commit()
         cursor.close()
         cnx.close()
