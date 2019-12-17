@@ -82,6 +82,7 @@ try:
 except:
     print(CRED+'[NOK] '+nowStr()+' Could not find SI1145 light and uv_index'+CEND)
 
+
 if flag_camera:
     try:
         os.system('raspistill -h 1054 -w 1054 -o '+local_path+'cam.jpg') # Take the camera image
@@ -100,6 +101,8 @@ except:
 # Assume temperature is from BME280 or MCP9808
 os.system('modprobe i2c_bcm2835 baudrate=10000')
 time.sleep(3)
+co2=0
+tvoc=0
 if flag_ams811:
     from read_ams811 import *
     try:
