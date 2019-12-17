@@ -29,7 +29,7 @@ class WeatherService(rpyc.Service):
         pass
 
     def get_all(self): # this is an exposed method
-        return self.temperature,self.pressure,self.humidity,self.rain,self.rain_rate,self.wind_speed,self.wind_gust,self.wind_dir_str,self.wind_dir_angle,self.uv_index,self.light_intensity,self.date_update
+        return self.temperature,self.pressure,self.humidity,self.rain,self.rain_rate,self.wind_speed,self.wind_gust,self.wind_dir_str,self.wind_dir_angle,self.uv_index,self.light_intensity,self.co2,self.tvoc,self.date_update
 
     def update_sensor_2018(self,in_temperature,in_pressure,in_humidity,in_uv_index,in_light_intensity,in_date_update): # this is an exposed method
         self.temperature = in_temperature
