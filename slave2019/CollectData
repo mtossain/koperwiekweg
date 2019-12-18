@@ -1,0 +1,10 @@
+#!/bin/bash
+# My first script
+python3 wind_daemon.py &
+sleep 1
+while true; do 
+        python3 scrape_slave.py
+        echo 'Finished scraping slave...[OK]'
+        echo ''
+        sleep 60
+done

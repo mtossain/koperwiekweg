@@ -1,11 +1,9 @@
 ###############################################################################
 # Read all sensor data (except rain & lightning) and push to master
-# 2018 - M.Tossaint
+# 2019 - M.Tossaint
 ###############################################################################
 import os
-os.system('modprobe i2c_bcm2835 baudrate=400000')
 import time
-time.sleep(3) # Wait for baudrate to change
 import shelve
 import ftplib
 import datetime
@@ -29,10 +27,12 @@ def nowStr():
     return( datetime.datetime.now().strftime( '%Y-%m-%d %H:%M:%S'))
 
 try:
-    WeatherService2 = rpyc.connect(ftp_server, 18861)
+    WeatherService = rpyc.connect(ftp_server, 18861)
     print(CGREEN+'[OK] Connected to the WeatherServer')
 except:
     print(CRED+'[NOK] Not connected to the WeatherServer')
+
+###############################################################################
 
 # Read the sensor data
 from read_bme280 import *
@@ -48,6 +48,7 @@ try:
 except:
     print(CRED+'[NOK] '+nowStr()+' Could not find the data from the BME280 pressure and humidity'+CEND)
 
+###############################################################################
 
 if flag_sht3x:
     from read_sht3x import *
@@ -59,6 +60,7 @@ if flag_sht3x:
     except:
         print(CRED+'[NOK] '+nowStr()+' Could not find the data from the SHT3X data')
 
+###############################################################################
 
 if flag_mcp9808:
     from read_mcp9808 import *
@@ -69,6 +71,7 @@ if flag_mcp9808:
     except:
         print(CRED+'[NOK] '+nowStr()+' Could not find MCP9808 temperature'+CEND)
 
+###############################################################################
 
 from read_si1145 import *
 light_intensity=0
@@ -91,10 +94,9 @@ if flag_camera:
     except:
         print(CRED+'[NOK] '+nowStr()+' Could not take the camera image'+CEND)
 
+###############################################################################
 
 # Assume temperature is from BME280 or MCP9808
-os.system('modprobe i2c_bcm2835 baudrate=10000')
-time.sleep(3)
 co2=0
 tvoc=0
 if flag_ams811:
@@ -104,14 +106,21 @@ if flag_ams811:
         print(CGREEN+'[OK]  '+nowStr()+' AMS811 eCO2: '+str(co2)+' [ppm] TVOC: '+str(tvoc)+' [ppm]')
     except:
         print(CRED+'[NOK] '+nowStr()+' Could not find AMS811 CO2 data'+CEND)
+os.system('modprobe i2c_bcm2835 baudrate=10000')
+time.sleep(3)
 
+os.system('modprobe i2c_bcm2835 baudrate=10000')
+time.sleep(3)
 
-try:
-    #WeatherService2.root.update_sensor_2018(temperature,pressure,humidity,uv_index,light_intensity,nowStr())
-    WeatherService2.root.update_sensor_2019(temperature,pressure,humidity,uv_index,light_intensity,co2,tvoc,nowStr())
-    print(CGREEN+'[OK] Uploaded data to Weather server'+CEND)
-except:
-    print(CRED+'[NOK] Could not update Weather server...'+CEND)
+###############################################################################
+
+#try:
+WeatherService.root.update_sensor_2018(temperature,pressure,humidity,uv_index,light_intensity,nowStr())
+print(CGREEN+'[OK] Uploaded data to WeatherServer'+CEND)
+#except:
+#    print(CRED+'[NOK] Could not update WeatherServer...'+CEND)
+
+###############################################################################
 
 if flag_upload_to_master:
     try:
@@ -123,6 +132,6 @@ if flag_upload_to_master:
             fh = open(local_path+"cam_hd.jpg", 'rb')
             ftp_connection.storbinary('STOR /ramtmp/cam_hd.jpg', fh)
             fh.close()
-        print('[OK]  '+nowStr()+' Uploaded skyview to the ftp master: '+ftp_server)
+        print(CGREEN+'[OK]  '+nowStr()+' Uploaded skyview to the ftp master: '+ftp_server)
     except:
         print(CRED+'[NOK] '+nowStr()+' Could not upload skyview to the ftp master.'+CEND)
