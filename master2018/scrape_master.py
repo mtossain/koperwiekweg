@@ -60,7 +60,7 @@ def nowStr():
 if upload_fisheye:
     try:
         print('*** Converting camera fisheye image')
-        os.system("convert "+ram_drive+"cam.jpg -page -50+0 -background none -flatten "+ram_drive+"back.jpg") # translate the image to the middle
+        os.system("convert "+ram_drive+"cam.jpg -page -40-20 -background none -flatten "+ram_drive+"back.jpg") # translate the image to the middle
         os.system("convert -size 1024x1024 xc:none -fill "+ram_drive+"back.jpg -draw 'circle 512,512 20,512' "+ram_drive+"back2.png") # cut out the circle
         os.system("convert -size 1024x1024 xc:none "+ram_drive+"back2.png -rotate '-90' -flop  -composite "+ram_drive+"dome.png") # rotate around axis
         print('[OK] '+nowStr()+' Converted camera image')
